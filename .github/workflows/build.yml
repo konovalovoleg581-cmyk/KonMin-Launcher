@@ -1,0 +1,86 @@
+name: Build KonMin Launcher
+
+on:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    env:
+      # Необязательная подпись кода. Если секреты не заданы — шаг пропускается.
+      WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+      WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Setup Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+
+      - name: Install npm dependencies
+        shell: bash
+        # npm ci требует package-lock.json; если его нет в репозитории — npm install создаст его
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+      # --- Обычная сборка (пуш в ветку / ручной запуск) ---
+      - name: Build (npm run tauri build)
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        run: npm run tauri build
+
+      - name: Sign installer (optional)
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') && env.WINDOWS_CERTIFICATE != '' }}
+        shell: pwsh
+        run: |
+          $pfx = Join-Path $env:RUNNER_TEMP "cert.pfx"
+          [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE))
+          $signtool = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin\*\x64\signtool.exe" | Select-Object -Last 1
+          Get-ChildItem src-tauri/target/release/bundle/nsis/*-setup.exe | ForEach-Object {
+            & $signtool.FullName sign /f $pfx /p $env:WINDOWS_CERTIFICATE_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 $_.FullName
+          }
+          Remove-Item $pfx
+
+      - name: Upload setup.exe artifact
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: KonMin-Launcher-Setup
+          path: src-tauri/target/release/bundle/nsis/*-setup.exe
+          if-no-files-found: error
+
+      # --- Релиз (пуш тега v*, например v0.1.0) ---
+      - name: Build and publish GitHub Release
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "KonMin Launcher ${{ github.ref_name }}"
+          releaseBody: "Скачайте файл KonMin Launcher_..._x64-setup.exe и запустите его."
+          releaseDraft: false
+          prerelease: false
+
+      - name: Upload release artifact copy
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: KonMin-Launcher-Setup-${{ github.ref_name }}
+          path: src-tauri/target/release/bundle/nsis/*-setup.exe
