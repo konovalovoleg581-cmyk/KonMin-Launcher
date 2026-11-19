@@ -10,6 +10,7 @@ import { finishFirstRun, konminGuest, leaveGuestStep, playWithoutMillida, useFir
 import { isGameAccountKind, useAccounts } from '../state/accounts'
 import { refreshGameNick } from '../state/gameNick'
 import { openExt } from '../lib/api'
+import { enterApp } from '../lib/session'
 import { PixelField } from '../components/lobby/PixelField'
 import '../styles/pixel/login.css'
 
@@ -145,7 +146,7 @@ export function Login({ on }: { on: boolean }) {
             <Icon id="i-shield" />
             <span>{t('Пароль — только на сайте Millida')}</span>
           </div>
-          <button className="btn md ghost lg2-guest-konmin" data-track="konmin_guest" onClick={playWithoutMillida}>
+          <button className="btn md ghost lg2-guest-konmin" data-track="konmin_guest" onClick={() => (playWithoutMillida() ? enterApp() : undefined)}>
             {t('Играть без аккаунта Millida')}
           </button>
         </div>

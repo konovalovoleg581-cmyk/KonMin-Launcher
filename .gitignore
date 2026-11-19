@@ -13,3 +13,7 @@ pnpm-lock.yaml
 public/**/*.md
 public/**/*.txt
 installer/target
+
+# KonMin Launcher packaging output
+KonMin_Launcher.zip
+release-artifacts/

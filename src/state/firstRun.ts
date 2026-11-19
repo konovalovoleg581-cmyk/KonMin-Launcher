@@ -44,9 +44,13 @@ const GUEST_KEY = 'm-konmin-guest'
 /// Millida features (friends, catalog purchases, cosmetics) still ask for a Millida sign-in where they need it.
 export const konminGuest = (): boolean => readPref(GUEST_KEY, '') === '1'
 
-export function playWithoutMillida() {
+/// Returns true when the player already has a game account and can go straight back to the lobby (the sign-in
+/// screen was opened from a Millida feature); otherwise the game-account step opens.
+export function playWithoutMillida(): boolean {
   writePref(GUEST_KEY, '1')
+  if (hasGameAccount()) return true
   startGameStep()
+  return false
 }
 
 /// «Назад» from the game-account step of a guest: back to the Millida sign-in, nothing remembered.
