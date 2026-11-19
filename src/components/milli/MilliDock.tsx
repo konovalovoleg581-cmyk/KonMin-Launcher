@@ -280,8 +280,8 @@ function Composer() {
               rows={1}
               value={text}
               maxLength={MILLI_TEXT_MAX}
-              aria-label={t('Сообщение Милли')}
-              placeholder={t('Напиши Милли…')}
+              aria-label={t('Сообщение КонМинли')}
+              placeholder={t('Напиши КонМинли…')}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
@@ -364,7 +364,7 @@ function PlusNudges({ m, asked }: { m: MilliMessage; asked: string }) {
           <PxArt name="glowstone" size={28} className="mci" />
           <span>
             {asks ? t('Шейдеры, паки и карты — с PLUS') : t('С PLUS добавлю шейдеры и карту')}
-            <small>{t('Милли поставит их в сборку сама')}</small>
+            <small>{t('КонМинли поставит их в сборку сама')}</small>
           </span>
           <em>PLUS</em>
         </button>
@@ -494,7 +494,7 @@ function Thinking() {
   const live = stages.some((st) => st.key !== 'plan')
   const step = milliThinkStep(elapsed)
   return (
-    <div className="ml-msg ml-think" aria-busy="true" aria-label={t('Милли думает')}>
+    <div className="ml-msg ml-think" aria-busy="true" aria-label={t('КонМинли думает')}>
       <MilliAva mode="think" spin />
       <div className="ml-col">
         <div className={'ml-bubble ' + (live ? 'ml-think' : 'ml-typing-b')}>
@@ -503,7 +503,7 @@ function Thinking() {
               <MilliProgress stages={stages} title={editing ? t('Правлю сборку…') : t('Собираю сборку…')} onStop={cancelMilli} />
             ) : (
               // Этапов сборки нет — это обычный ответ в разговоре: просто «печатает».
-              <span className="ml-typing" aria-label={t('Милли печатает')}>
+              <span className="ml-typing" aria-label={t('КонМинли печатает')}>
                 <i />
                 <i />
                 <i />
@@ -643,7 +643,7 @@ function Hello({ mood }: { mood: MilliMode }) {
       {free ? (
         <button type="button" className={'ml-tryon' + (tryOn ? ' on' : '')} data-track="milli_plus_upsell" data-src="tryon" onClick={() => openPlusSheet('tryon')} tabIndex={tryOn ? 0 : -1} aria-hidden={!tryOn}>
           <PxIcon name="crown" size={12} />
-          {t('Милли с PLUS')}
+          {t('КонМинли с PLUS')}
         </button>
       ) : null}
       <div className="ml-say" style={g === undefined ? { visibility: 'hidden' } : undefined}>
@@ -785,7 +785,7 @@ function Panel() {
   ) : off || blocked ? (
     <div className="ml-state">
       <Milli size={96} mode="idle" />
-      <b>{off ? t('Милли отдыхает') : t('Милли тебе недоступна')}</b>
+      <b>{off ? t('КонМинли отдыхает') : t('КонМинли тебе недоступна')}</b>
     </div>
   ) : view === 'history' ? (
     <History />
@@ -808,7 +808,7 @@ function Panel() {
       className={
         'ml-panel' + (open || shown ? ' on' : '') + (!open && shown ? ' is-closing' : '') + (pending ? ' is-busy' : '') + (mood === 'happy' ? ' is-happy' : '') + ' tier-' + milliLook(status)
       }
-      aria-label={t('Милли')}
+      aria-label={t('КонМинли')}
       aria-hidden={!open}
       data-section="milli"
     >
@@ -872,9 +872,9 @@ function Panel() {
 function Fab() {
   const t = useT()
   return (
-    <button type="button" className="mlf milli-wave-hover" data-sound="open" data-track="milli_fab" aria-label={t('Милли')} onClick={() => openMilli({ src: 'fab' })}>
+    <button type="button" className="mlf milli-wave-hover" data-sound="open" data-track="milli_fab" aria-label={t('КонМинли')} onClick={() => openMilli({ src: 'fab' })}>
       <Milli size={60} mode="idle" />
-      <span className="mlf-lab">{t('Милли')}</span>
+      <span className="mlf-lab">{t('КонМинли')}</span>
     </button>
   )
 }

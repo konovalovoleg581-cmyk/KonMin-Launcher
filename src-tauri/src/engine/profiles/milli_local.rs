@@ -115,11 +115,11 @@ pub(crate) fn milli_file_path(pdir: &Path, rel: &str) -> Result<(String, PathBuf
         return Ok((norm, safe_join(pdir, OPTIONS)?));
     }
     let Some(inner) = norm.strip_prefix("config/") else {
-        return Err(format!("Милли правит только options.txt и папку config, а не «{}»", rel));
+        return Err(format!("КонМинли правит только options.txt и папку config, а не «{}»", rel));
     };
     let ext = Path::new(inner).extension().and_then(|e| e.to_str()).map(|e| e.to_ascii_lowercase()).unwrap_or_default();
     if !CONFIG_EXTS.contains(&ext.as_str()) {
-        return Err(format!("«{}» — не текстовый конфиг, Милли его не трогает", rel));
+        return Err(format!("«{}» — не текстовый конфиг, КонМинли его не трогает", rel));
     }
     let target = safe_join(&pdir.join("config"), inner)?;
     Ok((norm, target))
@@ -203,14 +203,14 @@ pub fn milli_files_write(pdir: &Path, edits: &[LocalFileEdit]) -> Result<Vec<Loc
         let (_, target) = milli_file_path(pdir, &e.path)?;
         if let Some(t) = &e.text {
             if t.len() as u64 > MAX_TEXT_BYTES {
-                return Err(format!("«{}» больше {} КБ — такой конфиг Милли не пишет", e.path, MAX_TEXT_BYTES / 1024));
+                return Err(format!("«{}» больше {} КБ — такой конфиг КонМинли не пишет", e.path, MAX_TEXT_BYTES / 1024));
             }
         }
         if let Some(want) = &e.expect {
             let now = read_one(pdir, &e.path)?;
             let same = if want.is_empty() { !now.exists } else { now.exists && now.sha1.eq_ignore_ascii_case(want) };
             if !same {
-                return Err(format!("«{}» изменился, пока Милли его правила: попроси её ещё раз", e.path));
+                return Err(format!("«{}» изменился, пока КонМинли его правила: попроси её ещё раз", e.path));
             }
         }
         plan.push((e, target));
@@ -242,7 +242,7 @@ pub fn milli_note_read(pdir: &Path, name: &str) -> Result<Option<String>, String
     match std::fs::read_to_string(&p) {
         Ok(s) => Ok(Some(s)),
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
-        Err(e) => Err(io_fail("Чтение дневника Милли", &p, &e)),
+        Err(e) => Err(io_fail("Чтение дневника КонМинли", &p, &e)),
     }
 }
 
@@ -250,7 +250,7 @@ pub fn milli_note_write(pdir: &Path, name: &str, text: &str) -> Result<(), Strin
     existing_build(pdir)?;
     let p = note_path(pdir, name)?;
     if text.len() > MAX_NOTE_BYTES {
-        return Err("Дневник Милли слишком большой для записи".into());
+        return Err("Дневник КонМинли слишком большой для записи".into());
     }
     let _g = locked();
     write_bytes_atomic(&p, text.as_bytes())

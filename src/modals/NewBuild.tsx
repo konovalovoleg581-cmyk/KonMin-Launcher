@@ -458,7 +458,7 @@ export function NewBuildModal() {
             }}
           >
             <PxIcon name="sparkle" size={18} />
-            {t('Собрать с Милли')}
+            {t('Собрать с КонМинли')}
           </button>
           <button className="btn md secondary" id="nbCancel" data-sound="close" onClick={close}>
             {t('Отмена')}

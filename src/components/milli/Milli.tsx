@@ -24,6 +24,7 @@ import {
   MILLI_IRIS,
   MILLI_LEGS,
   MILLI_NOSE,
+  MILLI_FACE_FIT,
   MILLI_NOTE,
   MILLI_NOTES,
   MILLI_PUFF,
@@ -32,11 +33,11 @@ import {
   MILLI_RIM,
   MILLI_SHADOW,
   MILLI_SHADOW_SHIFT,
+  MILLI_SHADOW_SHIFT_X,
   MILLI_SHOULDER_Y,
   MILLI_SLEEP_AFTER,
   MILLI_SPARK,
   MILLI_SPARKS,
-  MILLI_SPROUT,
   MILLI_STEPS,
   MILLI_TILE,
   MILLI_TOTEM,
@@ -475,38 +476,39 @@ function sprite(sl: Slots, crown: 'gold' | 'diamond' | null = null) {
           ))}
         </g>
         <g className="mm-rig">
-          <Pivot x={MILLI_SPROUT.stem.x + MILLI_SPROUT.stem.w / 2} y={MILLI_SPROUT.stem.y + MILLI_SPROUT.stem.h} className="mm-sprout">
-            <Box b={milliGrow(MILLI_SPROUT.stem, 4)} className="mm-outline" />
-            <path d={milliCut(milliGrow(MILLI_SPROUT.leafR, 4), 8)} className="mm-outline" />
-            <path d={milliCut(milliGrow(MILLI_SPROUT.leafL, 4), 8)} className="mm-outline" />
-            <Box b={MILLI_SPROUT.stem} className="mm-leaf-dk" />
-            <path d={milliCut(MILLI_SPROUT.leafR, 6)} className="mm-leaf" />
-            <path d={milliCut(MILLI_SPROUT.leafL, 6)} className="mm-leaf" />
-            <Box b={{ x: MILLI_SPROUT.leafR.x + 6, y: MILLI_SPROUT.leafR.y + 12, w: MILLI_SPROUT.leafR.w - 12, h: 8 }} className="mm-leaf-dk" />
-            <Box b={{ x: MILLI_SPROUT.leafL.x + 6, y: MILLI_SPROUT.leafL.y + 12, w: MILLI_SPROUT.leafL.w - 12, h: 8 }} className="mm-leaf-dk" />
-          </Pivot>
+          {/* KonMinli carries the spark of the KonMin mark in its K, so there is no antenna. */}
           <g className="mm-back mm-back-l">
             <Arm a={MILLI_ARMS.l} side="l" />
           </g>
           <g className="mm-back mm-back-r">
             <Arm a={MILLI_ARMS.r} side="r" />
           </g>
-          <path d={MILLI_TILE} className="mm-body" />
-          <Box b={MILLI_BEVEL.top} className="mm-hi" />
-          <Box b={MILLI_BEVEL.left} className="mm-hi2" />
-          <Box b={MILLI_BEVEL.right} className="mm-sh" />
+          <defs>
+            {/* Same gradient as the KonMin mark. Every instance defines it identically, so a shared id is harmless. */}
+            <linearGradient id="konminli-tile" x1="0" y1="0" x2="376" y2="376" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stopColor="#3D8BFF" />
+              <stop offset="1" stopColor="#7B5CFF" />
+            </linearGradient>
+          </defs>
+          <path d={MILLI_TILE} className="mm-body" fill="url(#konminli-tile)" />
+          <path d={MILLI_BEVEL.top} className="mm-hi" />
+          <path d={MILLI_BEVEL.left} className="mm-hi2" />
+          <path d={MILLI_BEVEL.right} className="mm-sh" />
           <path d={MILLI_BEVEL.bottom} className="mm-sh2" />
           <path d={MILLI_RIM} fillRule="evenodd" className="mm-rim" />
           <g className="mm-face">
             <g transform={`translate(0 ${MILLI_GLYPH_LIFT})`}>
-              <g transform={`translate(${MILLI_SHADOW_SHIFT} ${MILLI_SHADOW_SHIFT})`} className="mm-gsh">
+              <g transform={`translate(${MILLI_SHADOW_SHIFT_X} ${MILLI_SHADOW_SHIFT})`} className="mm-gsh">
                 <path d={MILLI_FRAME} />
                 <path d={MILLI_STEPS} />
                 <Box b={MILLI_NOSE} />
               </g>
               <path d={MILLI_FRAME} className="mm-glyph" />
               <path d={MILLI_STEPS} className="mm-glyph" />
-              <Box b={MILLI_NOSE} className="mm-glyph" />
+              <Box b={MILLI_NOSE} className="mm-kspark" />
+            </g>
+            {/* The face sits in the empty fields of the KonMin mark: drawn in face units, fitted onto the tile. */}
+            <g transform={`translate(${MILLI_FACE_FIT.dx} ${MILLI_FACE_FIT.dy}) scale(${MILLI_FACE_FIT.s})`}>
               <g className="mm-cheeks">
                 {MILLI_CHEEKS.map((b, i) => (
                   <Box key={i} b={b} className="mm-cheek" />

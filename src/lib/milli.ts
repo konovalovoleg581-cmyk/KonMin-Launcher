@@ -442,12 +442,12 @@ export interface MilliError {
 const ERROR_TEXT: Record<MilliErrorKind, string> = {
   get auth() { return t('Войди в аккаунт Millida') },
   get limit() { return t('Лимит на сегодня') },
-  get busy() { return t('Милли ещё думает над прошлым') },
-  get blocked() { return t('Милли тебе недоступна') },
-  get off() { return t('Милли отдыхает — скоро вернётся') },
+  get busy() { return t('КонМинли ещё думает над прошлым') },
+  get blocked() { return t('КонМинли тебе недоступна') },
+  get off() { return t('КонМинли отдыхает — скоро вернётся') },
   get plus() { return t('Это в PLUS') },
   get offline() { return t('Нет связи с Millida') },
-  get failed() { return t('Милли не ответила') },
+  get failed() { return t('КонМинли не ответила') },
 }
 
 const err = (kind: MilliErrorKind, scope?: 'day' | 'month'): MilliError => ({

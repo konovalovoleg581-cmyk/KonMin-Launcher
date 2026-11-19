@@ -108,7 +108,7 @@ interface Tag {
 }
 
 /** Сборку собрала Милли (30.09.2026): её маскот первой меткой, как на сайте. */
-const milliTag = (): Tag => ({ label: t('Милли'), accent: true, bare: true, node: <Milli size={18} /> })
+const milliTag = (): Tag => ({ label: t('КонМинли'), accent: true, bare: true, node: <Milli size={18} /> })
 
 /** Метка «RU · На русском». Подсказка про студию — только у переводов студии (`by`), русские авторы без неё. */
 const RuMark = ({ className, by }: { className: string; by?: string }) => (

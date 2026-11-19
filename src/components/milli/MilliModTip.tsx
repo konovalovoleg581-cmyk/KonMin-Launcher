@@ -490,7 +490,7 @@ export function MilliModTip({
       {m.risk === 'risky' ? (
         <p className="mtip-risk">
           <PxIcon name="alert" size={10} />
-          <span>{m.riskNote || t('У этой версии была проблема — Милли её обошла')}</span>
+          <span>{m.riskNote || t('У этой версии была проблема — КонМинли её обошла')}</span>
         </p>
       ) : null}
 

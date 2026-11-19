@@ -212,7 +212,7 @@ export function packRepairText(r: Pick<PackRepair, 'done' | 'failed' | 'unresolv
   const head = r.done.length ? t('Готово: {list}. Запусти игру', { list: r.done.join('; ') }) : ''
   const fail = r.failed.length ? t('Не вышло: {list}', { list: r.failed.join('; ') }) : ''
   if (head || fail) return [head, fail].filter(Boolean).join('. ')
-  if (r.unresolved) return t('Файлы в порядке, а причину вылета автоматом не убрать — Милли разберёт лог')
+  if (r.unresolved) return t('Файлы в порядке, а причину вылета автоматом не убрать — КонМинли разберёт лог')
   return r.filesText || t('Всё на месте: файлы игры сверены по хешам')
 }
 

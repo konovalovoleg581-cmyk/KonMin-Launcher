@@ -12,24 +12,28 @@
 
 .milli {
   position: relative; display: inline-block; flex: none; line-height: 0;
-  --milli-body: #5ec64d; --milli-ink: #1b1f1c; --milli-glyph: #ffffff; --milli-cheek: #f59aa8; --milli-tongue: #e8566b;
+  --milli-body: #5c84ff; --milli-ink: #1b1f1c; --milli-glyph: #ffffff; --milli-cheek: #f59aa8; --milli-tongue: #e8566b;
 }
 .milli svg { display: block; overflow: visible; }
 .milli svg g { transform-origin: 0 0; }
 
 /* ── Палитра ── */
-.mm-body, .mm-limb { fill: #5ec64d; fill: var(--milli-body); }
-.mm-hi { fill: #fff; opacity: 0.3; }
+.mm-limb { fill: #5c84ff; fill: var(--milli-body); }
+/* The KonMin mark's gradient (defined once in Milli.tsx); plain accent blue where url() fails. */
+.mm-body { fill: #5c84ff; fill: url(#konminli-tile); }
+.mm-hi { fill: #fff; opacity: 0.22; }
 .mm-hi2 { fill: #fff; opacity: 0.1; }
-.mm-sh { fill: #1b1f1c; opacity: 0.14; }
-.mm-sh2 { fill: #1b1f1c; opacity: 0.32; }
-.mm-rim { fill: #1b1f1c; opacity: 0.16; }
-.mm-gsh { fill: #1b1f1c; opacity: 0.22; }
+.mm-sh { fill: #0b0d2a; opacity: 0.1; }
+.mm-sh2 { fill: #0b0d2a; opacity: 0.14; }
+/* The KonMin mark has a light inner rim, not a dark one. */
+.mm-rim { fill: #fff; opacity: 0.14; }
+.mm-gsh { fill: #0b0d2a; opacity: 0.3; }
 .mm-glyph, .mm-glint, .mm-glove { fill: #fff; fill: var(--milli-glyph); }
-.mm-iris-hi { fill: #57e0c4; }
-.mm-iris-lo { fill: #1f8f93; }
-.mm-leaf { fill: #8be35f; }
-.mm-leaf-dk { fill: #3fae4a; }
+.mm-kspark { fill: #5ef0ff; }
+.mm-iris-hi { fill: #8ff5ff; }
+.mm-iris-lo { fill: #1fb5d6; }
+.mm-leaf { fill: #5ef0ff; }
+.mm-leaf-dk { fill: #3b4fc4; }
 .mm-ink, .mm-boot { fill: #1b1f1c; fill: var(--milli-ink); }
 .mm-cheek { fill: #f59aa8; fill: var(--milli-cheek); }
 .mm-tongue { fill: #e8566b; fill: var(--milli-tongue); }

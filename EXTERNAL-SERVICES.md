@@ -34,7 +34,7 @@ Requests identify themselves honestly with the User-Agent `KonMinLauncher/<versi
 
 | Host | What depends on it |
 | --- | --- |
-| `api.millida.net` (`/v2`) | Millida account sign-in and session refresh, friends, chat, calls signalling, parties, cloud profile sync, Millida catalog and paid packs, wallet and purchases, Millida skins/capes/cosmetics, hosting panel, feedback, share codes, CurseForge **search proxy**, remote translations and remote UI screens (signed), usage statistics (opt-in in KonMin), error reports |
+| `api.millida.net` (`/v2`) | the KonMinli AI assistant (upstream "Milli": chat, modpack building, crash analysis), Millida account sign-in and session refresh, friends, chat, calls signalling, parties, cloud profile sync, Millida catalog and paid packs, wallet and purchases, Millida skins/capes/cosmetics, hosting panel, feedback, share codes, CurseForge **search proxy**, remote translations and remote UI screens (signed), usage statistics (opt-in in KonMin), error reports |
 | `wss://api.millida.net` | realtime events (friends, calls, rooms) |
 | `millida.net` | account pages (`/auth/launcher`, profiles `/u/<nick>`), site catalog pages, public share pages |
 | `cdn.millida.net`, `cdn.millida.trade`, `millida.trade` | catalog art, cosmetics and store images |

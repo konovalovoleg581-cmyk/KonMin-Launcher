@@ -13,7 +13,7 @@
    Движение — только transform/opacity и steps. */
 .milli {
   position: relative; display: inline-block; flex: none; line-height: 0;
-  --milli-body: #5ec64d; --milli-ink: #1b1f1c; --milli-glyph: #ffffff; --milli-cheek: #f59aa8; --milli-tongue: #e8566b;
+  --milli-body: #5c84ff; --milli-ink: #1b1f1c; --milli-glyph: #ffffff; --milli-cheek: #f59aa8; --milli-tongue: #e8566b;
 }
 .milli svg { display: block; overflow: visible; }
 .milli-body { fill: var(--milli-body); }
@@ -24,10 +24,10 @@
 .milli-rim { fill: var(--milli-ink); opacity: 0.16; }
 .milli-gsh { fill: var(--milli-ink); opacity: 0.22; }
 .milli-glyph, .milli-glint { fill: var(--milli-glyph); }
-.milli-iris { fill: #1f8f93; }
-.milli-iris-hi { fill: #57e0c4; }
-.milli-leaf { fill: #8be35f; }
-.milli-leaf-dk { fill: #3fae4a; }
+.milli-iris { fill: #1fb5d6; }
+.milli-iris-hi { fill: #8ff5ff; }
+.milli-leaf { fill: #5ef0ff; }
+.milli-leaf-dk { fill: #3b4fc4; }
 .milli-ink { fill: var(--milli-ink); }
 .milli-cheek { fill: var(--milli-cheek); }
 .milli-tongue { fill: var(--milli-tongue); }
@@ -297,10 +297,10 @@
 /* Частицы, как у сломанного блока: вбок (внешний слой), вверх и вниз под тяжестью (внутренний), гаснут ступенями */
 .mlb { position: absolute; z-index: 3; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
 .mlb i { position: absolute; left: -2px; top: -2px; animation: ml-px-x 760ms steps(10, end) both; }
-.mlb b { display: block; width: 100%; height: 100%; background: #5ec64d; box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.3); animation: ml-px-y 760ms steps(10, end) both; }
-.mlb i:nth-child(3n) b { background: #8be35f; }
+.mlb b { display: block; width: 100%; height: 100%; background: #5c84ff; box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.3); animation: ml-px-y 760ms steps(10, end) both; }
+.mlb i:nth-child(3n) b { background: #5ef0ff; }
 .mlb i:nth-child(4n) b { background: #ffffff; }
-.mlb i:nth-child(5n) b { background: #3fae4a; }
+.mlb i:nth-child(5n) b { background: #7b5cff; }
 @keyframes ml-px-x { 0% { transform: translateX(0); } 100% { transform: translateX(var(--dx)); } }
 @keyframes ml-px-y {
   0% { transform: translateY(0); opacity: 1; animation-timing-function: var(--m-ease-smooth); }

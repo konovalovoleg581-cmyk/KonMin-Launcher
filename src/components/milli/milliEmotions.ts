@@ -14,7 +14,7 @@
  * Эмоцию можно держать и режимом: <Milli mode="search" /> / useMilli mood.
  */
 
-import { milliCell, milliMirror, MILLI_EYES, type MilliBox } from './milliMascot'
+import { milliMirror, MILLI_EYES, MILLI_MOUTH_CELL, type MilliBox } from './milliMascot'
 
 /** Эмоции. `disco` — танец на готовую сборку (`dance` занят старым режимом = happy). */
 export const MILLI_EMOTIONS = [
@@ -408,7 +408,7 @@ export const MILLI_MOUTHS_EX = {
   blep: ['XXXXX.', '...TT.', '...TT.'],
 } as const
 export type MilliMouthEx = keyof typeof MILLI_MOUTHS_EX
-const BELOW = milliCell(2, 3)
+const BELOW = MILLI_MOUTH_CELL
 export function milliMouthExBox(kind: MilliMouthEx): MilliBox {
   const rows = MILLI_MOUTHS_EX[kind]
   const w = Math.max(...rows.map((r) => r.length)) * 7

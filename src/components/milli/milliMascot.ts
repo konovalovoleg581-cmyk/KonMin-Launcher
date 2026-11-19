@@ -1,21 +1,17 @@
 /**
- * Милли — персонаж из логотипа Millida (владелец 30.09.2026 16:11: «персонаж с
- * ручками и ножками в стиле логотипа, очень милый и запоминающийся»).
+ * КонМинли (KonMinli) — ИИ-помощник и маскот KonMin Launcher: сам логотип KonMin, ставший персонажем.
  *
- * Тело — ровно знак из `public/millida-logo.svg`; к нему приделаны пиксельные
- * ручки в белых перчатках (белый — цвет скобки знака) и ножки в тёмных ботинках
- * (цвет глаз). Ручки и ножки лежат ПОД телом: их корень прячется за знаком, и
- * без конечностей Милли — всё тот же логотип.
+ * Тело — плитка знака как есть: квадрат 376 со скруглением 84, градиент #3D8BFF → #7B5CFF, белая
+ * пиксельная буква K на сетке 7×7 по 30 (от 83 до 293, тень со сдвигом), голубая искра в клетке (6,0).
+ * Ни размер, ни место буквы не меняются: лицо живёт в пустых полях самого знака — маленькие глаза
+ * в верхнем поле над буквой, улыбка и щёки в нижнем поле под ней. Ручки растут из боков плитки,
+ * ножки — снизу, и только у персонажа: логотип и иконка приложения — та же плитка с лицом без них.
  *
- * Геометрия — ровно знак из `public/millida-logo.svg` (поле 376×376, кубик со
- * срезанными углами и белая скобка), разложенный на части, чтобы лицо жило
- * отдельно: скобка — шлем, белый квадрат в центре — нос, глаза стоят в пустых
- * клетках по бокам от него, рот — в клетке под ним. Сетка знака — 5×5 клеток
- * по ~44,57 от 76,38 до 299,22; лицо не заходит на белые клетки, поэтому без глаз
- * Милли — тот же логотип, пиксель в пиксель.
+ * Лицо рисуется в своих координатах («лицо», как у прежнего маскота) и ставится на плитку одним
+ * преобразованием `MILLI_FACE_FIT`: глаза, все кадры эмоций и рты уменьшаются вместе.
  *
- * Тот же файл лежит в лаунчере (`src/components/milli/milliMascot.ts`): маскот
- * один на сайте и в приложении.
+ * Механика персонажа (кадры, эмоции, ручки и ножки, взгляд) унаследована от маскота Milli
+ * из Millida Launcher; знак Millida из тела убран.
  */
 import type { MilliEmotion } from './milliEmotions'
 
@@ -40,48 +36,87 @@ export const MILLI_VIEW = 376
  */
 export const MILLI_FRAME_BOX = { x: -96, y: -96, size: 568 } as const
 
-/** Клетка сетки скобки: столбец и строка 0…4 → прямоугольник в координатах знака. */
-export const MILLI_GRID = { x0: 76.38, step: 44.568 } as const
+/** Сетка буквы K логотипа KonMin: 7×7 клеток по 30, ровно как в знаке (от 83 до 293). */
+export const MILLI_GRID = { x0: 83, y0: 83, step: 30 } as const
 export function milliCell(col: number, row: number): MilliBox {
-  const { x0, step } = MILLI_GRID
-  return { x: x0 + col * step, y: x0 + row * step, w: step, h: step }
+  const { x0, y0, step } = MILLI_GRID
+  return { x: x0 + col * step, y: y0 + row * step, w: step, h: step }
 }
 
-/** Белые клетки скобки: строка за строкой, 1 — белая. */
+/** Буква K логотипа KonMin по клеткам, строка за строкой (1 — белая). Клетка (6,0) — голубая искра. */
 export const MILLI_GLYPH_CELLS: readonly (readonly number[])[] = [
-  [1, 1, 1, 0, 1],
-  [1, 0, 0, 1, 0],
-  [1, 0, 1, 0, 1],
-  [1, 0, 0, 0, 1],
-  [1, 1, 1, 1, 1],
+  [1, 1, 0, 0, 0, 1, 1],
+  [1, 1, 0, 0, 1, 1, 0],
+  [1, 1, 0, 1, 1, 0, 0],
+  [1, 1, 1, 1, 0, 0, 0],
+  [1, 1, 0, 1, 1, 0, 0],
+  [1, 1, 0, 0, 1, 1, 0],
+  [1, 1, 0, 0, 0, 1, 1],
 ]
 
-export const MILLI_TILE = 'M24 0H352V24H376V352H352V376H24V352H0V24H24Z'
-/** Внутренний ободок толщиной 10 — тот же, что обводка знака с clip-path, но без id в DOM. */
-export const MILLI_RIM = `${MILLI_TILE}M34 10V34H10V342H34V366H342V342H366V34H342V10Z`
+/** Плитка знака KonMin: квадрат 376 со скруглением 84. */
+export const MILLI_TILE = 'M84 0H292A84 84 0 0 1 376 84V292A84 84 0 0 1 292 376H84A84 84 0 0 1 0 292V84A84 84 0 0 1 84 0Z'
+/** Внутренний ободок толщиной 10 по той же скруглённой форме. */
+export const MILLI_RIM = `${MILLI_TILE}M84 10H292A74 74 0 0 1 366 84V292A74 74 0 0 1 292 366H84A74 74 0 0 1 10 292V84A74 74 0 0 1 84 10Z`
+/** Блик сверху и слева, тень справа и снизу — полосы, обрезанные по скруглённым углам. */
 export const MILLI_BEVEL = {
-  top: { x: 24, y: 0, w: 328, h: 18 },
-  left: { x: 0, y: 24, w: 18, h: 328 },
-  right: { x: 358, y: 24, w: 18, h: 328 },
-  bottom: 'M0 346H376V352H352V376H24V352H0Z',
+  top: 'M32.04 18A84 84 0 0 1 84 0H292A84 84 0 0 1 343.96 18Z',
+  left: 'M18 32.04A84 84 0 0 0 0 84V292A84 84 0 0 0 18 343.96Z',
+  right: 'M358 32.04A84 84 0 0 1 376 84V292A84 84 0 0 1 358 343.96Z',
+  bottom: 'M19.66 346H356.34A84 84 0 0 1 292 376H84A84 84 0 0 1 19.66 346Z',
 } as const
 
-/** Скобка без центрального квадрата: рама и ступенька. Квадрат-нос рисуется отдельно. */
-export const MILLI_FRAME =
-  'M210.071 120.946H120.949V254.654H254.641L254.642 165.517H299.209V254.654H299.222V299.222H76.3809V120.946H76.3672V76.3774H210.071V120.946Z'
-export const MILLI_STEPS = 'M299.209 120.947H254.656V165.515H210.088V120.947H254.641V76.3784H299.209V120.947Z'
-export const MILLI_NOSE: MilliBox = { x: 165.503, y: 165.516, w: 44.568, h: 44.568 }
-/** Скобка в знаке поднята на 8 и отбрасывает тень со сдвигом 10. */
-export const MILLI_GLYPH_LIFT = -8
+/** Строки буквы K прямоугольниками: соседние клетки строки сливаются, искра (6,0) — отдельно. */
+function glyphRuns(fromRow: number, toRow: number): MilliBox[] {
+  const out: MilliBox[] = []
+  for (let r = fromRow; r <= toRow; r++) {
+    const row = MILLI_GLYPH_CELLS[r] ?? []
+    for (let c = 0; c < row.length; c++) {
+      if (!row[c] || (r === 0 && c === 6)) continue
+      let end = c
+      while (row[end + 1] && !(r === 0 && end + 1 === 6)) end++
+      const cell = milliCell(c, r)
+      out.push({ ...cell, w: cell.w * (end - c + 1) })
+      c = end
+    }
+  }
+  return out
+}
+const boxPath = (rs: readonly MilliBox[]) => rs.map((b) => `M${b.x} ${b.y}H${b.x + b.w}V${b.y + b.h}H${b.x}Z`).join('')
+const GLYPH_UPPER = glyphRuns(0, 3)
+const GLYPH_LOWER = glyphRuns(4, 6)
+
+/** Буква K прямоугольниками (без искры): по ним тест проверяет, что лицо её не закрывает. */
+export const MILLI_GLYPH_RECTS: readonly MilliBox[] = [...GLYPH_UPPER, ...GLYPH_LOWER]
+/** Ствол и верхнее плечо буквы K. */
+export const MILLI_FRAME = boxPath(GLYPH_UPPER)
+/** Нижняя нога буквы K. */
+export const MILLI_STEPS = boxPath(GLYPH_LOWER)
+/** Голубая искра логотипа — клетка (6,0) буквы. Имя `NOSE` осталось от прежнего маскота. */
+export const MILLI_NOSE: MilliBox = milliCell(6, 0)
+export const MILLI_GLYPH_LIFT = 0
 export const MILLI_SHADOW_SHIFT = 10
+/** Тень буквы в знаке KonMin сдвинута на (8, 10). */
+export const MILLI_SHADOW_SHIFT_X = 8
 
 function centered(cell: MilliBox, w: number, h: number, dy = 0): MilliBox {
   return { x: cell.x + (cell.w - w) / 2, y: cell.y + (cell.h - h) / 2 + dy, w, h }
 }
 
-const LEFT = milliCell(1, 2)
-const RIGHT = milliCell(3, 2)
-const BELOW = milliCell(2, 3)
+/**
+ * Лицо → плитка: x' = s·x + dx, y' = s·y + dy. Глаза (в координатах лица 6…130 по высоте) ложатся
+ * в верхнее поле знака над буквой, место улыбки — в нижнее поле под ней.
+ */
+export const MILLI_FACE_FIT = { s: 0.5, dx: 94, dy: 14 } as const
+export function milliFaceToTile(b: MilliBox): MilliBox {
+  const { s, dx, dy } = MILLI_FACE_FIT
+  return { x: b.x * s + dx, y: b.y * s + dy, w: b.w * s, h: b.h * s }
+}
+/** Место улыбки в координатах лица: на плитке это полоса 305…341 под буквой, по центру. */
+export const MILLI_MOUTH_CELL: MilliBox = { x: 188 - 44, y: 584, w: 88, h: 72 }
+const BELOW = MILLI_MOUTH_CELL
+const LEFT: MilliBox = { ...BELOW, x: BELOW.x - 96 }
+const RIGHT: MilliBox = { ...BELOW, x: BELOW.x + 96 }
 
 /**
  * Глаза в пиксельном аниме-стиле (владелец 30.09.2026 20:51: «большие красивые
@@ -139,9 +174,9 @@ export const MILLI_CHEEKS: readonly MilliBox[] = [
  * листика ступеньками — правый выше. Рисуется ДО тела, корень спрятан.
  */
 export const MILLI_SPROUT = {
-  stem: { x: 340, y: -10, w: 8, h: 26 } as MilliBox,
-  leafR: { x: 348, y: -26, w: 24, h: 16 } as MilliBox,
-  leafL: { x: 318, y: -16, w: 22, h: 14 } as MilliBox,
+  stem: { x: 300, y: -30, w: 12, h: 46 } as MilliBox,
+  leafR: { x: 290, y: -62, w: 32, h: 32 } as MilliBox,
+  leafL: { x: 328, y: -78, w: 14, h: 14 } as MilliBox,
 } as const
 export const MILLI_MOUTH_SHUT: MilliBox = centered(BELOW, 24, 8, -8)
 export const MILLI_MOUTH_OPEN: MilliBox = centered(BELOW, 30, 24, -2)
@@ -168,9 +203,9 @@ export function milliJoy(eye: MilliBox): MilliBox[] {
 
 /** Точки «думает» над правым верхним углом. */
 export const MILLI_DOTS: readonly MilliBox[] = [
-  { x: 300, y: -40, w: 20, h: 20 },
-  { x: 332, y: -56, w: 20, h: 20 },
-  { x: 364, y: -40, w: 20, h: 20 },
+  { x: 332, y: -40, w: 20, h: 20 },
+  { x: 356, y: -60, w: 20, h: 20 },
+  { x: 380, y: -40, w: 20, h: 20 },
 ]
 
 /**

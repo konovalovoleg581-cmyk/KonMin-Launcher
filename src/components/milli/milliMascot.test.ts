@@ -26,6 +26,9 @@ import {
   milliExtent,
   MILLI_EYES,
   MILLI_GLYPH_CELLS,
+  MILLI_GLYPH_RECTS,
+  MILLI_MOUTH_CELL,
+  milliFaceToTile,
   MILLI_MOUTH_OPEN,
   MILLI_MOUTH_SHUT,
   MILLI_IRIS,
@@ -44,27 +47,54 @@ const whiteCells: MilliBox[] = MILLI_GLYPH_CELLS.flatMap((row, r) =>
 )
 
 describe('маскот Милли — логотип с лицом', () => {
-  it('центральный квадрат знака — клетка (2,2) сетки', () => {
-    const c = milliCell(2, 2)
+  it('искра логотипа KonMin — правая верхняя клетка буквы K', () => {
+    const c = milliCell(6, 0)
+    expect(MILLI_GLYPH_CELLS[0]?.[6]).toBe(1)
     expect(Math.abs(c.x - MILLI_NOSE.x)).toBeLessThan(0.5)
     expect(Math.abs(c.y - MILLI_NOSE.y)).toBeLessThan(0.5)
   })
 
+  it('буква K логотипа целиком видна: глаза её не закрывают и лицо не выходит за плитку', () => {
+    const tile = { x: 0, y: 0, w: MILLI_VIEW, h: MILLI_VIEW }
+    for (const raw of MILLI_EYES) {
+      const e = milliFaceToTile(raw)
+      for (const cell of whiteCells) expect(overlaps(e, cell), JSON.stringify([e, cell])).toBe(false)
+      expect(inside(e, tile), JSON.stringify(e)).toBe(true)
+    }
+    expect(inside(milliFaceToTile(MILLI_MOUTH_CELL), tile)).toBe(true)
+  })
+
+  it('буква K стоит ровно как в логотипе KonMin: сетка 7×7 по 30 от 83 до 293', () => {
+    const xs = MILLI_GLYPH_RECTS.flatMap((r) => [r.x, r.x + r.w])
+    const ys = MILLI_GLYPH_RECTS.flatMap((r) => [r.y, r.y + r.h])
+    expect(Math.min(...xs)).toBe(83)
+    expect(Math.max(...xs)).toBe(293)
+    expect(MILLI_NOSE.x + MILLI_NOSE.w).toBe(293)
+    expect(Math.min(...ys)).toBe(83)
+    expect(Math.max(...ys)).toBe(293)
+  })
+
   it('рот и щёки не заходят на белые клетки; глаза — большие наклейки поверх скобки (владелец 30.09.2026, 21:22)', () => {
     const face = [...MILLI_CHEEKS, MILLI_MOUTH_SHUT, MILLI_MOUTH_OPEN, MILLI_TONGUE]
-    for (const e of MILLI_EYES) expect(overlaps(e, MILLI_NOSE)).toBe(false)
+    for (const e of MILLI_EYES) expect(overlaps(milliFaceToTile(e), MILLI_NOSE)).toBe(false)
     for (const part of face) {
-      for (const cell of whiteCells) expect(overlaps(part, cell), JSON.stringify(part)).toBe(false)
+      for (const cell of whiteCells) expect(overlaps(milliFaceToTile(part), cell), JSON.stringify(part)).toBe(false)
     }
   })
 
-  it('глаза симметричны относительно носа, рот под носом', () => {
-    const nose = MILLI_NOSE.x + MILLI_NOSE.w / 2
+  it('глаза симметричны относительно центра плитки, улыбка под буквой K', () => {
+    const nose = MILLI_VIEW / 2
     const [l, r] = MILLI_EYES as [MilliBox, MilliBox]
     expect(Math.abs(nose - (l.x + l.w / 2) - (r.x + r.w / 2 - nose))).toBeLessThan(0.5)
     expect(l.y).toBe(r.y)
     expect(Math.abs(MILLI_MOUTH_OPEN.x + MILLI_MOUTH_OPEN.w / 2 - nose)).toBeLessThan(0.5)
-    expect(MILLI_MOUTH_OPEN.y).toBeGreaterThan(MILLI_NOSE.y + MILLI_NOSE.h)
+    expect(milliFaceToTile(MILLI_MOUTH_OPEN).y).toBeGreaterThan(Math.max(...MILLI_GLYPH_RECTS.map((r) => r.y + r.h)))
+  })
+
+  it('КонМинли: рот, щёки и язык не задевают ни одного прямоугольника буквы K', () => {
+    const face = [...MILLI_CHEEKS, MILLI_MOUTH_SHUT, MILLI_MOUTH_OPEN, MILLI_TONGUE]
+    for (const part of face) for (const r of MILLI_GLYPH_RECTS) expect(overlaps(milliFaceToTile(part), r), JSON.stringify([part, r])).toBe(false)
+    for (const r of MILLI_GLYPH_RECTS) expect(overlaps(r, MILLI_NOSE)).toBe(false)
   })
 
   it('язык внутри открытого рта', () => {
@@ -100,11 +130,11 @@ describe('Милли — персонаж: ручки и ножки', () => {
 })
 
 describe('Милли — кадры лица', () => {
-  it('все рты лежат в пустой клетке под носом и не задевают белые клетки', () => {
+  it('все рты лежат в месте улыбки под буквой и не задевают её клетки', () => {
     for (const k of Object.keys(MILLI_MOUTHS) as MilliMouth[]) {
       const b = milliMouthBox(k)
-      expect(inside(b, milliCell(2, 3)), k).toBe(true)
-      for (const cell of whiteCells) expect(overlaps(b, cell), k).toBe(false)
+      expect(inside(b, MILLI_MOUTH_CELL), k).toBe(true)
+      for (const cell of whiteCells) expect(overlaps(milliFaceToTile(b), cell), k).toBe(false)
     }
   })
 

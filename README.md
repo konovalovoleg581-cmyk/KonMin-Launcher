@@ -101,12 +101,20 @@ cargo clippy --all-targets -- -D warnings
 cargo test
 ```
 
-## Branding assets
+## KonMinli: logo, icon and AI assistant
 
-- `public/konmin-logo.svg`: the mark (pixel "K" on a blue-violet tile), also `public/favicon.svg`
-- `src-tauri/icons/`: application icons for every platform; regenerate them with
-  `python scripts/gen-app-icons.py` then `bunx tauri icon src-tauri/icons/icon-1024.png -o src-tauri/icons`
-- `branding/`: logo, 1024 px icon and README banner
+<p align="center"><img src="branding/konminli/konminli-welcome.webp" width="640" alt="KonMinli, the KonMin Launcher mascot and AI assistant"></p>
+
+**КонМинли (KonMinli)** is the KonMin logo turned into a character: the same blue-violet tile, pixel K
+and cyan spark, with a face in the logo's empty margins. It is the launcher logo, the application icon
+(window, taskbar, Windows installer) and the in-app AI assistant at once. The assistant's features are
+unchanged from upstream ("Milli"): building modpacks, fixing crashes, tuning configs, chat history.
+It answers through Millida's AI service, so it needs a Millida account sign-in (see
+[EXTERNAL-SERVICES.md](EXTERNAL-SERVICES.md)).
+
+- `branding/`: every KonMinli asset (logo SVG, icon, avatars, expressions, welcome art) and how to
+  regenerate them: [branding/README.md](branding/README.md)
+- `src/components/milli/`: the live mascot (22 emotions, animations) and the assistant
 - Colour tokens: `src/styles/02-kit.css` (`--m-bg #0F1117`, accent `#5C84FF`, gradient `#3D8BFF → #7B5CFF`)
 
 ## Known limitations

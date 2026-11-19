@@ -137,7 +137,7 @@ export function MilliPlusSheet() {
   const per = dia ? n.diamond : n.plus
   const buy = () => void useDaily.getState().startPlus((dia ? 'DIAMOND' : 'PLUS') as PlusTier)
   return (
-    <div className={'mps lp' + (dia ? ' is-diamond' : '')} role="dialog" aria-label={t('Милли с PLUS')} data-src={src}>
+    <div className={'mps lp' + (dia ? ' is-diamond' : '')} role="dialog" aria-label={t('КонМинли с PLUS')} data-src={src}>
       <button type="button" className="mps-x" aria-label={t('Закрыть')} onClick={closeSheet}>
         <PxIcon name="x" size={12} />
       </button>
@@ -148,7 +148,7 @@ export function MilliPlusSheet() {
         <Milli size={96} mode="dance" poke={false} track={false} crown={dia ? 'diamond' : 'gold'} />
       </div>
       <h3 className="mps-title">
-        {t('Милли с')} <em>{dia ? 'PLUS Diamond' : 'PLUS'}</em>
+        {t('КонМинли с')} <em>{dia ? 'PLUS Diamond' : 'PLUS'}</em>
       </h3>
 
       <div className="segs mps-segs" role="tablist" aria-label={t('Тариф')}>
@@ -207,7 +207,7 @@ export function MilliPlusSheet() {
       {/* Милли: сколько сообщений и что она соберёт — сравнение полосами и 4 плитки */}
       <div className="mps-ai" key={dia ? 'dia' : 'plus'}>
         <div className="mps-ai-head">
-          <b>{t('Сообщений Милли в день')}</b>
+          <b>{t('Сообщений КонМинли в день')}</b>
           <span className="mps-ai-x">×{Math.round(per / Math.max(1, n.free))}</span>
         </div>
         <div className="mps-ai-cmp">

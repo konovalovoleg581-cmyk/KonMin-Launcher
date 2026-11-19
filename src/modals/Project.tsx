@@ -660,7 +660,7 @@ export function ProjectModal() {
                 {ctx ? (
                   <span className={'pjx-milli-tag' + (ctx.inPack ? '' : ' out')}>
                     <PxIcon name={ctx.inPack ? 'check' : 'minus'} size={9} />
-                    {ctx.inPack ? t('В сборке Милли') : t('Убран из сборки')}
+                    {ctx.inPack ? t('В сборке КонМинли') : t('Убран из сборки')}
                   </span>
                 ) : null}
               </div>
@@ -741,7 +741,7 @@ export function ProjectModal() {
               {ctx ? (
                 ctx.onBack ? (
                   <button className="pjx-note pjx-back" data-track="milli_back" onClick={backToMilli}>
-                    <PxIcon name="arrow-l" size={10} />{ctx.packTitle ? t('К сборке «{name}»', { name: ctx.packTitle }) : t('К сборке Милли')}
+                    <PxIcon name="arrow-l" size={10} />{ctx.packTitle ? t('К сборке «{name}»', { name: ctx.packTitle }) : t('К сборке КонМинли')}
                   </button>
                 ) : null
               ) : ctaNote && !running ? (
@@ -850,7 +850,7 @@ export function ProjectModal() {
             </article>
             <aside className="pjx-aside">
               {ctx && ctx.why ? (
-                <Plate className="pjx-milli" title={ctx.packTitle ? t('Сборка «{name}»', { name: ctx.packTitle }) : t('Сборка Милли')}>
+                <Plate className="pjx-milli" title={ctx.packTitle ? t('Сборка «{name}»', { name: ctx.packTitle }) : t('Сборка КонМинли')}>
                   {ctx.why ? (
                     <p className="pjx-why">
                       <PxIcon name="sparkle" size={11} />
