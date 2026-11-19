@@ -6642,5 +6642,6 @@
   "Исходный код Millida Launcher: github.com/millida/launcher": "Millida Launcherのソースコード：github.com/millida/launcher",
   "Лицензия GPL-3.0: файлы LICENSE и NOTICE": "GPL-3.0ライセンス：LICENSE と NOTICE ファイル",
   "KonMin Launcher не связан с Millida. Аккаунт, каталог, скины и другие онлайн-функции Millida работают через серверы Millida.": "KonMin LauncherはMillidaとは提携していません。Millidaアカウント、カタログ、スキンなどのMillidaのオンライン機能はMillidaのサーバーを通じて動作します。",
-  "Играть без аккаунта Millida": "Millidaアカウントなしでプレイ"
+  "Играть без аккаунта Millida": "Millidaアカウントなしでプレイ",
+  "Привет! Я КонМинли, ИИ-помощник KonMin Launcher! Помогу подобрать моды и собрать идеальную сборку Minecraft. С чего начнём?": "こんにちは！KonMin LauncherのAIアシスタント、コンミンリです！Modを選んで最高のMinecraft Modパックを作るお手伝いをします。何から始めましょう？"
 }

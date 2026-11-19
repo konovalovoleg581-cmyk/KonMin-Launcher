@@ -14,7 +14,7 @@ import { useBench } from '../../state/milliBench'
 import { MilliAva, MilliHead, MilliSafe, MilliScene } from './MilliStage'
 import { PxArt, type PxName } from './px'
 import { SUPPORT_URL, openExt } from '../../lib/api'
-import { LOADER_LABEL, MILLI_TEXT_MAX, isMilliSizeAsk, milliLeft, milliLook, milliOutError, milliPlanNumbers, milliPreviewOn, milliPreviewTier, milliResetText, setMilliPreviewTier } from '../../lib/milli'
+import { LOADER_LABEL, MILLI_TEXT_MAX, isMilliSizeAsk, konminliText, milliLeft, milliLook, milliOutError, milliPlanNumbers, milliPreviewOn, milliPreviewTier, milliResetText, setMilliPreviewTier } from '../../lib/milli'
 import type { MilliError, MilliGreeting, MilliGreetingChip, MilliMessage } from '../../lib/milli'
 import { milliCue, type MilliMode } from './Milli'
 import { useHasMillida } from '../../state/auth'
@@ -392,7 +392,7 @@ function Bubble({ m, last, cheer, asked = '' }: { m: MilliMessage; last: boolean
     <div className="ml-msg">
       <MilliAva cheer={cheer} />
       <div className="ml-col">
-        {m.text ? <p className="ml-bubble">{m.text}</p> : null}
+        {m.text ? <p className="ml-bubble">{konminliText(m.text)}</p> : null}
         {askSize && last ? (
           <MilliSafe>
             <MilliSizePick onPick={pickSize} />
@@ -592,7 +592,12 @@ function Menu({ onClose }: { onClose: () => void }) {
   )
 }
 
-const helloFallback = () => t('Привет! Какую сборку соберём?')
+/**
+ * KonMinli's own greeting. The server's greeting text belongs to Millida's assistant («Я Милли, помощник
+ * Millida…»), so the launcher always says this one; the server's personalised suggestion buttons stay.
+ */
+const helloText = () =>
+  t('Привет! Я КонМинли, ИИ-помощник KonMin Launcher! Помогу подобрать моды и собрать идеальную сборку Minecraft. С чего начнём?')
 
 /**
  * Пустой чат: сцена, приветствие и примеры; Милли тянется к примеру под мышью.
@@ -647,7 +652,7 @@ function Hello({ mood }: { mood: MilliMode }) {
         </button>
       ) : null}
       <div className="ml-say" style={g === undefined ? { visibility: 'hidden' } : undefined}>
-        <p className="ml-bubble">{g?.text ?? helloFallback()}</p>
+        <p className="ml-bubble">{helloText()}</p>
       </div>
       {chips.length > 0 && (
         <div className="ml-chips" role="group" aria-label={t('С чего начать')} style={{ justifyContent: 'center', marginTop: 10 }}>

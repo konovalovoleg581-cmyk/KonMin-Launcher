@@ -192,3 +192,16 @@ describe('milliOutError', () => {
     })
   }
 })
+
+test('KonMinli: the assistant is shown under its own name, real Millida services keep theirs', () => {
+  const { konminliText } = require('./milli') as typeof import('./milli')
+  expect(konminliText('Привет! Я Милли, помощник Millida. Соберу сборку модов под тебя — с чего начнём?')).toBe(
+    'Привет! Я КонМинли, помощник KonMin Launcher. Соберу сборку модов под тебя — с чего начнём?',
+  )
+  expect(konminliText("Hi! I'm Milli, Millida's assistant.")).toBe("Hi! I'm KonMinli, KonMin Launcher's assistant.")
+  expect(konminliText('Hi, I am Milli, the assistant from Millida')).toBe('Hi, I am KonMinli, the assistant of KonMin Launcher')
+  expect(konminliText('Милли: поставила Sodium')).toBe('КонМинли: поставила Sodium')
+  expect(konminliText('Эта сборка есть в каталоге Millida'), 'the catalog is a real Millida service').toBe('Эта сборка есть в каталоге Millida')
+  expect(konminliText('войди в аккаунт Millida'), 'so is the account').toBe('войди в аккаунт Millida')
+  expect(konminliText('Millimetre Milliseconds'), 'longer words are not the name').toBe('Millimetre Milliseconds')
+})

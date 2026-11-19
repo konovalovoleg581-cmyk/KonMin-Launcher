@@ -351,6 +351,21 @@ export interface MilliGreeting {
   known?: boolean
 }
 
+/**
+ * KonMin Launcher: the assistant's replies come from Millida's AI service, which calls itself «Милли» /
+ * «Milli» and «помощник Millida». The launcher shows them under its own name, KonMinli. Only the
+ * assistant's self-references change: «Millida» elsewhere (the catalog, the account) is a real
+ * service and stays as written. Stored chat history is left untouched; this runs on display.
+ */
+export function konminliText(text: string): string {
+  return text
+    .replace(/(помощни(?:к|ца)|ИИ-помощни(?:к|ца)) Millida/g, '$1 KonMin Launcher')
+    .replace(/(assistant) (?:of|from) Millida/gi, '$1 of KonMin Launcher')
+    .replace(/Millida(?:'s|’s) (assistant)/g, "KonMin Launcher's $1")
+    .replace(/(^|[^\p{L}])Милли(?![\p{L}])/gu, '$1КонМинли')
+    .replace(/(^|[^\p{L}])Milli(?![\p{L}])/gu, '$1KonMinli')
+}
+
 /** Ответ сервера → приветствие или null (старый сервер, демо, битый ответ). */
 export function milliGreetingOf(raw: unknown): MilliGreeting | null {
   const r = raw as Partial<MilliGreeting> | null
