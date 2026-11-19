@@ -1,5 +1,10 @@
 # Авторские права и уведомления DMCA
 
+> **Примечание KonMin Launcher.** Документ перенесён без изменений из оригинального проекта
+> [Millida Launcher](https://github.com/millida/launcher). Он описывает официальные сборки, сервисы,
+> контакты и процессы Millida, а не KonMin. Чем отличается KonMin Launcher:
+> [README.ru.md](README.ru.md) и [EXTERNAL-SERVICES.md](EXTERNAL-SERVICES.md).
+
 [English version: DMCA.md](DMCA.md)
 
 Millida уважает права правообладателей. Если вы считаете, что материал в этом репозитории или в релизе

@@ -46,6 +46,8 @@ const DURABLE = [
   'm-app-icon',
   'm-lang',
   'm-first-run',
+  // KonMin Launcher: the player chose to play without a Millida account (state/firstRun, konminGuest).
+  'm-konmin-guest',
   'm-lag-off',
   'm-lag-pending',
   'm-live-log',

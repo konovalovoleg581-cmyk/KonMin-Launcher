@@ -1,4 +1,4 @@
-# How to build Millida Launcher yourself
+# How to build KonMin Launcher yourself
 
 Russian version: [BUILDING.ru.md](BUILDING.ru.md)
 
@@ -41,7 +41,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 <summary><b>Linux (Debian, Ubuntu, Mint)</b></summary>
 
 ```bash
-sudo apt-get install -y git curl libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libxdo-dev libssl-dev build-essential file wget
+sudo apt-get install -y git curl libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libxdo-dev libasound2-dev libssl-dev build-essential file wget
 curl -fsSL https://bun.sh/install | bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
@@ -52,49 +52,46 @@ For other distributions, see the package names in the [Tauri docs](https://tauri
 ## 2. Build
 
 ```bash
-git clone https://github.com/millida/launcher.git
-cd launcher
+cd <the KonMin Launcher source folder>
 bun install
 bun run tauri build
 ```
 
-To build exactly the version that was released on the site, switch to its tag before you build:
+Optional build-time settings (Microsoft sign-in, Discord, updates) are described in
+[README.md](README.md#build-time-configuration). For example, in PowerShell:
 
-```bash
-git checkout v2.0.177
+```powershell
+$env:KONMIN_MS_CLIENT_ID = "<your Azure application (client) id>"
+bun run tauri build
 ```
-
-The list of versions is on the [releases](https://github.com/millida/launcher/releases) page.
 
 ## 3. Get the result
 
 | System | Where it is |
 | --- | --- |
-| Windows | `src-tauri\target\release\bundle\nsis\Millida Launcher_<version>_x64-setup.exe` |
-| macOS | `src-tauri/target/release/bundle/dmg/` and `bundle/macos/Millida Launcher.app` |
+| Windows | `src-tauri\target\release\bundle\nsis\KonMin Launcher_<version>_x64-setup.exe` |
+| macOS | `src-tauri/target/release/bundle/dmg/` and `bundle/macos/KonMin Launcher.app` |
 | Linux | `src-tauri/target/release/bundle/`: `deb/`, `rpm/`, `appimage/` |
 
 To run it straight from the source without installing: `bun run tauri dev`.
 
-## How your build differs from ours
+The NSIS installer installs for the current user (no administrator rights), adds "KonMin Launcher"
+shortcuts, registers the `konmin://` link scheme and an uninstaller.
+If the WebView2 Runtime is missing, the installer downloads Microsoft's bootstrapper
+(`src-tauri/installer-hooks.nsh`).
 
-| | Your build | From millida.net |
-| --- | --- | --- |
-| Code | The same as in this repository | The same. Every release here is the commit the installer was built from |
-| Digital signature | None. Windows shows "Unknown publisher" | Yes. No developer publishes the signing key: with it, anyone could release a virus in our name |
-| Version | `2.0.0` | The build number, for example `2.0.177` |
-| Updates | On first start the launcher updates itself to the official version | Installed automatically |
+## Updates and signing
 
-To stay on your own build, change `"version": "2.0.0"` to `"version": "99.0.0"` in [`src-tauri/tauri.conf.json`](src-tauri/tauri.conf.json) before `bun run tauri build`. With a number higher than ours, the update will not touch your build.
+KonMin Launcher ships **without** an update channel and **without** a code-signing certificate:
 
-Updates are checked with the signature key from [`tauri.conf.json`](src-tauri/tauri.conf.json) (`plugins.updater.pubkey`). The launcher will not install a swapped file.
-
-## How to check the official installer
-
-- Download only from [millida.net/launcher](https://millida.net/launcher) or from the [releases](https://github.com/millida/launcher/releases) page. Anything else is not ours.
-- Windows: right-click the file, then "Properties", then "Digital Signatures", then "This digital signature is OK".
-- To check that a release file was built here, from this code: the [Release workflow](.github/workflows/release.yml) builds every installer on GitHub servers, and GitHub signs which commit it came from. Check with `gh attestation verify <file> -R millida/launcher`. Or download `provenance.sigstore.json` from the release and add `--bundle provenance.sigstore.json`.
-- The VirusTotal report for every installer is at [millida.net/launcher/antivirus](https://millida.net/launcher/antivirus).
+- `plugins.updater.endpoints` and `plugins.updater.pubkey` in
+  [`src-tauri/tauri.conf.json`](src-tauri/tauri.conf.json) are empty, so the launcher never checks
+  for updates (neither the window nor the core). To publish updates, generate a key pair with
+  `bunx tauri signer generate`, put the **public** key into `pubkey`, your `latest.json` URLs into
+  `endpoints`, keep the private key in CI secrets (`TAURI_SIGNING_PRIVATE_KEY`) and build with
+  `bun run build:release` (it also writes the `.sig` update artifacts).
+- Unsigned installers make Windows show "Unknown publisher" / SmartScreen. Signing needs your own
+  certificate; [CODE_SIGNING.md](CODE_SIGNING.md) describes how upstream signs its builds.
 
 ## If the build fails
 
@@ -103,7 +100,8 @@ Updates are checked with the signature key from [`tauri.conf.json`](src-tauri/ta
 | `linker 'link.exe' not found` | The C++ Build Tools are missing. Use the Windows command from step 1 |
 | `bun` or `cargo` "is not recognized as a command" | Restart the terminal after the install |
 | `webkit2gtk-4.1 not found` | The Linux packages from step 1 are not installed |
+| `alsa-sys` build script fails | Install `libasound2-dev` (Linux) |
 | AppImage fails on `linuxdeploy` | Build without it: `bun run tauri build --bundles deb` |
-| Something else | [Open an issue](https://github.com/millida/launcher/issues/new/choose) and attach the command output |
 
-Want to send a fix? See [CONTRIBUTING.md](CONTRIBUTING.md). Want a fork under your own name? See [TRADEMARK.md](TRADEMARK.md).
+Want to send a fix? See [CONTRIBUTING.md](CONTRIBUTING.md). The name and logo rules of the upstream
+project: [TRADEMARK.md](TRADEMARK.md).

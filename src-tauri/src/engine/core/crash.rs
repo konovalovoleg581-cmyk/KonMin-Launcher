@@ -36,7 +36,7 @@ pub fn install_panic_hook(version: String) {
             .unwrap_or_else(|| "паника без сообщения".to_string());
         let place = info.location().map(|l| format!("{}:{}", l.file(), l.line())).unwrap_or_default();
         let body = format!(
-            "millida-launcher {}\nos: {} {}\nместо: {}\nсообщение: {}\n\n{}",
+            "konmin-launcher {}\nos: {} {}\nместо: {}\nсообщение: {}\n\n{}",
             version,
             std::env::consts::OS,
             std::env::consts::ARCH,
@@ -77,7 +77,7 @@ fn webview_failure_box(msg: &str) {
     // Both languages at once: the page and its translations are exactly what did not start.
     let text = [WEBVIEW_FAILED_RU, WEBVIEW_FAILED_EN, detail.as_str()].join("\n\n");
     let wide = |s: &str| -> Vec<u16> { s.encode_utf16().chain(std::iter::once(0)).collect() };
-    let (body, title) = (wide(&text), wide("Millida Launcher"));
+    let (body, title) = (wide(&text), wide("KonMin Launcher"));
     let answer = unsafe { MessageBoxW(std::ptr::null_mut(), body.as_ptr(), title.as_ptr(), MB_YESNO | MB_ICONERROR | MB_SETFOREGROUND | MB_TOPMOST) };
     if answer == IDYES {
         let _ = crate::engine::open_external(WEBVIEW2_PAGE);
@@ -110,8 +110,8 @@ pub fn record_freeze(stamp: u64, stalled: std::time::Duration, recovered: bool) 
         return stamp;
     }
     let body = format!(
-        "millida-launcher {}\nos: {} {}\nместо: главный поток\nсообщение: интерфейс не отвечал {} с\nитог: {}\n",
-        env!("MILLIDA_VERSION"),
+        "konmin-launcher {}\nos: {} {}\nместо: главный поток\nсообщение: интерфейс не отвечал {} с\nитог: {}\n",
+        env!("KONMIN_VERSION"),
         std::env::consts::OS,
         std::env::consts::ARCH,
         stalled.as_secs(),

@@ -1,150 +1,78 @@
-*[English version: README.md](README.md) | Русский*
-
 <p align="center">
-  <img src=".github/readme/banner-ru.png" alt="Millida Launcher — лаунчер Minecraft с модами, скинами и друзьями">
+  <img src="branding/konmin-banner.webp" alt="KonMin Launcher — современный лаунчер Minecraft">
 </p>
 
-<p align="center">
-  <a href="https://millida.net/launcher/dl/windows"><img src=".github/readme/download-windows-ru.png" width="32%" alt="Скачать для Windows"></a>
-  <a href="https://millida.net/launcher/dl/macos"><img src=".github/readme/download-macos-ru.png" width="32%" alt="Скачать для macOS"></a>
-  <a href="https://millida.net/launcher/dl/linux"><img src=".github/readme/download-linux-ru.png" width="32%" alt="Скачать для Linux"></a>
-</p>
+*Русский | English version: [README.md](README.md)*
+
+**KonMin Launcher** — настольный лаунчер Minecraft для Windows, macOS и Linux с тёмным
+современным интерфейсом. Ставит и запускает любую версию Minecraft, сам настраивает Fabric,
+Quilt, Forge и NeoForge, скачивает нужную Java и устанавливает моды, сборки, ресурспаки и шейдеры
+с Modrinth и CurseForge.
+
+> KonMin Launcher — форк открытого [Millida Launcher](https://github.com/millida/launcher)
+> (GPL-3.0-only). Он **не связан с Millida, не одобрен и не поддерживается Millida**. Онлайн-сервисы
+> Millida, которыми код всё ещё пользуется, перечислены в [EXTERNAL-SERVICES.md](EXTERNAL-SERVICES.md).
 
 <p align="center">
-  <a href="https://github.com/millida/launcher/releases/latest"><img src="https://img.shields.io/github/v/release/millida/launcher?label=%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F&color=9B6BFF" alt="Последняя версия"></a>
-  <a href="https://millida.net/launcher/antivirus"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Flauncher-storage.millida.net%2Fsetup%2Fscan.json&query=%24.files%5B0%5D.malicious&label=VirusTotal&suffix=%20%D1%83%D0%B3%D1%80%D0%BE%D0%B7&color=2ea043" alt="Проверка VirusTotal"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/%D0%BB%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F-GPL--3.0-555" alt="Лицензия GPL-3.0"></a>
+  <img src="screenshots/konmin-lobby.webp" alt="Лобби KonMin Launcher">
 </p>
 
-<p align="center">
-  <a href="https://millida.net/launcher/antivirus"><img src=".github/readme/trust-virus-ru.png" width="49%" alt="Без вирусов: каждый установщик проверен VirusTotal"></a>
-  <img src=".github/readme/trust-account-ru.png" width="49%" alt="Аккаунт в безопасности: пароль вводится только на сайте Microsoft">
-  <img src=".github/readme/trust-signed-ru.png" width="49%" alt="Установщик с сайта подписан сертификатом Certum">
-  <a href="ARCHITECTURE.md"><img src=".github/readme/trust-open-ru.png" width="49%" alt="Код открыт: любую строку можно проверить здесь"></a>
-</p>
+## Возможности
 
-<p align="center">
-  <img src="screenshots/lobby-ru.png" alt="Лобби лаунчера">
-</p>
+- **Любая версия Minecraft** из официального манифеста Mojang; каждый файл сверяется с отпечатками Mojang.
+- **Загрузчики модов**: Fabric, Quilt, Forge и NeoForge ставятся автоматически.
+- **Java сама**: под каждую версию скачивается и проверяется нужная сборка Eclipse Temurin.
+- **Моды и сборки**: поиск и установка с Modrinth и CurseForge, `.mrpack` и архивы CurseForge,
+  зависимости, обновления, сканер модов и карантин.
+- **Аккаунты**: Microsoft (лицензия) через официальный вход по коду, офлайн-ник и, по желанию,
+  аккаунт Millida для онлайн-функций Millida.
+- **Сборки**: импорт из Prism, MultiMC, ATLauncher, GDLauncher, CurseForge, Modrinth App и
+  `.minecraft`; миры, бэкапы, скриншоты, логи, разбор вылетов и исправления в один клик.
+- **Внешний вид**: сине-фиолетовая тема KonMin, 20+ цветов акцента, обои, 21 язык интерфейса.
 
-| Сборки | Каталог |
-| :---: | :---: |
-| <img src="screenshots/library-ru.png" alt="Мои сборки"> | <img src="screenshots/catalog-ru.png" alt="Каталог модов и сборок Modrinth и CurseForge"> |
-| **Гардероб** | **Свой сервер** |
-| <img src="screenshots/wardrobe-ru.png" alt="Скины, плащи и косметика"> | <img src="screenshots/server-ru.png" alt="Панель своего сервера"> |
+## Чем отличается от Millida Launcher
 
-<p align="center">
-  <a href="BUILDING.md"><img src=".github/readme/build-guide-ru.gif" alt="Собери лаунчер сам из открытого кода — три команды"></a>
-</p>
+| | Millida Launcher | KonMin Launcher |
+| --- | --- | --- |
+| Имя, значок, цвета, идентификатор | Millida, зелёный, `net.millida.launcher` | KonMin, сине-фиолетовый, `com.konmin.launcher` |
+| Файл программы и установщик | `millida-launcher.exe`, `Millida Launcher_<v>_x64-setup.exe` | `konmin-launcher.exe`, `KonMin Launcher_<v>_x64-setup.exe` |
+| Папка данных | `%APPDATA%\net.millida.launcher` | `%APPDATA%\com.konmin.launcher` (своя, ничего не общего) |
+| Вход в программу | обязателен аккаунт Millida | **«Играть без аккаунта Millida»**: хватит лицензии Microsoft или офлайн-ника |
+| Вход через Microsoft | приложение Azure от Millida | своё приложение Azure через `KONMIN_MS_CLIENT_ID` |
+| Автообновление | сервер и ключ подписи Millida | выключено, пока вы не настроите свой канал |
+| Статистика | включена по умолчанию, уходит в Millida | **выключена по умолчанию**, при включении уходит в API Millida |
+| Discord Rich Presence | приложение Discord от Millida | выключено без `KONMIN_DISCORD_APP_ID` |
+| Ссылки | `millida://` | `konmin://` |
 
-## Установка
+## Сборка
 
-<details>
-<summary><b>Windows</b> — установщик <code>.exe</code></summary>
-
-1. Скачай и запусти [установщик с подписью](https://github.com/millida/launcher/releases/download/setup-signed-2/MillidaLauncherSetup.exe) — лаунчер откроется сам.
-2. Если появилось синее окно «Windows защитила ваш компьютер»: **«Подробнее»** → **«Выполнить в любом случае»**.
-
-Обновления лаунчер ставит сам.
-</details>
-
-<details>
-<summary><b>macOS</b> — образ <code>.dmg</code> или одна команда</summary>
-
-Перетащи **Millida Launcher** в «Программы». Пишет «повреждено» — выполни в Терминале:
+Нужны [Bun](https://bun.sh), [Rust](https://rustup.rs) (stable) и
+[зависимости Tauri 2](https://tauri.app/start/prerequisites/) для вашей системы. Подробно по
+системам: [BUILDING.ru.md](BUILDING.ru.md).
 
 ```bash
-chmod -R u+w "/Applications/Millida Launcher.app" && xattr -cr "/Applications/Millida Launcher.app"
+bun install
+bun run tauri dev          # запуск из исходников
+bun run tauri build        # установщики в src-tauri/target/release/bundle/
 ```
 
-Или поставь одной командой, без этого шага:
+На Windows получится `src-tauri\target\release\bundle\nsis\KonMin Launcher_<версия>_x64-setup.exe`.
 
-```bash
-curl -fsSL https://launcher-storage.millida.net/setup/install.sh | sh
-```
-</details>
+Переменные сборки (`KONMIN_MS_CLIENT_ID`, `KONMIN_DISCORD_APP_ID`, `KONMIN_SITE_URL`,
+`VITE_KONMIN_DOWNLOAD_PAGE`) и настройка автообновления описаны в [README.md](README.md#build-time-configuration).
 
-<details>
-<summary><b>Linux</b> — Flatpak или одна команда</summary>
+## Ограничения
 
-```bash
-flatpak install --user https://launcher-flatpak.millida.net/millida-launcher.flatpakref
-```
+- Функции на API Millida (аккаунт Millida, друзья, чат, звонки, покупки в каталоге, скины и
+  косметика Millida, облако, панель хостинга, **поиск** CurseForge) зависят от серверов Millida,
+  которые могут в любой момент заблокировать неофициальные сборки.
+- Сборки не подписаны сертификатом: Windows SmartScreen и macOS Gatekeeper предупредят.
+- Обои, арт лобби и музыка в `public/` и `media/` — материалы оригинального проекта; перед
+  публичным распространением их стоит заменить (см. [TRADEMARK.ru.md](TRADEMARK.ru.md)).
 
-Без Flatpak (AppImage с ярлыком в меню):
+## Лицензия
 
-```bash
-curl -fsSL https://launcher-storage.millida.net/setup/install.sh | sh
-```
+GPL-3.0-only, см. [LICENSE](LICENSE) и [NOTICE](NOTICE). KonMin Launcher — изменённая версия
+Millida Launcher © Millida (Роман Бабаскин); изменения © KonMin.
 
-`.deb` и `.rpm` — на [странице загрузки](https://millida.net/launcher#download).
-</details>
-
-## Вопросы
-
-<details>
-<summary><b>Это бесплатно?</b></summary>
-
-Да. Без рекламы и постороннего софта в установщике.
-</details>
-
-<details>
-<summary><b>Нужен купленный Minecraft?</b></summary>
-
-Нет: можно играть по нику. С лицензией — вход через официальное окно Microsoft, пароль лаунчер не видит.
-</details>
-
-<details>
-<summary><b>Java ставить нужно?</b></summary>
-
-Нет, лаунчер скачает подходящую сам.
-</details>
-
-<details>
-<summary><b>Антивирус ругается</b></summary>
-
-Отчёт VirusTotal по каждому установщику — на [millida.net/launcher/antivirus](https://millida.net/launcher/antivirus). Качай только с millida.net или со страницы [релизов](https://github.com/millida/launcher/releases) — всё остальное не наше.
-</details>
-
-<details>
-<summary><b>Что-то не работает</b></summary>
-
-Напиши в [Discord](https://discord.gg/mcru) или заведи issue. К отчёту приложи `logs/launcher-latest.log` из папки сборки.
-</details>
-
-<details>
-<summary><b>Зачем лаунчеру телеметрия?</b></summary>
-
-Чтобы узнавать о поломках раньше, чем о них напишут в поддержку, и чинить их быстрее. Так, например, 13.10.2026 по событиям вылета нашли, что часть сборок на Fabric падает из-за старого Fabric Loader. По ней же видно, какие экраны тормозят и что в интерфейсе не находят. При входе в аккаунт Millida статистика привязывается к нему. Пароли, токены, файлы и тексты чатов не уходят, выключается в «Настройки → Аккаунт → Статистика использования». Полный список отправляемого и код, который это делает: [TELEMETRY.md](TELEMETRY.ru.md).
-</details>
-
-<details>
-<summary><b>Как удалить?</b></summary>
-
-Windows — «Параметры» → «Приложения»; macOS — в корзину; Flatpak — `flatpak uninstall net.millida.launcher`.
-</details>
-
-## Разработчикам
-
-Rust-ядро (Tauri 2) и интерфейс на React, лицензия [GPL-3.0-only](LICENSE). Флаги в выборе языка — [Twemoji](https://github.com/jdecked/twemoji), CC-BY 4.0.
-
-[Как собрать самому](BUILDING.ru.md) · [Устройство](ARCHITECTURE.ru.md) · [Как прислать правку](CONTRIBUTING.ru.md) · [Уязвимости](SECURITY.ru.md) · [Название и логотип](TRADEMARK.ru.md)
-
-<details>
-<summary><b>Зачем открыт код</b></summary>
-
-Лаунчер держит вход в аккаунт Microsoft, файлы игры и сетевые запросы — честный ответ на вопрос «что он делает с моим аккаунтом» — дать прочитать код целиком. С января по июнь 2026 года поддельные клиенты Minecraft [заразили больше ста тысяч машин](https://thehackernews.com/2026/08/weedhack-malware-spreads-via-fake.html) и крали именно токен входа Microsoft.
-
-- Официальные сборки — только с [millida.net/launcher](https://millida.net/launcher) и из [релизов](https://github.com/millida/launcher/releases) этого репозитория.
-- Сторонние сборки мы не поддерживаем. Собрать код для себя это не мешает.
-- Правки принимаем сюда — так они достаются всем игрокам сразу.
-- GPL-3.0 даёт право на форк, но бренд, ключи и наши сервисы под неё не подпадают — см. [TRADEMARK.md](TRADEMARK.ru.md).
-
-Форку нужны своё имя, свои иконки и своя регистрация приложения в Azure (`MILLIDA_MS_CLIENT_ID`). Установка игры, загрузчики, Java и Modrinth работают без наших серверов; вход Millida, друзья, скины, рейтинг, панель хостинга и прокси к CurseForge ходят в `api.millida.net`.
-</details>
-
-## Авторские права / DMCA
-
-Уведомления об авторских правах и DMCA: [dmca@millida.net](mailto:dmca@millida.net). Что должно быть в уведомлении: [DMCA.ru.md](DMCA.ru.md).
-
-<sub>Millida Launcher не связан с Mojang AB и Microsoft. Minecraft — товарный знак Mojang AB.</sub>
+<sub>KonMin Launcher не связан с Mojang AB, Microsoft и Millida. Minecraft — товарный знак Mojang AB.</sub>

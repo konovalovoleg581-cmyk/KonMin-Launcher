@@ -29,7 +29,7 @@ export interface Accent extends AccentVars {
 
 function hexToRgb(hex: string) {
   const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim())
-  const n = m ? parseInt(m[1], 16) : 0x5ec64d
+  const n = m ? parseInt(m[1], 16) : 0x5c84ff
   return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 }
 }
 
@@ -54,7 +54,7 @@ function luminance(hex: string) {
   return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
 }
 
-const UI_BACKGROUND = '#161718'
+const UI_BACKGROUND = '#0F1117'
 /// The darkest stock swatch sits at 3.87 against the window background: a colour
 /// of the player's own is held to the same line, so no stock colour moves.
 const MIN_UI_CONTRAST = 3.8
@@ -180,7 +180,7 @@ export function accentBase(): string {
   const picked = /^#[0-9a-f]{6}$/i.exec(style.getPropertyValue('--m-accent-base').trim())
   if (picked) return picked[0].toLowerCase()
   const m = /^(\d+)\s*,\s*(\d+)\s*,\s*(\d+)$/.exec(style.getPropertyValue('--m-accent-rgb').trim())
-  return m ? toHex(+m[1], +m[2], +m[3]) : '#5ec64d'
+  return m ? toHex(+m[1], +m[2], +m[3]) : '#5c84ff'
 }
 
 export interface AccentChange {

@@ -112,7 +112,7 @@ jvm:
   -Djna.tmpdir=/G/versions/1.20.1/natives
   -Dorg.lwjgl.system.SharedLibraryExtractPath=/G/versions/1.20.1/natives
   -Dio.netty.native.workdir=/G/versions/1.20.1/natives
-  -Dminecraft.launcher.brand=MillidaLauncher
+  -Dminecraft.launcher.brand=KonMinLauncher
   -Dminecraft.launcher.version=0.1
   -cp
   ${classpath}

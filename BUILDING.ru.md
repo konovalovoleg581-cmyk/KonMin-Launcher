@@ -1,12 +1,6 @@
-# Как собрать Millida Launcher самому
+# Как собрать KonMin Launcher самому
 
 [English version: BUILDING.md](BUILDING.md)
-
-<p align="center">
-  <a href="https://github.com/millida/launcher/raw/main/.github/readme/build-guide-ru.mp4"><img src=".github/readme/build-guide-ru.gif" alt="Сборка лаунчера из исходников: клонирование, зависимости, сборка установщика" width="100%"></a>
-  <br>
-  <a href="https://github.com/millida/launcher/raw/main/.github/readme/build-guide-ru.mp4"><b>Смотреть видео целиком (MP4, 75 с)</b></a>
-</p>
 
 Три команды. Первая сборка — 10–20 минут, смотря какой компьютер. Дальше — быстрее: Rust пересобирает только изменённое.
 
@@ -46,7 +40,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 <summary><b>Linux (Debian, Ubuntu, Mint)</b></summary>
 
 ```bash
-sudo apt-get install -y git curl libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libxdo-dev libssl-dev build-essential file wget
+sudo apt-get install -y git curl libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libxdo-dev libasound2-dev libssl-dev build-essential file wget
 curl -fsSL https://bun.sh/install | bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
@@ -57,58 +51,44 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ## 2. Собери
 
 ```bash
-git clone https://github.com/millida/launcher.git
-cd launcher
+cd <папка с исходниками KonMin Launcher>
 bun install
 bun run tauri build
 ```
 
-Хочешь собрать ровно ту версию, что вышла на сайте, — переключись на её тег перед сборкой:
+Необязательные настройки сборки (вход через Microsoft, Discord, обновления) описаны в
+[README.md](README.md#build-time-configuration). Например, в PowerShell:
 
-```bash
-git checkout v2.0.177
+```powershell
+$env:KONMIN_MS_CLIENT_ID = "<id приложения (клиента) Azure>"
+bun run tauri build
 ```
-
-Список версий — на странице [релизов](https://github.com/millida/launcher/releases).
 
 ## 3. Забери результат
 
 | Система | Где лежит |
 | --- | --- |
-| Windows | `src-tauri\target\release\bundle\nsis\Millida Launcher_<версия>_x64-setup.exe` |
-| macOS | `src-tauri/target/release/bundle/dmg/` и `bundle/macos/Millida Launcher.app` |
-| Linux | `src-tauri/target/release/bundle/` — `deb/`, `rpm/`, `appimage/` |
+| Windows | `src-tauri\target\release\bundle\nsis\KonMin Launcher_<версия>_x64-setup.exe` |
+| macOS | `src-tauri/target/release/bundle/dmg/` и `bundle/macos/KonMin Launcher.app` |
+| Linux | `src-tauri/target/release/bundle/`: `deb/`, `rpm/`, `appimage/` |
 
-Запустить без установки, прямо из исходников: `bun run tauri dev`.
+Запустить прямо из исходников без установки: `bun run tauri dev`.
 
-## Чем твоя сборка отличается от нашей
+## Обновления и подпись
 
-| | Твоя сборка | С millida.net |
-| --- | --- | --- |
-| Код | Тот же, что в этом репозитории | Тот же: каждый релиз здесь — коммит, из которого собран установщик |
-| Цифровая подпись | Нет — Windows покажет «Неизвестный издатель» | Есть. Ключ подписи не публикует ни один разработчик: с ним любой выпустил бы вирус от нашего имени |
-| Версия | `2.0.0` | Номер сборки, например `2.0.177` |
-| Обновления | При первом запуске лаунчер сам обновится до официальной версии | Ставятся сами |
-
-Остаться на своей сборке — перед `bun run tauri build` поменяй `"version": "2.0.0"` на `"version": "99.0.0"` в [`src-tauri/tauri.conf.json`](src-tauri/tauri.conf.json). Номер выше нашего — обновление сборку не тронет.
-
-Обновление проверяется подписью из [`tauri.conf.json`](src-tauri/tauri.conf.json) (`plugins.updater.pubkey`): подменённый файл лаунчер не установит.
-
-## Как проверить официальный установщик
-
-- Скачивай только с [millida.net/launcher](https://millida.net/launcher) или со страницы [релизов](https://github.com/millida/launcher/releases). Всё остальное — не наше.
-- Windows: правый клик по файлу → «Свойства» → «Цифровые подписи» → «Подпись действительна».
-- Что файл из релиза собран здесь, из этого кода: каждый установщик собирает [workflow Release](.github/workflows/release.yml) на серверах GitHub, и GitHub подписывает, из какого коммита он получен. Проверка — `gh attestation verify <файл> -R millida/launcher`, или скачай `provenance.sigstore.json` из релиза и добавь `--bundle provenance.sigstore.json`.
-- Отчёт VirusTotal по каждому установщику — [millida.net/launcher/antivirus](https://millida.net/launcher/antivirus).
+KonMin Launcher поставляется **без** канала обновлений и **без** сертификата подписи: в
+[`src-tauri/tauri.conf.json`](src-tauri/tauri.conf.json) пусты `plugins.updater.endpoints` и
+`pubkey`, поэтому лаунчер не проверяет обновления. Чтобы выпускать обновления, создайте пару ключей
+`bunx tauri signer generate`, впишите **открытый** ключ в `pubkey`, адреса своих `latest.json` — в
+`endpoints`, закрытый ключ держите в секретах CI (`TAURI_SIGNING_PRIVATE_KEY`) и собирайте
+`bun run build:release`. Неподписанный установщик Windows показывает «Неизвестный издатель».
 
 ## Если не собирается
 
-| Ошибка | Что сделать |
+| Ошибка | Что делать |
 | --- | --- |
-| `linker 'link.exe' not found` | Не стоит Build Tools с C++ — команда из шага 1 для Windows |
+| `linker 'link.exe' not found` | Нет C++ Build Tools. Команда для Windows — в шаге 1 |
 | `bun` или `cargo` «не является командой» | Перезапусти терминал после установки |
-| `webkit2gtk-4.1 not found` | Не поставлены пакеты из шага 1 для Linux |
+| `webkit2gtk-4.1 not found` | Не поставлены пакеты Linux из шага 1 |
+| Падает сборка `alsa-sys` | Поставь `libasound2-dev` (Linux) |
 | AppImage падает на `linuxdeploy` | Собери без него: `bun run tauri build --bundles deb` |
-| Что-то другое | [Заведи issue](https://github.com/millida/launcher/issues/new/choose) и приложи вывод команды |
-
-Хочешь прислать правку — [CONTRIBUTING.md](CONTRIBUTING.ru.md). Форк под своим именем — [TRADEMARK.md](TRADEMARK.ru.md).

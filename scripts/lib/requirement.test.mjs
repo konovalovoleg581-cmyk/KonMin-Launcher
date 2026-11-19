@@ -29,11 +29,12 @@ describe('identifierRequirement', () => {
 /**
  * The pin that matters: macOS keeps the microphone permission against these
  * exact bytes. A different identifier is a different app to the system, and
- * every player is asked for the microphone again.
+ * every player is asked for the microphone again. (KonMin Launcher: pinned to
+ * com.konmin.launcher, its own identifier since the rebrand.)
  */
 test('требование подписи лаунчера не меняется от сборки к сборке', () => {
   const { identifier } = JSON.parse(readFileSync(join(tauriDir, 'tauri.conf.json'), 'utf8'))
   expect(identifierRequirement(identifier).toString('hex')).toBe(
-    'fade0c00000000280000000100000002000000146e65742e6d696c6c6964612e6c61756e63686572',
+    'fade0c0000000028000000010000000200000013636f6d2e6b6f6e6d696e2e6c61756e6368657200',
   )
 })

@@ -360,7 +360,7 @@ export const useDaily = create<DailyState>((set, get) => ({
         return { error: t('Этого сундука уже нет') }
       }
       if (/\b404\b|not found|cannot post/i.test(raw))
-        return { error: t('Откроется после обновления Millida'), outdated: true }
+        return { error: t('Откроется после обновления KonMin Launcher'), outdated: true }
       trackFailure('chest_open', e)
       return { error: apiErrorText(e, t('Сундук не открылся, попробуй ещё раз')) }
     }

@@ -1,4 +1,4 @@
-// Fallback launcher update: takes the version list from launcher-storage.millida.net (addresses from tauri.conf.json), downloads the new build from GitHub or from our mirror and checks the Millida signature (minisign).
+// Fallback launcher update: takes the version list from the updater endpoints in tauri.conf.json, downloads the new build and checks its minisign signature against plugins.updater.pubkey.
 // If the signature does not match, the file is deleted and not run. Running the installer, replacing the .app on macOS and the AppImage on Linux are described at each function.
 use minisign_verify::{PublicKey, Signature};
 use serde::Serialize;
@@ -19,7 +19,10 @@ use super::paths::open_path;
 // tauri.conf.json, so the fallback is not a hole through which a compromised CDN
 // could run an arbitrary installer.
 // Fallback address of the version list. It returns json with the version, the file link and the signature. The main path goes through the Tauri updater plugin.
-const FALLBACK_ENDPOINTS: &[&str] = &["https://launcher-storage.millida.net/latest.json"];
+// KonMin Launcher: no fallback host. The upstream address served Millida Launcher builds signed with
+// Millida's key, and a KonMin install must never update itself into another product. Updates come only
+// from the endpoints a KonMin release configures in tauri.conf.json (plugins.updater).
+const FALLBACK_ENDPOINTS: &[&str] = &[];
 
 // Testing channel. The player opts in from settings and then sees a release
 // before everyone else, so a heavy change lands on a few hundred machines
@@ -215,7 +218,17 @@ pub async fn fallback_latest(app: &AppHandle) -> Result<Option<FallbackUpdate>, 
     fetch_manifest(app, false).await
 }
 
+/// A build updates itself only when it names its own update channel: at least one endpoint and the public
+/// key its releases are signed with. KonMin Launcher ships with neither (see README «Updates»), so the
+/// check quietly finds nothing instead of failing on every start.
+pub fn updates_configured(app: &AppHandle) -> bool {
+    pubkey(app).is_ok() && !endpoints(app).is_empty()
+}
+
 async fn fetch_manifest(app: &AppHandle, require_newer: bool) -> Result<Option<FallbackUpdate>, String> {
+    if !updates_configured(app) {
+        return Ok(None);
+    }
     let keys = platform_keys()?;
     let current = app.package_info().version.to_string();
     let mut last = "нет ни одного источника обновления".to_string();
@@ -487,7 +500,7 @@ fn refuse_inside_flatpak() -> Result<(), String> {
 }
 
 const FLATPAK_UPDATE_HINT: &str =
-    "лаунчер из Flatpak обновляется через магазин приложений или командой flatpak update net.millida.launcher";
+    "лаунчер из Flatpak обновляется через магазин приложений или командой flatpak update com.konmin.launcher";
 
 /// One preparation of an update at a time. The core's tray loop and the window can both ask for the same file: two
 /// downloads into one path made the loser delete the winner's good file (on Windows its rename fails while the
@@ -1001,26 +1014,21 @@ mod tests {
     /// на части людей» превратилось бы в «стучимся всеми».
     #[test]
     fn testing_channel_asks_beta_before_its_own_stable_neighbour() {
-        let configured = vec!["https://launcher-storage.millida.net/v2/latest.json".to_string()];
+        let configured = vec!["https://updates.example/v2/latest.json".to_string()];
 
         let off = channel_order(&configured, false);
         assert_eq!(
             off,
-            vec![
-                "https://launcher-storage.millida.net/v2/latest.json".to_string(),
-                "https://launcher-storage.millida.net/latest.json".to_string(),
-            ],
-            "без галки бета не спрашивается вовсе"
+            vec!["https://updates.example/v2/latest.json".to_string()],
+            "без галки бета не спрашивается вовсе, и чужой запасной адрес не добавляется"
         );
 
         let on = channel_order(&configured, true);
         assert_eq!(
             on,
             vec![
-                "https://launcher-storage.millida.net/v2/beta.json".to_string(),
-                "https://launcher-storage.millida.net/v2/latest.json".to_string(),
-                "https://launcher-storage.millida.net/beta.json".to_string(),
-                "https://launcher-storage.millida.net/latest.json".to_string(),
+                "https://updates.example/v2/beta.json".to_string(),
+                "https://updates.example/v2/latest.json".to_string(),
             ],
             "с галкой каждая бета идёт перед своим стабильным соседом"
         );
@@ -1030,6 +1038,15 @@ mod tests {
                 < on.iter().position(|u| u.ends_with("/v2/latest.json")),
             "бета обязана опрашиваться первой: иначе тестировщик получит общую сборку"
         );
+    }
+
+    /// KonMin Launcher must never fall back to the upstream Millida update host: it would install
+    /// Millida Launcher over a KonMin install (or fail the signature check on every start).
+    #[test]
+    fn no_built_in_update_host() {
+        assert!(FALLBACK_ENDPOINTS.is_empty());
+        assert!(channel_order(&[], false).is_empty(), "no configured endpoint means no update check at all");
+        assert!(channel_order(&[], true).is_empty());
     }
 
     #[test]
@@ -1090,7 +1107,7 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(&dir).unwrap();
         let patch = dir.join(selfdelta::staged_name("2.0.9"));
-        let installer = dir.join("Millida-Launcher_2.0.8_x64-setup.exe");
+        let installer = dir.join("KonMin-Launcher_2.0.8_x64-setup.exe");
         std::fs::write(&patch, b"patched exe").unwrap();
         std::fs::write(&installer, b"installer").unwrap();
         record_staged(&patch, "patch-signature", "2.0.9").unwrap();
@@ -1169,11 +1186,11 @@ mod tests {
     #[test]
     fn system_packages_go_to_the_package_installer() {
         let cases: [(&str, bool, &str); 5] = [
-            ("Millida-Launcher_2.0.150_amd64.deb", true, "deb needs root, only the package manager may ask for it"),
-            ("Millida-Launcher-2.0.150-1.x86_64.RPM", true, "extension case must not decide the install path"),
-            ("Millida-Launcher_2.0.150_amd64.AppImage", false, "an AppImage is replaced in place"),
-            ("Millida-Launcher.deb.AppImage", false, "only the final extension names the format"),
-            ("Millida-Launcher", false, "no extension is not a package"),
+            ("KonMin-Launcher_2.0.150_amd64.deb", true, "deb needs root, only the package manager may ask for it"),
+            ("KonMin-Launcher-2.0.150-1.x86_64.RPM", true, "extension case must not decide the install path"),
+            ("KonMin-Launcher_2.0.150_amd64.AppImage", false, "an AppImage is replaced in place"),
+            ("KonMin-Launcher.deb.AppImage", false, "only the final extension names the format"),
+            ("KonMin-Launcher", false, "no extension is not a package"),
         ];
         for (name, want, why) in cases {
             assert_eq!(is_system_package(Path::new(name)), want, "{}: {}", name, why);
@@ -1183,8 +1200,8 @@ mod tests {
     #[test]
     fn takes_file_name_from_url() {
         assert_eq!(
-            file_from_url("https://cdn/1.0.49/x86_64-pc-windows-msvc/Millida-Launcher_1.0.49_x64-setup.exe").unwrap(),
-            "Millida-Launcher_1.0.49_x64-setup.exe"
+            file_from_url("https://cdn/1.0.49/x86_64-pc-windows-msvc/KonMin-Launcher_1.0.49_x64-setup.exe").unwrap(),
+            "KonMin-Launcher_1.0.49_x64-setup.exe"
         );
         assert_eq!(file_from_url("https://cdn/1.0.49/win/Millida%20Launcher.exe").unwrap(), "Millida Launcher.exe");
     }

@@ -258,17 +258,17 @@ mod tests {
     #[test]
     fn only_in_place_replacements_are_quiet() {
         let exe = |p: &str| Some(Path::new(p).to_path_buf());
-        let setup = Path::new("Millida-Launcher_2.0.9_x64-setup.exe");
+        let setup = Path::new("KonMin-Launcher_2.0.9_x64-setup.exe");
         assert!(can_replace_quietly_in("windows", setup, None, false));
-        assert!(can_replace_quietly_in("windows", Path::new("millida-launcher-2.0.9.delta.exe"), None, false));
-        let bundle = exe("/Applications/Millida.app/Contents/MacOS/millida-launcher");
-        assert!(can_replace_quietly_in("macos", Path::new("Millida.app.tar.gz"), bundle.as_deref(), false));
-        let translocated = exe("/private/var/folders/x/AppTranslocation/ABC/d/Millida.app/Contents/MacOS/millida-launcher");
-        assert!(!can_replace_quietly_in("macos", Path::new("Millida.app.tar.gz"), translocated.as_deref(), false), "Gatekeeper's throwaway copy");
-        assert!(!can_replace_quietly_in("macos", Path::new("Millida.app.tar.gz"), exe("/tmp/millida-launcher").as_deref(), false), "not run from a bundle");
-        assert!(can_replace_quietly_in("linux", Path::new("Millida-Launcher.AppImage"), None, true));
-        assert!(!can_replace_quietly_in("linux", Path::new("Millida-Launcher.AppImage"), None, false), "not run as an AppImage");
-        assert!(!can_replace_quietly_in("linux", Path::new("Millida-Launcher_2.0.9_amd64.deb"), None, true), "a package needs the package manager");
+        assert!(can_replace_quietly_in("windows", Path::new("konmin-launcher-2.0.9.delta.exe"), None, false));
+        let bundle = exe("/Applications/KonMin Launcher.app/Contents/MacOS/konmin-launcher");
+        assert!(can_replace_quietly_in("macos", Path::new("KonMin Launcher.app.tar.gz"), bundle.as_deref(), false));
+        let translocated = exe("/private/var/folders/x/AppTranslocation/ABC/d/KonMin Launcher.app/Contents/MacOS/konmin-launcher");
+        assert!(!can_replace_quietly_in("macos", Path::new("KonMin Launcher.app.tar.gz"), translocated.as_deref(), false), "Gatekeeper's throwaway copy");
+        assert!(!can_replace_quietly_in("macos", Path::new("KonMin Launcher.app.tar.gz"), exe("/tmp/konmin-launcher").as_deref(), false), "not run from a bundle");
+        assert!(can_replace_quietly_in("linux", Path::new("KonMin-Launcher.AppImage"), None, true));
+        assert!(!can_replace_quietly_in("linux", Path::new("KonMin-Launcher.AppImage"), None, false), "not run as an AppImage");
+        assert!(!can_replace_quietly_in("linux", Path::new("KonMin-Launcher_2.0.9_amd64.deb"), None, true), "a package needs the package manager");
     }
 
     /// The notes live per version: the counters of an old version never block a new one.
@@ -297,7 +297,7 @@ mod tests {
     #[test]
     fn a_failed_patch_is_forgotten_with_its_sidecars_and_its_version_is_marked() {
         let dir = scratch("failed");
-        let file = dir.join("millida-launcher-2.0.9.delta.exe");
+        let file = dir.join("konmin-launcher-2.0.9.delta.exe");
         std::fs::write(&file, b"exe").unwrap();
         std::fs::write(sig_path(&file), b"sig").unwrap();
         std::fs::write(ver_path(&file), b"2.0.9\n").unwrap();
@@ -306,7 +306,7 @@ mod tests {
         assert!(delta_bad_in(&dir, "2.0.9"));
         assert!(!delta_bad_in(&dir, "2.0.10"));
         // no version file: nothing to mark, the files still go
-        let lone = dir.join("millida-launcher-2.0.11.delta.exe");
+        let lone = dir.join("konmin-launcher-2.0.11.delta.exe");
         std::fs::write(&lone, b"exe").unwrap();
         delta_failed_in(&dir, &lone);
         assert!(!lone.exists());

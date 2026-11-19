@@ -9,7 +9,7 @@ pub const UI_TEXT_KEYS: &[&str] = &[
     "Файл для сервера",
     "Файл java (java.exe / bin/java)",
     "Папка со сборками",
-    "Папка игры Millida",
+    "Папка игры KonMin Launcher",
     "Своя музыка",
     "Музыка",
     "Архив мира",

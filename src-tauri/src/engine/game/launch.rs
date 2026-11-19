@@ -1324,7 +1324,7 @@ pub(crate) fn build_args_on(
             .replace("${user_property_map}", "{}")
             .replace("${auth_session}", &session)
             .replace("${game_assets}", &game_assets)
-            .replace("${profile_name}", "Millida")
+            .replace("${profile_name}", "KonMin")
             .replace("${version_name}", v["id"].as_str().unwrap_or(""))
             .replace("${game_directory}", &game_dir.to_string_lossy())
             .replace("${assets_root}", &assets_root.to_string_lossy())
@@ -1339,7 +1339,7 @@ pub(crate) fn build_args_on(
             .replace("${library_directory}", &libraries_dir.to_string_lossy())
             .replace("${classpath_separator}", sep)
             .replace("${primary_jar}", &primary_jar)
-            .replace("${launcher_name}", "MillidaLauncher")
+            .replace("${launcher_name}", "KonMinLauncher")
             .replace("${launcher_version}", "0.1")
             .replace("${classpath}", &cp)
     };
@@ -3122,7 +3122,7 @@ mod tests {
         const VERDICT: &str = "Не хватает зависимости одного из модов.";
         let cases: &[(&str, bool, &str)] = &[
             (
-                "[main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\\Users\\Nest\\AppData\\Roaming\\net.millida.launcher\\minecraft\\libraries\\net\\minecraftforge\\fmlcore\\1.20.1-47.4.10\\fmlcore-1.20.1-47.4.10.jar is missing mods.toml file\n\
+                "[main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\\Users\\Nest\\AppData\\Roaming\\com.konmin.launcher\\minecraft\\libraries\\net\\minecraftforge\\fmlcore\\1.20.1-47.4.10\\fmlcore-1.20.1-47.4.10.jar is missing mods.toml file\n\
                  [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclient' with arguments\n\
                  [Render thread/INFO] [minecraft/Minecraft]: Backend library: LWJGL version 3.3.1",
                 false,

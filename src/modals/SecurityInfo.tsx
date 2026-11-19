@@ -1,9 +1,6 @@
 import { Icon } from '../components/Icon'
 import { useT } from '../i18n'
-import { openExt } from '../lib/api'
 import { BRAND_SVG, SEC_SECTIONS, TRUST_ROWS, type BrandId } from '../lib/securityContent'
-
-export const SECURITY_URL = 'https://millida.net/launcher/bezopasnost'
 
 function Logo({ id }: { id: BrandId }) {
   const b = BRAND_SVG[id]
@@ -25,7 +22,6 @@ function Trust() {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden><rect x="5" y="11" width="14" height="9"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
         </span>
         <b>{t('Безопасность лаунчера')}</b>
-        <span className="sec-trust-tag">{t('ПРОВЕРЕНО')}</span>
       </div>
       <ul>
         {TRUST_ROWS.map((r) => (
@@ -33,9 +29,7 @@ function Trust() {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" className="sec-trust-ok" aria-hidden><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>
             <span className="sec-trust-txt">
               <span>{t(r.text)}</span>
-              {r.id === 'vt' ? (
-                <small>{t('0 из 71, установщик Windows, 13.09.2026')}</small>
-              ) : r.detail ? (
+              {r.detail ? (
                 <small>{t(r.detail)}</small>
               ) : null}
             </span>
@@ -73,6 +67,7 @@ export function SecurityInfo({ onBack }: { onBack: () => void }) {
                   </li>
                 ))}
               </ol>
+              {s.more.length ? (
               <ol>
                 {s.more.map((st) => (
                   <li key={st.title}>
@@ -81,6 +76,7 @@ export function SecurityInfo({ onBack }: { onBack: () => void }) {
                   </li>
                 ))}
               </ol>
+              ) : null}
               {s.honest.length ? (
                 <div className="sec-info-honest">
                   <b>{t('Честно')}</b>
@@ -93,14 +89,6 @@ export function SecurityInfo({ onBack }: { onBack: () => void }) {
           </section>
         ))}
       </div>
-      <button
-        className="btn md primary"
-        style={{ width: '100%', marginTop: '14px' }}
-        onClick={() => openExt(SECURITY_URL)}
-      >
-        <Icon id="i-ext" />
-        {t('Подробнее на сайте')}
-      </button>
     </div>
   )
 }

@@ -3,20 +3,24 @@
 use crate::engine::*;
 use serde_json::Value;
 
-/// Azure application client_id, baked in at compile time. Own builds should set
-/// MILLIDA_MS_CLIENT_ID to their own registration.
-// Public Azure application id, not a secret. Custom builds set their own through MILLIDA_MS_CLIENT_ID.
-const MS_CLIENT_ID_FALLBACK: &str = "499c8d36-be2a-4231-9ebd-ef291b7bb64c";
+/// Shown when the build carries no Azure client_id of its own.
+pub(crate) const MS_NOT_CONFIGURED: &str =
+    "Вход через Microsoft не настроен в этой сборке KonMin Launcher: её нужно собрать с переменной KONMIN_MS_CLIENT_ID (свой клиент Azure)";
 
-pub(crate) fn ms_client_id() -> &'static str {
-    match option_env!("MILLIDA_MS_CLIENT_ID") {
-        Some(v) if !v.trim().is_empty() => v.trim(),
-        _ => MS_CLIENT_ID_FALLBACK,
-    }
+/// Azure application client_id, baked in at compile time from KONMIN_MS_CLIENT_ID.
+/// KonMin Launcher deliberately has no built-in fallback: the upstream Millida id belongs to
+/// Millida's Azure organisation and its TRADEMARK.md forbids forks from using it. Without an id
+/// the launcher still builds and runs; only Microsoft sign-in reports that it is not configured.
+pub(crate) fn ms_client_id() -> Result<&'static str, String> {
+    client_id_from(option_env!("KONMIN_MS_CLIENT_ID")).ok_or_else(|| MS_NOT_CONFIGURED.to_string())
+}
+
+fn client_id_from(raw: Option<&'static str>) -> Option<&'static str> {
+    raw.map(str::trim).filter(|v| !v.is_empty())
 }
 
 pub async fn ms_device_start() -> Result<Value, String> {
-    let client_id = ms_client_id();
+    let client_id = ms_client_id()?;
     let r = client()
         // Step one: ask Microsoft for a login code. client_id and the list of scopes are sent.
         .post("https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode")
@@ -82,7 +86,7 @@ pub async fn ms_device_poll(device_code: String) -> Result<Value, String> {
 }
 
 async fn redeem_device_code(device_code: String) -> Result<Option<(String, String)>, String> {
-    let client_id = ms_client_id();
+    let client_id = ms_client_id()?;
     let r = client()
         // Polls Microsoft: has the user signed in on the code page yet.
         .post("https://login.microsoftonline.com/consumers/oauth2/v2.0/token")
@@ -229,7 +233,7 @@ pub(crate) fn grant_gone(text: &str) -> bool {
 /// the rotated refresh_token (the old one when Microsoft keeps it). The Xbox and Minecraft steps
 /// follow in `ms_session_refresh`, which keeps the rotated token even if they fail.
 pub(crate) async fn ms_refresh_token(refresh_token: &str) -> Result<(String, String), String> {
-    let client_id = ms_client_id();
+    let client_id = ms_client_id()?;
     let r = client()
         .post("https://login.microsoftonline.com/consumers/oauth2/v2.0/token")
         .form(&[
@@ -262,6 +266,13 @@ fn xsts_error_text(code: Option<u64>) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn client_id_needs_a_real_value() {
+        assert_eq!(client_id_from(None), None, "no id must not fall back to someone else's Azure app");
+        assert_eq!(client_id_from(Some("  ")), None);
+        assert_eq!(client_id_from(Some(" abc ")), Some("abc"));
+    }
     use std::sync::atomic::{AtomicUsize, Ordering};
 
     #[tokio::test]

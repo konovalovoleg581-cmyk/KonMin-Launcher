@@ -7,7 +7,9 @@ import { RECS_UID_KEY, dayIndex, hashStr } from '../../lib/recsMix'
  */
 export type PromoSlide = 'abonent' | 'discord' | 'telegram' | 'anarchy' | 'arcania' | 'prisonrpg' | 'smp' | 'invite'
 
-export const PROMO_ORDER: PromoSlide[] = ['discord', 'telegram', 'anarchy', 'arcania', 'prisonrpg', 'smp', 'invite']
+/// KonMin Launcher: the «discord» and «telegram» slides invited players into Millida's own community channels
+/// as «our» Discord / channel, which is not true for a KonMin build; they stay defined but out of the rotation.
+export const PROMO_ORDER: PromoSlide[] = ['anarchy', 'arcania', 'prisonrpg', 'smp', 'invite']
 /** Слайд держится 7 секунд (владелец 11.10.2026: «минута — слишком долго»); наведение держит. */
 export const PROMO_ROTATE_MS = 7_000
 

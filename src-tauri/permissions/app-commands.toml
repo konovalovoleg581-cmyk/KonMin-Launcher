@@ -164,6 +164,7 @@ permissions = [
   "allow-modpack-contents",
   "allow-catalog-pack-contents",
   "allow-install-server-pack-file",
+  "allow-install-server-mod-file",
   "allow-scan-imports",
   "allow-pick-import-dir",
   "allow-tlauncher-nick",

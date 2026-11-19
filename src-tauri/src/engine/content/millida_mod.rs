@@ -620,14 +620,26 @@ fn telemetry_off_file() -> PathBuf {
     data_dir().join("telemetry-off")
 }
 
+/// KonMin Launcher: statistics are opt-in (they go to Millida's API, see TELEMETRY.md), so the core sends
+/// them only once the interface has recorded the player's yes in this file.
+fn telemetry_on_file() -> PathBuf {
+    data_dir().join("telemetry-on")
+}
+
 pub fn game_telemetry_enabled() -> bool {
-    enabled_at(&telemetry_off_file())
+    telemetry_opted_in(&telemetry_on_file(), &telemetry_off_file())
+}
+
+fn telemetry_opted_in(on: &Path, off: &Path) -> bool {
+    on.exists() && enabled_at(off)
 }
 
 pub fn set_game_telemetry_enabled(on: bool) -> Result<(), String> {
     if on {
-        turn_on_at(&telemetry_off_file())
+        turn_on_at(&telemetry_off_file())?;
+        turn_off_at(&telemetry_on_file())
     } else {
+        turn_on_at(&telemetry_on_file())?;
         turn_off_at(&telemetry_off_file())
     }
 }
@@ -1542,6 +1554,19 @@ pub(crate) async fn ensure_millida_mod_with(
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn statistics_stay_off_until_the_player_turns_them_on() {
+        let dir = std::env::temp_dir().join(format!("konmin-telemetry-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let (on, off) = (dir.join("telemetry-on"), dir.join("telemetry-off"));
+        assert!(!telemetry_opted_in(&on, &off), "a fresh install sends nothing");
+        turn_off_at(&on).unwrap();
+        assert!(telemetry_opted_in(&on, &off), "the player's yes turns statistics on");
+        turn_off_at(&off).unwrap();
+        assert!(!telemetry_opted_in(&on, &off), "an explicit no always wins");
+        let _ = std::fs::remove_dir_all(&dir);
+    }
 
     /// stable list, beta list -> which version the testing channel installs. Leaving the
     /// channel is covered by `manifest` itself: with the setting off the beta list is not read.

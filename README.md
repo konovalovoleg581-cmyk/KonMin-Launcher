@@ -1,146 +1,130 @@
 <p align="center">
-  <img src=".github/readme/banner-en.png" alt="Millida Launcher: a Minecraft launcher with mods, skins and friends">
+  <img src="branding/konmin-banner.webp" alt="KonMin Launcher: a modern Minecraft launcher">
 </p>
 
 <p align="center">
-  <a href="https://millida.net/launcher/dl/windows"><img src=".github/readme/download-windows-en.png" width="32%" alt="Download for Windows"></a>
-  <a href="https://millida.net/launcher/dl/macos"><img src=".github/readme/download-macos-en.png" width="32%" alt="Download for macOS"></a>
-  <a href="https://millida.net/launcher/dl/linux"><img src=".github/readme/download-linux-en.png" width="32%" alt="Download for Linux"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--only-555" alt="License GPL-3.0-only"></a>
+  <img src="https://img.shields.io/badge/Tauri-2-5C84FF" alt="Tauri 2">
+  <img src="https://img.shields.io/badge/React-19-5C84FF" alt="React 19">
+  <img src="https://img.shields.io/badge/Rust-stable-5C84FF" alt="Rust">
 </p>
+
+*English | Русская версия: [README.ru.md](README.ru.md)*
+
+**KonMin Launcher** is a desktop Minecraft launcher for Windows, macOS and Linux with a dark,
+modern interface. It installs and starts any Minecraft version, sets up Fabric, Quilt, Forge and
+NeoForge, downloads the right Java by itself, and installs mods, modpacks, resource packs and
+shaders from Modrinth and CurseForge.
+
+> KonMin Launcher is a fork of the open-source [Millida Launcher](https://github.com/millida/launcher)
+> (GPL-3.0-only). It is **not affiliated with, endorsed by or supported by Millida**. Millida's
+> online services that the code still uses are listed in [EXTERNAL-SERVICES.md](EXTERNAL-SERVICES.md).
 
 <p align="center">
-  <a href="https://github.com/millida/launcher/releases/latest"><img src="https://img.shields.io/github/v/release/millida/launcher?label=version&color=9B6BFF" alt="Latest version"></a>
-  <a href="https://millida.net/launcher/antivirus"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Flauncher-storage.millida.net%2Fsetup%2Fscan.json&query=%24.files%5B0%5D.malicious&label=VirusTotal&suffix=%20threats&color=2ea043" alt="VirusTotal scan"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-555" alt="License GPL-3.0"></a>
+  <img src="screenshots/konmin-lobby.webp" alt="KonMin Launcher lobby">
 </p>
 
-<p align="center">
-  <a href="https://millida.net/launcher/antivirus"><img src=".github/readme/trust-virus-en.png" width="49%" alt="No viruses: every installer is checked by VirusTotal"></a>
-  <img src=".github/readme/trust-account-en.png" width="49%" alt="Your account is safe: you enter your password only on the Microsoft site">
-  <img src=".github/readme/trust-signed-en.png" width="49%" alt="The installer from the site is signed with a Certum certificate">
-  <a href="ARCHITECTURE.md"><img src=".github/readme/trust-open-en.png" width="49%" alt="Open source: you can check any line right here"></a>
-</p>
-
-<p align="center">
-  <img src="screenshots/lobby.png" alt="Launcher lobby">
-</p>
-
-| Instances | Catalog |
+| Sign-in | Settings |
 | :---: | :---: |
-| <img src="screenshots/library.png" alt="My instances"> | <img src="screenshots/catalog.png" alt="Catalog of Modrinth and CurseForge mods and modpacks"> |
-| **Wardrobe** | **Your own server** |
-| <img src="screenshots/wardrobe.png" alt="Skins, capes and cosmetics"> | <img src="screenshots/server.png" alt="Control panel of your own server"> |
+| <img src="screenshots/konmin-login.webp" alt="Sign-in screen with the option to play without a Millida account"> | <img src="screenshots/konmin-settings.webp" alt="Settings with the KonMin accent colour"> |
 
-*English | Russian version: [README.ru.md](README.ru.md)*
+<sub>Screenshots are from the browser preview (`bun run dev`), where screens that need the Rust core show placeholders.</sub>
 
-## Install
+## Features
 
-<details>
-<summary><b>Windows</b>: <code>.exe</code> installer</summary>
+- **Any version of Minecraft**: releases and snapshots from Mojang's official manifest; every
+  file is checked against Mojang's hashes.
+- **Mod loaders**: Fabric, Quilt, Forge and NeoForge are installed automatically.
+- **Java is automatic**: the right Eclipse Temurin build is downloaded and verified for each version.
+- **Mods and modpacks**: search and install from Modrinth and CurseForge, `.mrpack` and CurseForge
+  archives, dependency resolution, updates, a mod scanner and quarantine.
+- **Accounts**: Microsoft (licensed) through the official device-code sign-in, offline nickname,
+  and, optionally, a Millida account for Millida's online features.
+- **Instances**: import from Prism, MultiMC, ATLauncher, GDLauncher, CurseForge, Modrinth App and
+  `.minecraft`; worlds, backups, screenshots, logs, crash diagnosis and one-click fixes.
+- **Performance**: automatic memory/GC tuning and an FPS Boost mode per instance.
+- **Look**: KonMin blue-violet theme, 20+ accent colours, wallpapers, 21 interface languages.
+- **Security**: tokens never leave the Rust core (AES-256-GCM vault), all downloads are hash-checked,
+  strict CSP and a minimal webview permission set. See [ARCHITECTURE.md](ARCHITECTURE.md).
 
-1. Download and run the [signed installer](https://github.com/millida/launcher/releases/download/setup-signed-2/MillidaLauncherSetup.exe). The launcher opens by itself.
-2. If you see a blue window "Windows protected your PC": click **"More info"**, then **"Run anyway"**.
+## What differs from Millida Launcher
 
-The launcher updates itself.
-</details>
+| | Millida Launcher | KonMin Launcher |
+| --- | --- | --- |
+| Name, icon, colours, identifier | Millida, green, `net.millida.launcher` | KonMin, blue-violet, `com.konmin.launcher` |
+| Executable / installer | `millida-launcher.exe`, `Millida Launcher_<v>_x64-setup.exe` | `konmin-launcher.exe`, `KonMin Launcher_<v>_x64-setup.exe` |
+| Data folder | `%APPDATA%\net.millida.launcher` | `%APPDATA%\com.konmin.launcher` (fresh install, nothing is shared) |
+| Entering the app | a Millida account is required | **"Play without a Millida account"**: Microsoft licence or offline nickname is enough |
+| Microsoft sign-in | Millida's Azure app | your own Azure app via `KONMIN_MS_CLIENT_ID` (see below) |
+| Auto-update | Millida's update server and signing key | off until you configure your own channel |
+| Usage statistics | on by default, sent to Millida | **off by default** (opt-in), still sent to Millida's API when turned on |
+| Discord Rich Presence | Millida's Discord app | off unless `KONMIN_DISCORD_APP_ID` is set |
+| Deep links | `millida://` | `konmin://` |
 
-<details>
-<summary><b>macOS</b>: <code>.dmg</code> image or one command</summary>
+Full list of third-party services, and of what still depends on Millida: [EXTERNAL-SERVICES.md](EXTERNAL-SERVICES.md).
 
-Drag **Millida Launcher** to "Applications". If macOS says the app is "damaged", run this in Terminal:
+## Build
+
+You need [Bun](https://bun.sh), [Rust](https://rustup.rs) (stable) and the
+[Tauri 2 prerequisites](https://tauri.app/start/prerequisites/) for your OS. Step-by-step
+instructions per platform: [BUILDING.md](BUILDING.md).
 
 ```bash
-chmod -R u+w "/Applications/Millida Launcher.app" && xattr -cr "/Applications/Millida Launcher.app"
+bun install
+bun run tauri dev          # run the app from source
+bun run tauri build        # installers in src-tauri/target/release/bundle/
 ```
 
-Or install with one command and skip that step:
+On Windows the result is `src-tauri\target\release\bundle\nsis\KonMin Launcher_<version>_x64-setup.exe`.
+
+### Build-time configuration
+
+| Variable | Needed for | Default |
+| --- | --- | --- |
+| `KONMIN_MS_CLIENT_ID` | Microsoft (licensed) sign-in. Register an app in Microsoft Entra ID for **personal Microsoft accounts**, enable "Allow public client flows" (device code), and request access to the Minecraft API from Microsoft for the app. | unset: Microsoft sign-in says it is not configured; offline play works |
+| `KONMIN_DISCORD_APP_ID` | Discord Rich Presence (also read at run time) | unset: presence off |
+| `KONMIN_SITE_URL` | "Download launcher" button in Discord presence | unset: no button |
+| `VITE_KONMIN_DOWNLOAD_PAGE` | page opened when an automatic update fails | unset: nothing opened |
+| `plugins.updater.endpoints` / `pubkey` in `src-tauri/tauri.conf.json` | auto-update: your `latest.json` URLs and the public key from `bunx tauri signer generate` | empty: no update checks |
+
+Never commit secrets: the Azure client id and the updater **public** key are not secrets; the
+updater **private** key must stay in your CI secrets (`TAURI_SIGNING_PRIVATE_KEY`).
+
+## Checks
 
 ```bash
-curl -fsSL https://launcher-storage.millida.net/setup/install.sh | sh
-```
-</details>
-
-<details>
-<summary><b>Linux</b>: Flatpak or one command</summary>
-
-```bash
-flatpak install --user https://launcher-flatpak.millida.net/millida-launcher.flatpakref
+bun run typecheck                                  # TypeScript (strict)
+bun run test                                       # frontend and script tests
+bun run build:web                                  # production web build + gates
+cd src-tauri
+cargo clippy --all-targets -- -D warnings
+cargo test
 ```
 
-Without Flatpak (AppImage with a menu shortcut):
+## Branding assets
 
-```bash
-curl -fsSL https://launcher-storage.millida.net/setup/install.sh | sh
-```
+- `public/konmin-logo.svg`: the mark (pixel "K" on a blue-violet tile), also `public/favicon.svg`
+- `src-tauri/icons/`: application icons for every platform; regenerate them with
+  `python scripts/gen-app-icons.py` then `bunx tauri icon src-tauri/icons/icon-1024.png -o src-tauri/icons`
+- `branding/`: logo, 1024 px icon and README banner
+- Colour tokens: `src/styles/02-kit.css` (`--m-bg #0F1117`, accent `#5C84FF`, gradient `#3D8BFF → #7B5CFF`)
 
-`.deb` and `.rpm` files are on the [download page](https://millida.net/launcher#download).
-</details>
+## Known limitations
 
-## FAQ
+- Online features that use Millida's API (Millida account, friends, chat, calls, catalog
+  purchases, Millida skins and cosmetics, cloud sync, hosting panel, CurseForge **search**) depend
+  on Millida's servers, which may block unofficial builds at any time.
+- Builds are not code-signed: Windows SmartScreen and macOS Gatekeeper will warn.
+- Wallpapers, lobby art and music in `public/` and `media/` are upstream artwork; replace them
+  before distributing builds publicly (see [TRADEMARK.md](TRADEMARK.md)).
+- `installer/` (upstream's web installer) and the release workflows under `.github/workflows/`
+  belong to Millida's release pipeline and are not used for KonMin.
 
-<details>
-<summary><b>Is it free?</b></summary>
+## License
 
-Yes. There are no ads and no extra software in the installer.
-</details>
+GPL-3.0-only, see [LICENSE](LICENSE) and [NOTICE](NOTICE). KonMin Launcher is a modified version of
+Millida Launcher © Millida (Roman Babaskin); modifications © KonMin. Third-party components:
+[THIRD-PARTY.md](THIRD-PARTY.md). The upstream trademark policy that applies to the Millida name
+and assets is in [TRADEMARK.md](TRADEMARK.md).
 
-<details>
-<summary><b>Do I need a paid copy of Minecraft?</b></summary>
-
-No. You can play with just a nickname. If you own the game, you sign in through the official Microsoft window. The launcher never sees your password.
-</details>
-
-<details>
-<summary><b>Do I need to install Java?</b></summary>
-
-No. The launcher downloads the right version itself.
-</details>
-
-<details>
-<summary><b>My antivirus complains</b></summary>
-
-The VirusTotal report for every installer is at [millida.net/launcher/antivirus](https://millida.net/launcher/antivirus). Download only from millida.net or from the [releases](https://github.com/millida/launcher/releases) page. Anything else is not ours.
-</details>
-
-<details>
-<summary><b>Something does not work</b></summary>
-
-Write in [Discord](https://discord.gg/mcru) or open an issue. Attach `logs/launcher-latest.log` from the instance folder to your report.
-</details>
-
-<details>
-<summary><b>Why does the launcher have telemetry?</b></summary>
-
-We want to learn about breakages before players write to support, and fix them faster. For example, on 13.10.2026 the crash events showed that some Fabric instances crash because of an old Fabric Loader. The same data shows which screens are slow and what people cannot find in the interface. When you sign in to a Millida account, the statistics are linked to it. Passwords, tokens, files and chat texts are never sent. You can turn it off in "Settings → Account → Usage statistics". The full list of what is sent and the code that sends it: [TELEMETRY.md](TELEMETRY.md).
-</details>
-
-<details>
-<summary><b>How do I uninstall it?</b></summary>
-
-Windows: "Settings" → "Apps". macOS: move it to the Trash. Flatpak: `flatpak uninstall net.millida.launcher`.
-</details>
-
-## For developers
-
-Rust core (Tauri 2) and a React interface. License: [GPL-3.0-only](LICENSE). Flag icons in the language picker: [Twemoji](https://github.com/jdecked/twemoji), CC-BY 4.0.
-
-[How to build it yourself](BUILDING.md) · [Architecture](ARCHITECTURE.md) · [How to send a fix](CONTRIBUTING.md) · [Vulnerabilities](SECURITY.md) · [Name and logo](TRADEMARK.md)
-
-<details>
-<summary><b>Why the code is open</b></summary>
-
-The launcher handles your Microsoft sign-in, the game files and network requests. The honest answer to "what does it do with my account" is to let you read all of the code. From January to June 2026, fake Minecraft clients [infected more than a hundred thousand machines](https://thehackernews.com/2026/08/weedhack-malware-spreads-via-fake.html) and stole exactly the Microsoft sign-in token.
-
-- Official builds come only from [millida.net/launcher](https://millida.net/launcher) and from the [releases](https://github.com/millida/launcher/releases) of this repository.
-- We do not support third-party builds. You can still build the code for yourself.
-- We accept fixes here, so every player gets them at once.
-- GPL-3.0 gives you the right to fork. The brand, the keys and our services are not covered by it. See [TRADEMARK.md](TRADEMARK.md).
-
-A fork needs its own name, its own icons and its own app registration in Azure (`MILLIDA_MS_CLIENT_ID`). Game installation, loaders, Java and Modrinth work without our servers. Millida sign-in, friends, skins, the rating, the hosting panel and the CurseForge proxy use `api.millida.net`.
-</details>
-
-## Copyright / DMCA
-
-Copyright and DMCA takedown notices: [dmca@millida.net](mailto:dmca@millida.net). What a notice must contain: [DMCA.md](DMCA.md).
-
-<sub>Millida Launcher is not affiliated with Mojang AB or Microsoft. Minecraft is a trademark of Mojang AB.</sub>
+<sub>KonMin Launcher is not affiliated with Mojang AB, Microsoft or Millida. Minecraft is a trademark of Mojang AB.</sub>

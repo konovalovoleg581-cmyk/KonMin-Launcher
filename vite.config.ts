@@ -1,4 +1,4 @@
-import { cpSync, createReadStream, existsSync, statSync } from 'node:fs'
+import { cpSync, createReadStream, existsSync, readFileSync, statSync } from 'node:fs'
 import { extname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig, loadEnv, type Plugin } from 'vite'
@@ -16,6 +16,15 @@ import { devCosmeticModels } from './scripts/dev-cosmetic-models.mjs'
 //    src-tauri/src/engine/core/media.rs). The same variable switches the core: docs/MEDIA.md.
 // The dev server serves media/ under /media/ for the browser preview in both cases.
 const mediaRemote = process.env.MEDIA_REMOTE === '1'
+
+// KonMin Launcher updates itself only when tauri.conf.json names its own update channel (endpoints and the
+// minisign public key of its releases). Without one, the window never asks the updater plugin, so a fork
+// build neither shows update errors nor reaches anybody else's update server. The core applies the same rule
+// (updates_configured in src-tauri/src/engine/core/selfupdate.rs).
+const updaterConf = JSON.parse(readFileSync(new URL('src-tauri/tauri.conf.json', import.meta.url), 'utf8'))?.plugins?.updater ?? {}
+const updatesConfigured =
+  Array.isArray(updaterConf.endpoints) && updaterConf.endpoints.length > 0 && typeof updaterConf.pubkey === 'string' && updaterConf.pubkey.trim() !== ''
+
 const mediaFile = (p: string) => fileURLToPath(new URL('media/' + p, import.meta.url))
 const bundledVideos = ['bg1', 'bg2', 'bg3', 'bg4'].filter((id) => existsSync(mediaFile('bg/' + id + '.mp4')))
 const hasBundledMusic = existsSync(mediaFile('music/01-starlight-city.mp3'))
@@ -77,6 +86,8 @@ export default defineConfig(({ mode }) => {
     __BUNDLED_VIDEOS__: JSON.stringify(bundledVideos),
     __HAS_BUNDLED_MUSIC__: JSON.stringify(hasBundledMusic),
     __MEDIA_REMOTE__: JSON.stringify(mediaRemote),
+    __KONMIN_UPDATES__: JSON.stringify(updatesConfigured),
+    __KONMIN_TELEMETRY_OPT_IN__: 'true',
   },
   server: {
     port: 5173,

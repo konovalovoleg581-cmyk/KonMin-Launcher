@@ -4,7 +4,7 @@ use crate::engine;
 
 #[tauri::command]
 pub fn core_version() -> String {
-    env!("MILLIDA_VERSION").to_string()
+    env!("KONMIN_VERSION").to_string()
 }
 
 #[tauri::command]

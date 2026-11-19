@@ -22,6 +22,15 @@ mod navguard;
 mod cli;
 mod update_start;
 
+/// URL scheme registered for KonMin Launcher (tauri.conf.json → plugins.deep-link).
+pub(crate) const APP_SCHEME: &str = "konmin";
+
+/// A deep link meant for this launcher. `konmin:` is its own scheme; `millida:` links (the scheme of the
+/// upstream Millida Launcher, used by millida.net buttons) are still understood when the OS hands one over.
+pub(crate) fn is_app_link(arg: &str) -> bool {
+    arg.starts_with("konmin:") || arg.starts_with("millida:")
+}
+
 /// Directories the webview may read through `asset://`: the media files it
 /// plays and shows, nothing else. The token
 /// vault (`secrets.bin`, `device.key`) sits directly under `data_dir()` and
@@ -70,7 +79,7 @@ fn on_run_event(app: &tauri::AppHandle, event: &tauri::RunEvent) {
         #[cfg(target_os = "macos")]
         tauri::RunEvent::Opened { urls } => {
             let links: Vec<String> = urls.iter().map(|u| u.to_string()).collect();
-            if background::unloaded() && links.iter().any(|l| l.starts_with("millida:")) {
+            if background::unloaded() && links.iter().any(|l| is_app_link(l)) {
                 background::keep_links(&links);
                 tray::show_main(app);
             }
@@ -240,7 +249,7 @@ pub fn run() {
     // ready (engine::mark_frontend_ready): a new exe that cannot even open leaves the old one to go back to.
     // Before the builder: Tauri creates the window from its config before our setup runs, and a
     // WebView2 that fails there panics with nobody listening (engine::install_panic_hook).
-    engine::install_panic_hook(env!("MILLIDA_VERSION").to_string());
+    engine::install_panic_hook(env!("KONMIN_VERSION").to_string());
     engine::wait_for_parent();
     cli::remember_startup_args();
     #[cfg(target_os = "linux")]

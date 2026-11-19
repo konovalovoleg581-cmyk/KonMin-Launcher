@@ -623,8 +623,8 @@ mod tests {
         const WIN: Platform = Platform { os: "windows", arch: "x86_64", bits: "64" };
         const LINUX: Platform = Platform { os: "linux", arch: "x86_64", bits: "64" };
         const MAC: Platform = Platform { os: "osx", arch: "x86_64", bits: "64" };
-        let cyrillic = "C:/Users/Вася/AppData/Roaming/net.millida.launcher/minecraft/versions/1.12.2/natives";
-        let ascii = "C:/Users/Ivan/AppData/Roaming/net.millida.launcher/minecraft/versions/1.12.2/natives";
+        let cyrillic = "C:/Users/Вася/AppData/Roaming/com.konmin.launcher/minecraft/versions/1.12.2/natives";
+        let ascii = "C:/Users/Ivan/AppData/Roaming/com.konmin.launcher/minecraft/versions/1.12.2/natives";
         let cases: [(Platform, &str, &str, bool, &str); 7] = [
             (WIN, "lwjgl-2.9.4-nightly-20150209.jar", cyrillic, true, "1.12.2: UTF-8 bytes of the OpenAL path are not a file name for LoadLibraryA"),
             (WIN, "lwjgl-2.9.1.jar", cyrillic, true, "1.7.10 loads OpenAL the same way"),

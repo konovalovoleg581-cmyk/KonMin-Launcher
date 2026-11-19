@@ -1,5 +1,10 @@
 # Откуда берётся лаунчер и как это проверить
 
+> **Примечание KonMin Launcher.** Документ перенесён без изменений из оригинального проекта
+> [Millida Launcher](https://github.com/millida/launcher). Он описывает официальные сборки, сервисы,
+> контакты и процессы Millida, а не KonMin. Чем отличается KonMin Launcher:
+> [README.ru.md](README.ru.md) и [EXTERNAL-SERVICES.md](EXTERNAL-SERVICES.md).
+
 [English version: SAFETY.md](SAFETY.md)
 
 ## Коротко

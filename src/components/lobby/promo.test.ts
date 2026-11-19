@@ -5,8 +5,8 @@ const RU = { partners: true, ruContent: true }
 
 test('slides keep the owner order and drop packs missing from the catalogue', () => {
   expect(promoSlides({ arcania: true, prisonrpg: true, invite: true, ...RU })).toEqual(PROMO_ORDER)
-  expect(promoSlides({ arcania: false, prisonrpg: true, invite: false, ...RU })).toEqual(['discord', 'telegram', 'anarchy', 'prisonrpg', 'smp'])
-  expect(promoSlides({ arcania: false, prisonrpg: false, invite: false, ...RU })).toEqual(['discord', 'telegram', 'anarchy', 'smp'])
+  expect(promoSlides({ arcania: false, prisonrpg: true, invite: false, ...RU })).toEqual(['anarchy', 'prisonrpg', 'smp'])
+  expect(promoSlides({ arcania: false, prisonrpg: false, invite: false, ...RU })).toEqual(['anarchy', 'smp'])
 })
 
 test('the invite slide shows only once the referral terms came from the server', () => {
@@ -19,7 +19,8 @@ test('outside the Russian market partner servers and the Russian Telegram channe
   expect(intl, 'MCRU anarchy and MetaLabs prison are Russian partner servers, an English player has nowhere to talk to them').not.toContain('anarchy')
   expect(intl, 'the prison slide is a partner server even when its pack is in the catalogue').not.toContain('prisonrpg')
   expect(intl, 'the Telegram channel posts in Russian only').not.toContain('telegram')
-  expect(intl, 'Millida own slides stay on every market').toEqual(['discord', 'arcania', 'smp', 'invite'])
+  expect(intl, 'Millida own slides stay on every market').toEqual(['arcania', 'smp', 'invite'])
+  expect(promoSlides({ arcania: true, prisonrpg: true, invite: true, ...RU }), "KonMin does not advertise Millida's community channels as its own").not.toContain('discord')
 })
 
 test('rotation walks every slide and wraps', () => {

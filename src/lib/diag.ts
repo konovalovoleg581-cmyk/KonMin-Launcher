@@ -37,9 +37,9 @@ async function safe<T>(fn: () => Promise<T>): Promise<T | null> {
 function accentId(): string {
   try {
     const s = JSON.parse(localStorage.getItem('m-accent') || 'null')
-    return s && typeof s.id === 'string' ? s.id : 'green'
+    return s && typeof s.id === 'string' ? s.id : 'konmin'
   } catch {
-    return 'green'
+    return 'konmin'
   }
 }
 
@@ -123,7 +123,7 @@ export async function buildDiagnostics(): Promise<string> {
   const skin = tauri && acc ? await safe(() => skinDiagnose(acc.nick, !!millida)) : null
 
   const lines: (string | null)[] = [
-    '=== Millida Launcher · диагностика ===',
+    '=== KonMin Launcher · диагностика ===',
     'Снято: ' + new Date().toISOString(),
     'Версия: ' + (ver || 'неизвестна') + (tauri ? '' : ' (веб-режим, без ядра)'),
     upd ? 'Обновление: доступна ' + upd.version + (updateReady() ? ' (готова к установке)' : ' (качается)') : 'Обновление: нет',

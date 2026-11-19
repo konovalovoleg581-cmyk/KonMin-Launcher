@@ -1,5 +1,10 @@
 # Security
 
+> **KonMin Launcher note.** This document is inherited unchanged from the upstream
+> [Millida Launcher](https://github.com/millida/launcher) project. It describes Millida's official
+> builds, services, contacts and processes, not KonMin's. What differs in KonMin Launcher:
+> [README.md](README.md) and [EXTERNAL-SERVICES.md](EXTERNAL-SERVICES.md).
+
 Russian version: [SECURITY.ru.md](SECURITY.ru.md)
 
 Thank you for taking the time to report a problem. The launcher starts the game, uses the

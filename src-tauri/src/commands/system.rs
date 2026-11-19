@@ -31,7 +31,7 @@ pub async fn set_game_dir(app: tauri::AppHandle, path: String, move_data: bool) 
 pub async fn pick_game_dir() -> Result<Option<String>, String> {
     let start = engine::game_root();
     let picked =
-        engine::pick_folder(engine::dialog().set_directory(&start).set_title(crate::engine::ui("Папка игры Millida"))).await;
+        engine::pick_folder(engine::dialog().set_directory(&start).set_title(crate::engine::ui("Папка игры KonMin Launcher"))).await;
     let Some(d) = picked else { return Ok(None) };
     let d = engine::game_root_from_pick(d);
     // refused at pick time, so the player sees why right away
@@ -125,7 +125,7 @@ pub fn open_url(app: tauri::AppHandle, url: String) -> Result<(), String> {
 
 #[tauri::command]
 pub fn app_version() -> String {
-    env!("MILLIDA_VERSION").to_string()
+    env!("KONMIN_VERSION").to_string()
 }
 
 #[tauri::command]
@@ -165,7 +165,7 @@ pub fn autostart_state(app: tauri::AppHandle) -> Result<bool, String> {
 pub fn autostart_set(app: tauri::AppHandle, on: bool) -> Result<bool, String> {
     use tauri_plugin_autostart::ManagerExt;
     // Dev and test builds never register a login item: every rebuilt target/debug binary is a new
-    // program to macOS, and each one used to pop «millida-launcher can run in the background» on
+    // program to macOS, and each one used to pop «konmin-launcher can run in the background» on
     // the owner's Mac (24.10.2026).
     if cfg!(debug_assertions) {
         return Ok(false);

@@ -2,7 +2,7 @@
 
 Russian version: [CONTRIBUTING.ru.md](CONTRIBUTING.ru.md)
 
-Millida Launcher is a desktop Minecraft launcher built with Tauri 2 (Rust) and React 19.
+KonMin Launcher (a fork of Millida Launcher) is a desktop Minecraft launcher built with Tauri 2 (Rust) and React 19.
 The core (`src-tauri`) installs and starts the game and works with files and
 secrets. The frontend (`src`) is the view on top of the core's IPC commands.
 
@@ -70,7 +70,7 @@ app they go through the Rust command `millida_api`. To check anything that
 touches installation, starting the game, paths or secrets, you need `bun run tauri dev`.
 
 Signing in with a Microsoft license needs your own Azure app: the `client_id` is built in
-at compile time from the `MILLIDA_MS_CLIENT_ID` variable. Without it, the launcher
+at compile time from the `KONMIN_MS_CLIENT_ID` variable. Without it, the launcher
 builds and works, and the sign-in button says plainly that sign-in is not set up.
 
 ## What to run before a pull request

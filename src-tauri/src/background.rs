@@ -9,7 +9,7 @@
 //!
 //! По крестику (если включено «в трей») и при запуске игры окно `main` не прячется, а
 //! уничтожается: вместе с ним завершается всё дерево `msedgewebview2.exe`, в диспетчере
-//! остаётся один `millida-launcher.exe`. Клик по значку в трее собирает окно заново из той
+//! остаётся один `konmin-launcher.exe`. Клик по значку в трее собирает окно заново из той
 //! же конфигурации (`tauri.conf.json`), и страница открывается на том экране, где её
 //! оставили: экран хранится здесь, в ядре, а не в странице, которой больше нет.
 //!
@@ -589,7 +589,7 @@ pub fn keep_links(argv: &[String]) {
         return;
     }
     let mut r = lock(&RESUME);
-    for a in argv.iter().filter(|a| a.starts_with("millida:")) {
+    for a in argv.iter().filter(|a| crate::is_app_link(a)) {
         if r.links.len() < MAX_LINKS && a.len() <= 2048 {
             r.links.push(a.clone());
         }
@@ -1111,7 +1111,7 @@ mod tests {
     fn only_webview_processes_of_our_tree_are_counted() {
         let mb = 1024 * 1024;
         let procs = vec![
-            (10, Some(1), "millida-launcher.exe".to_string(), 30 * mb),
+            (10, Some(1), "konmin-launcher.exe".to_string(), 30 * mb),
             (11, Some(10), "msedgewebview2.exe".to_string(), 90 * mb),
             (12, Some(11), "msedgewebview2.exe".to_string(), 120 * mb),
             (13, Some(10), "javaw.exe".to_string(), 2000 * mb),

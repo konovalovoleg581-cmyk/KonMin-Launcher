@@ -1,5 +1,5 @@
 // Shared network code: HTTP client, file downloads with checksum checks, resume, retries.
-// Every request has the User-Agent "MillidaLauncher/version". No tokens, nickname or hardware are added here. They get into headers only where the calling modules put them.
+// Every request has the User-Agent "KonMinLauncher/version". No tokens, nickname or hardware are added here. They get into headers only where the calling modules put them.
 use futures::StreamExt;
 use serde_json::Value;
 use std::io::Write;
@@ -15,7 +15,7 @@ use super::jobs::{count_downloaded, Halt, CANCELLED};
 pub(crate) const PAUSED: &str = "Загрузка на паузе";
 
 // The only header we send to every server ourselves: launcher version and site.
-const UA: &str = concat!("MillidaLauncher/", env!("MILLIDA_VERSION"), " (+https://millida.net)");
+const UA: &str = concat!("KonMinLauncher/", env!("KONMIN_VERSION"), " (fork of Millida Launcher)");
 const JSON_TIMEOUT: Duration = Duration::from_secs(30);
 const TRIES: u32 = 3;
 
@@ -2466,9 +2466,9 @@ PK"),
     /// "1.0" made every build look the same.
     #[test]
     fn user_agent_carries_the_real_app_version() {
-        let expected = format!("MillidaLauncher/{} (+https://millida.net)", env!("MILLIDA_VERSION"));
+        let expected = format!("KonMinLauncher/{} (fork of Millida Launcher)", env!("KONMIN_VERSION"));
         assert_eq!(UA, expected, "User-Agent обязан нести версию из Cargo.toml, которую CI ставит при выпуске");
-        assert_ne!(env!("MILLIDA_VERSION"), "", "пустая версия дала бы «MillidaLauncher/» без номера");
+        assert_ne!(env!("KONMIN_VERSION"), "", "пустая версия дала бы «KonMinLauncher/» без номера");
     }
 }
 

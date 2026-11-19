@@ -1,5 +1,10 @@
 # Where the launcher comes from and how to verify it
 
+> **KonMin Launcher note.** This document is inherited unchanged from the upstream
+> [Millida Launcher](https://github.com/millida/launcher) project. It describes Millida's official
+> builds, services, contacts and processes, not KonMin's. What differs in KonMin Launcher:
+> [README.md](README.md) and [EXTERNAL-SERVICES.md](EXTERNAL-SERVICES.md).
+
 Russian version: [SAFETY.ru.md](SAFETY.ru.md)
 
 ## In short

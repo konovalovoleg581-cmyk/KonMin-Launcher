@@ -13,7 +13,7 @@
 //! - Windows: иконка окна и панели задач + ярлыки «Рабочий стол» и «Пуск»,
 //!   которые ведут на наш .exe (`IShellLinkW::SetIconLocation` на копию .ico
 //!   в данных приложения). Сам .exe не трогаем — подпись цела.
-//! - Linux: окно + `Icon=` в `~/.local/share/applications/millida-launcher.desktop`.
+//! - Linux: окно + `Icon=` в `~/.local/share/applications/konmin-launcher.desktop`.
 //!
 //! Выбор хранит интерфейс и присылает его при каждом запуске.
 use tauri::image::Image;
@@ -219,7 +219,7 @@ mod shortcuts {
 mod shortcuts {
     use std::path::{Path, PathBuf};
 
-    const DESKTOP: &str = "millida-launcher.desktop";
+    const DESKTOP: &str = "konmin-launcher.desktop";
 
     fn entry() -> Option<PathBuf> {
         let base = std::env::var_os("XDG_DATA_HOME")
@@ -276,12 +276,12 @@ pub fn set_app_icon(app: AppHandle, id: String) -> Result<(), String> {
     apply(&app, &id, png)
 }
 
-/// Только dev-сборка: `MILLIDA_APP_ICON=amethyst` ставит иконку на старте —
+/// Только dev-сборка: `KONMIN_APP_ICON=amethyst` ставит иконку на старте —
 /// проверить переключение без входа в аккаунт.
 #[cfg(debug_assertions)]
 pub fn apply_from_env(app: &AppHandle) {
     // После старта: dev-сборка сама ставит свою иконку в Dock уже после setup.
-    if let Ok(id) = std::env::var("MILLIDA_APP_ICON") {
+    if let Ok(id) = std::env::var("KONMIN_APP_ICON") {
         let app = app.clone();
         std::thread::spawn(move || {
             std::thread::sleep(std::time::Duration::from_secs(3));

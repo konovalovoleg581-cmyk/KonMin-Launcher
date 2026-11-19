@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Millida Launcher",
+  "productName": "KonMin Launcher",
   "version": "2.9.0",
-  "identifier": "net.millida.launcher",
+  "identifier": "com.konmin.launcher",
   "build": {
     "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:5173",
@@ -14,14 +14,14 @@
     "withGlobalTauri": false,
     "windows": [
       {
-        "title": "Millida Launcher",
+        "title": "KonMin Launcher",
         "width": 1200,
         "height": 760,
         "minWidth": 980,
         "minHeight": 640,
         "decorations": false,
         "transparent": false,
-        "backgroundColor": "#16171800",
+        "backgroundColor": "#0F111700",
         "center": true,
         "acceptFirstMouse": true
       }
@@ -185,12 +185,11 @@
       "rpm",
       "appimage"
     ],
-    "publisher": "Millida",
-    "homepage": "https://millida.net/launcher",
-    "copyright": "© 2026 Millida (Roman Babaskin)",
+    "publisher": "KonMin",
+    "copyright": "© 2026 KonMin. Based on Millida Launcher © 2026 Millida (Roman Babaskin). GPL-3.0-only",
     "category": "Game",
-    "shortDescription": "Лаунчер Minecraft",
-    "longDescription": "Лаунчер Minecraft от Millida: версии от Mojang, загрузчики Fabric, Quilt, Forge и NeoForge, моды и модпаки с Modrinth и CurseForge.",
+    "shortDescription": "KonMin Launcher — Minecraft launcher",
+    "longDescription": "KonMin Launcher is a Minecraft launcher: official Mojang versions, Fabric, Quilt, Forge and NeoForge loaders, mods and modpacks from Modrinth and CurseForge. A fork of the GPL-3.0 Millida Launcher project.",
     "icon": [
       "icons/icon.icns",
       "icons/icon.ico",
@@ -237,16 +236,13 @@
     "deep-link": {
       "desktop": {
         "schemes": [
-          "millida"
+          "konmin"
         ]
       }
     },
     "updater": {
-      "endpoints": [
-        "https://launcher-storage.millida.net/v2/gh/latest.json?v={{current_version}}",
-        "https://launcher-storage.millida.net/v2/latest.json?v={{current_version}}"
-      ],
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDI5MzUwRDVGRUE4NUI5NzcKUldSM3VZWHFYdzAxS1VyamhaeUdwQkRTNzZwN3U2WXRjaDFpWDZ6b3FvLzN0bkFvY3JwWEFQeCsK",
+      "endpoints": [],
+      "pubkey": "",
       "windows": {
         "installMode": "passive"
       }

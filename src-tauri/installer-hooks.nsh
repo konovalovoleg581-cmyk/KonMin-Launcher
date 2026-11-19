@@ -1,28 +1,28 @@
 !include LogicLib.nsh
 
 !ifdef MAINBINARYNAME
-  !define MILLIDA_MAIN_EXE "${MAINBINARYNAME}.exe"
+  !define KONMIN_MAIN_EXE "${MAINBINARYNAME}.exe"
 !else
-  !define MILLIDA_MAIN_EXE "millida-launcher.exe"
+  !define KONMIN_MAIN_EXE "konmin-launcher.exe"
 !endif
 
-!define MILLIDA_ASIDE ".millida-old"
+!define KONMIN_ASIDE ".konmin-old"
 
-Var MillidaAttempt
-Var MillidaProbe
-Var MillidaAside
-Var MillidaExitCode
-Var MillidaGameRoot
-Var MillidaIndex
-Var MillidaName
-Var MillidaPrefix
-Var MillidaLen
-Var MillidaWipe
-Var MillidaFind
-Var MillidaEntry
-Var MillidaWv2
-Var MillidaWv2Find
-Var MillidaWv2Entry
+Var KonMinAttempt
+Var KonMinProbe
+Var KonMinAside
+Var KonMinExitCode
+Var KonMinGameRoot
+Var KonMinIndex
+Var KonMinName
+Var KonMinPrefix
+Var KonMinLen
+Var KonMinWipe
+Var KonMinFind
+Var KonMinEntry
+Var KonMinWv2
+Var KonMinWv2Find
+Var KonMinWv2Entry
 
 ; NSIS aborts the install with "Error opening file for writing" whenever the
 ; target is still held: the app running from the tray, an elevated instance the
@@ -32,52 +32,52 @@ Var MillidaWv2Entry
 ; the app asked to quit, then forced, and as a last resort the locked file is
 ; renamed aside — Windows allows renaming a running image — and removed on the
 ; next reboot. The installer writes a fresh binary either way.
-!macro MillidaFreeFile _file
+!macro KonMinFreeFile _file
   ${If} ${FileExists} "${_file}"
     SetFileAttributes "${_file}" NORMAL
-    StrCpy $MillidaAttempt 0
+    StrCpy $KonMinAttempt 0
     ${Do}
       ClearErrors
-      FileOpen $MillidaProbe "${_file}" a
+      FileOpen $KonMinProbe "${_file}" a
       ${IfNot} ${Errors}
-        FileClose $MillidaProbe
+        FileClose $KonMinProbe
         ${Break}
       ${EndIf}
-      ${If} $MillidaAttempt == 0
-        nsExec::Exec 'taskkill /IM "${MILLIDA_MAIN_EXE}"'
-        Pop $MillidaExitCode
-      ${ElseIf} $MillidaAttempt == 2
-        nsExec::Exec 'taskkill /F /IM "${MILLIDA_MAIN_EXE}"'
-        Pop $MillidaExitCode
-      ${ElseIf} $MillidaAttempt == 4
-        StrCpy $MillidaAside "${_file}${MILLIDA_ASIDE}"
-        Delete "$MillidaAside"
+      ${If} $KonMinAttempt == 0
+        nsExec::Exec 'taskkill /IM "${KONMIN_MAIN_EXE}"'
+        Pop $KonMinExitCode
+      ${ElseIf} $KonMinAttempt == 2
+        nsExec::Exec 'taskkill /F /IM "${KONMIN_MAIN_EXE}"'
+        Pop $KonMinExitCode
+      ${ElseIf} $KonMinAttempt == 4
+        StrCpy $KonMinAside "${_file}${KONMIN_ASIDE}"
+        Delete "$KonMinAside"
         ClearErrors
-        Rename "${_file}" "$MillidaAside"
+        Rename "${_file}" "$KonMinAside"
         ${IfNot} ${Errors}
-          Delete /REBOOTOK "$MillidaAside"
+          Delete /REBOOTOK "$KonMinAside"
           ${Break}
         ${EndIf}
-      ${ElseIf} $MillidaAttempt == 5
-        StrCpy $MillidaAside "${_file}${MILLIDA_ASIDE}2"
-        Delete "$MillidaAside"
+      ${ElseIf} $KonMinAttempt == 5
+        StrCpy $KonMinAside "${_file}${KONMIN_ASIDE}2"
+        Delete "$KonMinAside"
         ClearErrors
-        Rename "${_file}" "$MillidaAside"
+        Rename "${_file}" "$KonMinAside"
         ${IfNot} ${Errors}
-          Delete /REBOOTOK "$MillidaAside"
+          Delete /REBOOTOK "$KonMinAside"
         ${EndIf}
         ${Break}
       ${EndIf}
       Sleep 600
-      IntOp $MillidaAttempt $MillidaAttempt + 1
+      IntOp $KonMinAttempt $KonMinAttempt + 1
     ${Loop}
   ${EndIf}
 !macroend
 
-!macro MillidaFreeInstallDir
-  !insertmacro MillidaFreeFile "$INSTDIR\${MILLIDA_MAIN_EXE}"
-  !insertmacro MillidaFreeFile "$INSTDIR\WebView2Loader.dll"
-  !insertmacro MillidaFreeFile "$INSTDIR\uninstall.exe"
+!macro KonMinFreeInstallDir
+  !insertmacro KonMinFreeFile "$INSTDIR\${KONMIN_MAIN_EXE}"
+  !insertmacro KonMinFreeFile "$INSTDIR\WebView2Loader.dll"
+  !insertmacro KonMinFreeFile "$INSTDIR\uninstall.exe"
 !macroend
 
 ; WebView2 Runtime. Tauri's own section (webviewInstallMode) looked at one registry
@@ -88,79 +88,79 @@ Var MillidaWv2Entry
 ; done here: any registration naming a real version counts, files on disk save a
 ; failed repair from a false alarm, and a failure never stops the install. A
 ; launcher that then cannot open its window says so itself (engine/core/crash.rs).
-!define MILLIDA_WV2_GUID "{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
-!define MILLIDA_WV2_CLIENT "Microsoft\EdgeUpdate\Clients\${MILLIDA_WV2_GUID}"
-!define MILLIDA_WV2_URL "https://go.microsoft.com/fwlink/p/?LinkId=2124703"
-!define MILLIDA_WV2_PAGE "https://developer.microsoft.com/microsoft-edge/webview2/"
+!define KONMIN_WV2_GUID "{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+!define KONMIN_WV2_CLIENT "Microsoft\EdgeUpdate\Clients\${KONMIN_WV2_GUID}"
+!define KONMIN_WV2_URL "https://go.microsoft.com/fwlink/p/?LinkId=2124703"
+!define KONMIN_WV2_PAGE "https://developer.microsoft.com/microsoft-edge/webview2/"
 
 ; A version in the registration; «0.0.0.0» is what Microsoft writes for «not installed».
-!macro MillidaWv2Version _root _key
-  ${If} $MillidaWv2 == ""
-  ${OrIf} $MillidaWv2 == "0.0.0.0"
-    ReadRegStr $MillidaWv2 ${_root} "${_key}" "pv"
+!macro KonMinWv2Version _root _key
+  ${If} $KonMinWv2 == ""
+  ${OrIf} $KonMinWv2 == "0.0.0.0"
+    ReadRegStr $KonMinWv2 ${_root} "${_key}" "pv"
   ${EndIf}
 !macroend
 
-; $MillidaWv2Entry = "1" when msedgewebview2.exe is in a version folder under _dir.
-!macro MillidaWv2Files _dir
-  ${If} $MillidaWv2Entry != "1"
+; $KonMinWv2Entry = "1" when msedgewebview2.exe is in a version folder under _dir.
+!macro KonMinWv2Files _dir
+  ${If} $KonMinWv2Entry != "1"
     ClearErrors
-    FindFirst $MillidaWv2Find $MillidaWv2 "${_dir}\*"
+    FindFirst $KonMinWv2Find $KonMinWv2 "${_dir}\*"
     ${DoUntil} ${Errors}
-      ${If} $MillidaWv2 != "."
-      ${AndIf} $MillidaWv2 != ".."
-      ${AndIf} ${FileExists} "${_dir}\$MillidaWv2\msedgewebview2.exe"
-        StrCpy $MillidaWv2Entry "1"
+      ${If} $KonMinWv2 != "."
+      ${AndIf} $KonMinWv2 != ".."
+      ${AndIf} ${FileExists} "${_dir}\$KonMinWv2\msedgewebview2.exe"
+        StrCpy $KonMinWv2Entry "1"
         ${Break}
       ${EndIf}
       ClearErrors
-      FindNext $MillidaWv2Find $MillidaWv2
+      FindNext $KonMinWv2Find $KonMinWv2
     ${Loop}
-    FindClose $MillidaWv2Find
+    FindClose $KonMinWv2Find
   ${EndIf}
 !macroend
 
-!macro MillidaEnsureWebView2
+!macro KonMinEnsureWebView2
   ${If} $UpdateMode <> 1
-    StrCpy $MillidaWv2 ""
-    !insertmacro MillidaWv2Version HKLM "SOFTWARE\WOW6432Node\${MILLIDA_WV2_CLIENT}"
-    !insertmacro MillidaWv2Version HKLM "SOFTWARE\${MILLIDA_WV2_CLIENT}"
-    !insertmacro MillidaWv2Version HKCU "SOFTWARE\${MILLIDA_WV2_CLIENT}"
-    ${If} $MillidaWv2 == ""
-    ${OrIf} $MillidaWv2 == "0.0.0.0"
+    StrCpy $KonMinWv2 ""
+    !insertmacro KonMinWv2Version HKLM "SOFTWARE\WOW6432Node\${KONMIN_WV2_CLIENT}"
+    !insertmacro KonMinWv2Version HKLM "SOFTWARE\${KONMIN_WV2_CLIENT}"
+    !insertmacro KonMinWv2Version HKCU "SOFTWARE\${KONMIN_WV2_CLIENT}"
+    ${If} $KonMinWv2 == ""
+    ${OrIf} $KonMinWv2 == "0.0.0.0"
       DetailPrint "WebView2 Runtime is not registered, installing it"
       InitPluginsDir
       Delete "$PLUGINSDIR\MicrosoftEdgeWebview2Setup.exe"
       ; urlmon speaks HTTPS and follows the system proxy; NSISdl is the fallback.
-      System::Call 'urlmon::URLDownloadToFileW(p 0, w "${MILLIDA_WV2_URL}", w "$PLUGINSDIR\MicrosoftEdgeWebview2Setup.exe", i 0, p 0) i .s'
-      Pop $MillidaExitCode
+      System::Call 'urlmon::URLDownloadToFileW(p 0, w "${KONMIN_WV2_URL}", w "$PLUGINSDIR\MicrosoftEdgeWebview2Setup.exe", i 0, p 0) i .s'
+      Pop $KonMinExitCode
       ${IfNot} ${FileExists} "$PLUGINSDIR\MicrosoftEdgeWebview2Setup.exe"
-        NSISdl::download "${MILLIDA_WV2_URL}" "$PLUGINSDIR\MicrosoftEdgeWebview2Setup.exe"
-        Pop $MillidaExitCode
+        NSISdl::download "${KONMIN_WV2_URL}" "$PLUGINSDIR\MicrosoftEdgeWebview2Setup.exe"
+        Pop $KonMinExitCode
       ${EndIf}
-      StrCpy $MillidaExitCode "1"
+      StrCpy $KonMinExitCode "1"
       ${If} ${FileExists} "$PLUGINSDIR\MicrosoftEdgeWebview2Setup.exe"
-        ExecWait '"$PLUGINSDIR\MicrosoftEdgeWebview2Setup.exe" /silent /install' $MillidaExitCode
+        ExecWait '"$PLUGINSDIR\MicrosoftEdgeWebview2Setup.exe" /silent /install' $KonMinExitCode
       ${EndIf}
-      ${If} $MillidaExitCode = 0
+      ${If} $KonMinExitCode = 0
         DetailPrint "WebView2 Runtime installed"
       ${Else}
-        DetailPrint "WebView2 Runtime was not installed (code $MillidaExitCode), the launcher install goes on"
-        StrCpy $MillidaWv2Entry ""
-        !insertmacro MillidaWv2Files "$PROGRAMFILES32\Microsoft\EdgeWebView\Application"
-        !insertmacro MillidaWv2Files "$PROGRAMFILES64\Microsoft\EdgeWebView\Application"
-        !insertmacro MillidaWv2Files "$LOCALAPPDATA\Microsoft\EdgeWebView\Application"
+        DetailPrint "WebView2 Runtime was not installed (code $KonMinExitCode), the launcher install goes on"
+        StrCpy $KonMinWv2Entry ""
+        !insertmacro KonMinWv2Files "$PROGRAMFILES32\Microsoft\EdgeWebView\Application"
+        !insertmacro KonMinWv2Files "$PROGRAMFILES64\Microsoft\EdgeWebView\Application"
+        !insertmacro KonMinWv2Files "$LOCALAPPDATA\Microsoft\EdgeWebView\Application"
         ; The runtime is on disk: the repair failed, the launcher will most likely open anyway.
-        ${If} $MillidaWv2Entry != "1"
+        ${If} $KonMinWv2Entry != "1"
         ${AndIfNot} ${Silent}
         ${AndIf} $PassiveMode <> 1
           ${If} $LANGUAGE = 1049
-            MessageBox MB_YESNO|MB_ICONEXCLAMATION "Не удалось установить компонент Microsoft WebView2 — без него окно лаунчера не откроется. Установка лаунчера продолжится.$\n$\nОткрыть страницу WebView2, чтобы поставить его вручную?" IDNO millida_wv2_done
+            MessageBox MB_YESNO|MB_ICONEXCLAMATION "Не удалось установить компонент Microsoft WebView2 — без него окно лаунчера не откроется. Установка лаунчера продолжится.$\n$\nОткрыть страницу WebView2, чтобы поставить его вручную?" IDNO konmin_wv2_done
           ${Else}
-            MessageBox MB_YESNO|MB_ICONEXCLAMATION "Microsoft WebView2 could not be installed, and the launcher window will not open without it. The launcher install goes on.$\n$\nOpen the WebView2 page to install it by hand?" IDNO millida_wv2_done
+            MessageBox MB_YESNO|MB_ICONEXCLAMATION "Microsoft WebView2 could not be installed, and the launcher window will not open without it. The launcher install goes on.$\n$\nOpen the WebView2 page to install it by hand?" IDNO konmin_wv2_done
           ${EndIf}
-          ExecShell "open" "${MILLIDA_WV2_PAGE}"
-          millida_wv2_done:
+          ExecShell "open" "${KONMIN_WV2_PAGE}"
+          konmin_wv2_done:
         ${EndIf}
       ${EndIf}
     ${EndIf}
@@ -168,31 +168,31 @@ Var MillidaWv2Entry
 !macroend
 
 !macro NSIS_HOOK_PREINSTALL
-  !insertmacro MillidaFreeInstallDir
-  !insertmacro MillidaEnsureWebView2
+  !insertmacro KonMinFreeInstallDir
+  !insertmacro KonMinEnsureWebView2
 !macroend
 
 !macro NSIS_HOOK_POSTINSTALL
-  Delete /REBOOTOK "$INSTDIR\*${MILLIDA_ASIDE}*"
+  Delete /REBOOTOK "$INSTDIR\*${KONMIN_ASIDE}*"
 !macroend
 
 ; The game folder the player picked lives in game-root.txt inside the app data,
 ; read before the uninstall removes anything.
-!macro MillidaReadGameRoot
+!macro KonMinReadGameRoot
   SetShellVarContext current
-  StrCpy $MillidaGameRoot ""
+  StrCpy $KonMinGameRoot ""
   ClearErrors
-  FileOpen $MillidaProbe "$APPDATA\net.millida.launcher\game-root.txt" r
+  FileOpen $KonMinProbe "$APPDATA\com.konmin.launcher\game-root.txt" r
   ${IfNot} ${Errors}
-    FileRead $MillidaProbe $MillidaGameRoot
-    FileClose $MillidaProbe
+    FileRead $KonMinProbe $KonMinGameRoot
+    FileClose $KonMinProbe
   ${EndIf}
   ; Trim the line break.
   ${Do}
-    StrCpy $MillidaName $MillidaGameRoot 1 -1
-    ${If} $MillidaName == "$\r"
-    ${OrIf} $MillidaName == "$\n"
-      StrCpy $MillidaGameRoot $MillidaGameRoot -1
+    StrCpy $KonMinName $KonMinGameRoot 1 -1
+    ${If} $KonMinName == "$\r"
+    ${OrIf} $KonMinName == "$\n"
+      StrCpy $KonMinGameRoot $KonMinGameRoot -1
     ${Else}
       ${Break}
     ${EndIf}
@@ -202,48 +202,48 @@ Var MillidaWv2Entry
 ; Graphics card choices the launcher wrote for its own java (engine/game/gpu.rs) are
 ; values named by the java path under UserGpuPreferences: remove the ones under
 ; _prefix only. Deleting shifts the index, so it only moves on a kept value.
-!macro MillidaDropGpuPrefs _prefix
-  StrCpy $MillidaPrefix "${_prefix}"
-  StrLen $MillidaLen $MillidaPrefix
-  ${If} $MillidaLen > 3
-    StrCpy $MillidaIndex 0
+!macro KonMinDropGpuPrefs _prefix
+  StrCpy $KonMinPrefix "${_prefix}"
+  StrLen $KonMinLen $KonMinPrefix
+  ${If} $KonMinLen > 3
+    StrCpy $KonMinIndex 0
     ${Do}
       ClearErrors
-      EnumRegValue $MillidaName HKCU "Software\Microsoft\DirectX\UserGpuPreferences" $MillidaIndex
+      EnumRegValue $KonMinName HKCU "Software\Microsoft\DirectX\UserGpuPreferences" $KonMinIndex
       ${If} ${Errors}
-      ${OrIf} $MillidaName == ""
+      ${OrIf} $KonMinName == ""
         ${Break}
       ${EndIf}
-      StrCpy $MillidaProbe $MillidaName $MillidaLen
-      ${If} $MillidaProbe == $MillidaPrefix
-        DeleteRegValue HKCU "Software\Microsoft\DirectX\UserGpuPreferences" $MillidaName
+      StrCpy $KonMinProbe $KonMinName $KonMinLen
+      ${If} $KonMinProbe == $KonMinPrefix
+        DeleteRegValue HKCU "Software\Microsoft\DirectX\UserGpuPreferences" $KonMinName
       ${Else}
-        IntOp $MillidaIndex $MillidaIndex + 1
+        IntOp $KonMinIndex $KonMinIndex + 1
       ${EndIf}
     ${Loop}
   ${EndIf}
 !macroend
 
 ; Empties _dir except the entries named _keep1/_keep2/_keep3 («-» keeps nothing more).
-!macro MillidaWipeDirExcept _dir _keep1 _keep2 _keep3
+!macro KonMinWipeDirExcept _dir _keep1 _keep2 _keep3
   ClearErrors
-  FindFirst $MillidaFind $MillidaEntry "${_dir}\*"
+  FindFirst $KonMinFind $KonMinEntry "${_dir}\*"
   ${DoUntil} ${Errors}
-    ${If} $MillidaEntry != "."
-    ${AndIf} $MillidaEntry != ".."
-    ${AndIf} $MillidaEntry != "${_keep1}"
-    ${AndIf} $MillidaEntry != "${_keep2}"
-    ${AndIf} $MillidaEntry != "${_keep3}"
-      ${If} ${FileExists} "${_dir}\$MillidaEntry\*"
-        RmDir /r "${_dir}\$MillidaEntry"
+    ${If} $KonMinEntry != "."
+    ${AndIf} $KonMinEntry != ".."
+    ${AndIf} $KonMinEntry != "${_keep1}"
+    ${AndIf} $KonMinEntry != "${_keep2}"
+    ${AndIf} $KonMinEntry != "${_keep3}"
+      ${If} ${FileExists} "${_dir}\$KonMinEntry\*"
+        RmDir /r "${_dir}\$KonMinEntry"
       ${Else}
-        Delete "${_dir}\$MillidaEntry"
+        Delete "${_dir}\$KonMinEntry"
       ${EndIf}
     ${EndIf}
     ClearErrors
-    FindNext $MillidaFind $MillidaEntry
+    FindNext $KonMinFind $KonMinEntry
   ${Loop}
-  FindClose $MillidaFind
+  FindClose $KonMinFind
 !macroend
 
 ; The «delete app data» box stands for accounts, settings and caches, but Tauri's own
@@ -252,51 +252,51 @@ Var MillidaWv2Entry
 ; box is taken over before Tauri acts on it and the same folders are emptied here,
 ; keeping the builds (minecraft\profiles), their list and the pointer to a game
 ; folder picked by hand. The launcher adopts kept build folders on the next start.
-!macro MillidaWipeKeepingBuilds _roaming _local
+!macro KonMinWipeKeepingBuilds _roaming _local
   RmDir /r "${_local}"
-  !insertmacro MillidaWipeDirExcept "${_roaming}" "minecraft" "profiles.json" "game-root.txt"
-  !insertmacro MillidaWipeDirExcept "${_roaming}\minecraft" "profiles" "-" "-"
+  !insertmacro KonMinWipeDirExcept "${_roaming}" "minecraft" "profiles.json" "game-root.txt"
+  !insertmacro KonMinWipeDirExcept "${_roaming}\minecraft" "profiles" "-" "-"
   RmDir "${_roaming}\minecraft"
   RmDir "${_roaming}"
 !macroend
 
 ; What the uninstaller always removes, «delete app data» box or not: the WebView2
-; caches (never the page's own storage), the autostart entries, the millida:// link
+; caches (never the page's own storage), the autostart entries, the konmin:// link
 ; if it still points here and the GPU choices for our java. Accounts and settings
 ; stay unless the player ticks the box; builds and worlds stay always. The page keeps the
 ; account list, the statistics opt-out and its other settings in WebView2's Local
 ; Storage and IndexedDB, so those folders are left alone here. A game folder picked
 ; by hand is never removed — it may be shared with another launcher. Updates
 ; (/UPDATE) keep everything.
-!macro MillidaCleanTraces
+!macro KonMinCleanTraces
   ${If} $UpdateMode <> 1
     SetShellVarContext current
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\Default\Cache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\Default\Code Cache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\Default\GPUCache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\Default\DawnGraphiteCache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\Default\DawnWebGPUCache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\Default\Service Worker\CacheStorage"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\GrShaderCache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\GraphiteDawnCache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\ShaderCache"
-    RmDir /r "$APPDATA\net.millida.launcher\tmp"
+    RmDir /r "$LOCALAPPDATA\com.konmin.launcher\EBWebView\Default\Cache"
+    RmDir /r "$LOCALAPPDATA\com.konmin.launcher\EBWebView\Default\Code Cache"
+    RmDir /r "$LOCALAPPDATA\com.konmin.launcher\EBWebView\Default\GPUCache"
+    RmDir /r "$LOCALAPPDATA\com.konmin.launcher\EBWebView\Default\DawnGraphiteCache"
+    RmDir /r "$LOCALAPPDATA\com.konmin.launcher\EBWebView\Default\DawnWebGPUCache"
+    RmDir /r "$LOCALAPPDATA\com.konmin.launcher\EBWebView\Default\Service Worker\CacheStorage"
+    RmDir /r "$LOCALAPPDATA\com.konmin.launcher\EBWebView\GrShaderCache"
+    RmDir /r "$LOCALAPPDATA\com.konmin.launcher\EBWebView\GraphiteDawnCache"
+    RmDir /r "$LOCALAPPDATA\com.konmin.launcher\EBWebView\ShaderCache"
+    RmDir /r "$APPDATA\com.konmin.launcher\tmp"
     ; The notification id the launcher registers for toasts when there is no Start menu shortcut.
-    DeleteRegKey HKCU "Software\Classes\AppUserModelId\net.millida.launcher"
-    DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "Millida Launcher"
-    DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" "Millida Launcher"
-    ReadRegStr $MillidaName HKCU "Software\Classes\millida\shell\open\command" ""
-    StrCpy $MillidaPrefix "$\"$INSTDIR\${MILLIDA_MAIN_EXE}$\""
-    StrLen $MillidaLen $MillidaPrefix
-    StrCpy $MillidaProbe $MillidaName $MillidaLen
-    ${If} $MillidaProbe == $MillidaPrefix
-      DeleteRegKey HKCU "Software\Classes\millida"
+    DeleteRegKey HKCU "Software\Classes\AppUserModelId\com.konmin.launcher"
+    DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "KonMin Launcher"
+    DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" "KonMin Launcher"
+    ReadRegStr $KonMinName HKCU "Software\Classes\konmin\shell\open\command" ""
+    StrCpy $KonMinPrefix "$\"$INSTDIR\${KONMIN_MAIN_EXE}$\""
+    StrLen $KonMinLen $KonMinPrefix
+    StrCpy $KonMinProbe $KonMinName $KonMinLen
+    ${If} $KonMinProbe == $KonMinPrefix
+      DeleteRegKey HKCU "Software\Classes\konmin"
     ${EndIf}
-    !insertmacro MillidaDropGpuPrefs "$APPDATA\net.millida.launcher\"
-    ${If} $MillidaGameRoot != ""
+    !insertmacro KonMinDropGpuPrefs "$APPDATA\com.konmin.launcher\"
+    ${If} $KonMinGameRoot != ""
       ; Only the launcher's own java folder: a shared root such as D:\Games\ holds
       ; other launchers' java too, and their graphics choices are not ours to drop.
-      !insertmacro MillidaDropGpuPrefs "$MillidaGameRoot\runtime\"
+      !insertmacro KonMinDropGpuPrefs "$KonMinGameRoot\runtime\"
     ${EndIf}
   ${EndIf}
 !macroend
@@ -305,25 +305,25 @@ Var MillidaWv2Entry
 ; would mark the install alive again on the server. The timeout keeps a hung
 ; network from holding the uninstall.
 !macro NSIS_HOOK_PREUNINSTALL
-  StrCpy $MillidaWipe 0
+  StrCpy $KonMinWipe 0
   ${If} $DeleteAppDataCheckboxState = 1
   ${AndIf} $UpdateMode <> 1
     StrCpy $DeleteAppDataCheckboxState 0
-    StrCpy $MillidaWipe 1
+    StrCpy $KonMinWipe 1
   ${EndIf}
-  !insertmacro MillidaReadGameRoot
-  !insertmacro MillidaFreeInstallDir
-  ${If} ${FileExists} "$INSTDIR\${MILLIDA_MAIN_EXE}"
-    nsExec::Exec /TIMEOUT=10000 '"$INSTDIR\${MILLIDA_MAIN_EXE}" --report-uninstall'
-    Pop $MillidaExitCode
+  !insertmacro KonMinReadGameRoot
+  !insertmacro KonMinFreeInstallDir
+  ${If} ${FileExists} "$INSTDIR\${KONMIN_MAIN_EXE}"
+    nsExec::Exec /TIMEOUT=10000 '"$INSTDIR\${KONMIN_MAIN_EXE}" --report-uninstall'
+    Pop $KonMinExitCode
   ${EndIf}
 !macroend
 
 !macro NSIS_HOOK_POSTUNINSTALL
-  Delete /REBOOTOK "$INSTDIR\*${MILLIDA_ASIDE}*"
-  !insertmacro MillidaCleanTraces
-  ${If} $MillidaWipe = 1
+  Delete /REBOOTOK "$INSTDIR\*${KONMIN_ASIDE}*"
+  !insertmacro KonMinCleanTraces
+  ${If} $KonMinWipe = 1
     SetShellVarContext current
-    !insertmacro MillidaWipeKeepingBuilds "$APPDATA\net.millida.launcher" "$LOCALAPPDATA\net.millida.launcher"
+    !insertmacro KonMinWipeKeepingBuilds "$APPDATA\com.konmin.launcher" "$LOCALAPPDATA\com.konmin.launcher"
   ${EndIf}
 !macroend

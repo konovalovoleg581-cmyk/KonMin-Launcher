@@ -1,5 +1,12 @@
 # Telemetry
 
+> **KonMin Launcher note.** This document is inherited unchanged from the upstream
+> [Millida Launcher](https://github.com/millida/launcher) project. It describes Millida's official
+> builds, services, contacts and processes, not KonMin's. What differs in KonMin Launcher:
+> [README.md](README.md) and [EXTERNAL-SERVICES.md](EXTERNAL-SERVICES.md).
+> In KonMin Launcher usage statistics are **off by default**: nothing below is sent until the
+> player turns statistics on in Settings → Account. When turned on, the data goes to Millida's API.
+
 Russian version: [TELEMETRY.ru.md](TELEMETRY.ru.md)
 
 The launcher sends events about its own operation to `https://api.millida.net/v2/launcher/telemetry`: versions, hardware, launches, installs, errors, game crashes, screen transitions and button clicks. If you are signed in to a Millida account, the server ties this data to the account, so it is not anonymous statistics. It can be turned off in "Settings → Account → Usage statistics".

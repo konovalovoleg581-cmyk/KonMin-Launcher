@@ -35,3 +35,23 @@ export function finishFirstRun() {
 }
 
 export const firstRunState = (): string => readPref(KEY, '')
+
+const GUEST_KEY = 'm-konmin-guest'
+
+/// KonMin Launcher: a player may skip the Millida sign-in and play with a Microsoft licence or an offline
+/// nick only. Upstream lets nobody in without a Millida account; a fork cannot rely on a third party's
+/// service to open at all, so the choice is remembered and the next start goes straight to the lobby.
+/// Millida features (friends, catalog purchases, cosmetics) still ask for a Millida sign-in where they need it.
+export const konminGuest = (): boolean => readPref(GUEST_KEY, '') === '1'
+
+export function playWithoutMillida() {
+  writePref(GUEST_KEY, '1')
+  startGameStep()
+}
+
+/// «Назад» from the game-account step of a guest: back to the Millida sign-in, nothing remembered.
+export function leaveGuestStep() {
+  writePref(GUEST_KEY, '')
+  writePref(KEY, '')
+  useFirstRun.setState({ open: false })
+}

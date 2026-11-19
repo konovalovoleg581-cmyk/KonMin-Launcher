@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test'
 import { accentFromHex, computeAccent, readableOnUi } from './accent'
 
-const WINDOW = '#161718'
+const WINDOW = '#0F1117'
 const INK = '#06200e'
 
 const channel = (v: number) => {
@@ -19,7 +19,8 @@ const contrast = (a: string, b: string) => {
 }
 
 const STOCK: [string, string][] = [
-  ['#5EC64D', 'зелёный по умолчанию'],
+  ['#5C84FF', 'KonMin по умолчанию'],
+  ['#5EC64D', 'зелёный'],
   ['#3A6FE0', 'лазурный — самый тёмный из готовых'],
   ['#6C6BFF', 'индиго'],
   ['#E8457A', 'малиновый'],

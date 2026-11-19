@@ -74,3 +74,17 @@
 Если ваш сценарий не описан выше — напишите нам, договоримся.
 
 Уведомления об авторских правах и DMCA: [dmca@millida.net](mailto:dmca@millida.net), см. [DMCA.ru.md](DMCA.ru.md).
+
+---
+
+## KonMin Launcher
+
+*Раздел добавлен форком KonMin Launcher, как разрешает текст выше. Сам текст выше — правила Millida
+для знаков Millida, он не изменён.*
+
+KonMin Launcher выполняет эти требования: своё имя, идентификатор (`com.konmin.launcher`), файл
+программы (`konmin-launcher`), заголовок окна, запись автозапуска, логотип, значки и favicon; в
+сборке нет client id Azure, id приложения Discord, адресов и ключа обновлений Millida; форк не
+называет себя выпущенным, одобренным или поддерживаемым Millida. Оставшиеся материалы оригинала
+(обои, арт лобби, картинка плаща Millida для сервиса Millida) перечислены в ограничениях
+[README.ru.md](README.ru.md) и в [EXTERNAL-SERVICES.md](EXTERNAL-SERVICES.md).

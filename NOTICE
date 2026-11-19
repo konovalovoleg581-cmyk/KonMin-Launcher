@@ -1,3 +1,21 @@
+KonMin Launcher
+Copyright (C) 2026 KonMin (modifications)
+
+KonMin Launcher is a modified version of Millida Launcher
+(https://github.com/millida/launcher). The modifications made for KonMin
+Launcher (rebranding, new logo and icons, colour scheme, configuration,
+opt-in statistics, optional Millida account, disabled upstream update channel
+and credentials) were made in November 2026 and are licensed under the same
+GNU General Public License, version 3 only. KonMin Launcher is not affiliated
+with, endorsed by or supported by Millida.
+
+The KonMin Launcher name, logo (public/konmin-logo.svg, branding/) and app icons
+(src-tauri/icons/) are the KonMin brand. They replace the Millida brand assets
+of the upstream project.
+
+----------------------------------------------------------------------------
+Original notice of the upstream project:
+
 Millida Launcher
 Copyright (C) 2024-2026 Millida
 

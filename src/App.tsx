@@ -36,7 +36,7 @@ const ChestOpenHost = lazy(() => import('./components/daily/ChestOpen').then((m)
 const ProjectModal = lazy(() => import('./modals/Project').then((m) => ({ default: m.ProjectModal })))
 const NewBuildModal = lazy(() => import('./modals/NewBuild').then((m) => ({ default: m.NewBuildModal })))
 const OnboardingModal = lazy(() => import('./modals/Onboarding').then((m) => ({ default: m.OnboardingModal })))
-import { gameStepPending, hasGameAccount, useFirstRun } from './state/firstRun'
+import { gameStepPending, hasGameAccount, konminGuest, useFirstRun } from './state/firstRun'
 import { ImageLightbox } from './components/ImageLightbox'
 import { UpdateBanner } from './components/UpdateBanner'
 import { PartyHost } from './components/party/PartyHost'
@@ -535,7 +535,7 @@ export function App() {
       if (millida && !hasMillidaAccount() && !preview) {
         showLogin('start-no-session')
         showToast(t('Сессия истекла — войди заново'), 'error')
-      } else if (!millida && !preview) {
+      } else if (!millida && !preview && !(konminGuest() && acc)) {
         showLogin('start-no-account')
         if (acc) showToast(t('Войди в аккаунт Millida — это нужно один раз'), 'error')
       } else if (acc && gameStepPending() && !hasGameAccount()) {

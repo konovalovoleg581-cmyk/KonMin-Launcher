@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Desktop Minecraft launcher: Tauri 2 (Rust core in `src-tauri/`) + React 19 / TypeScript webview (`src/`). Detailed design docs: `ARCHITECTURE.md`, `BUILDING.md`, `CONTRIBUTING.md` (each has a `.ru.md` twin — keep both in sync when editing docs).
+KonMin Launcher — a rebranded fork of Millida Launcher (GPL-3.0-only). Desktop Minecraft launcher: Tauri 2 (Rust core in `src-tauri/`) + React 19 / TypeScript webview (`src/`). Millida's online services are still used and must stay labelled as Millida's: see `EXTERNAL-SERVICES.md` before renaming anything that says "Millida" (account, catalog, cosmetics, `millida_api`, `millida-settings.json` are real upstream services/formats, not branding). Detailed design docs: `ARCHITECTURE.md`, `BUILDING.md`, `CONTRIBUTING.md` (each has a `.ru.md` twin — keep both in sync when editing docs).
 
 ## Commands
 
@@ -32,7 +32,7 @@ cargo test -- --ignored                     # network-dependent tests
 
 No formatter is enforced (no Prettier, `cargo fmt` optional), but code should look rustfmt-formatted. TS style: 2-space indent, no semicolons, single quotes, `import type` for types. Code comments are written in English.
 
-`installer/` is a separate Cargo project (`MillidaLauncherSetup`, a small Windows web-installer stub that downloads and minisign-verifies the release); it is not part of the `src-tauri` workspace.
+`installer/` is a separate Cargo project (`MillidaLauncherSetup`, upstream's Windows web-installer stub that downloads Millida releases); it is not part of the `src-tauri` workspace and is not used for KonMin. The KonMin Windows installer is the Tauri NSIS bundle (`KonMin Launcher_<v>_x64-setup.exe`, hooks in `src-tauri/installer-hooks.nsh`).
 
 ## Architecture
 
@@ -64,7 +64,7 @@ Border rules (enforced by design and some tests):
 ### Game launch pipeline
 Entry: `install_and_launch_into` (`engine/game/launch.rs`) → `engine/game/pipeline/`: **Plan** (pure functions, `plan.rs`: merged version json, classpath, full Java command line) → **Prepare** (task graph, `graph.rs`: session, Java/Temurin, client, libraries, natives, assets, loader install for Fabric/Quilt/Forge/NeoForge) → **Start** → **Watch**. `warm.rs` pre-prepares from the lobby. Command lines of reference builds are snapshot-tested (`launch_snap.rs`, data in `src-tauri/tests/data/launch`) — update snapshots deliberately when changing args.
 
-Per-instance settings live in `millida-settings.json` inside the instance folder; profiles in `profiles.json` under `data_dir()/net.millida.launcher`.
+Per-instance settings live in `millida-settings.json` inside the instance folder (upstream format, kept); profiles in `profiles.json` under `data_dir()/com.konmin.launcher`.
 
 ### Frontend
 - No router: screens are `<section class="screen">` toggled by class `on`; active screen in `useUi().screen` (`src/state/ui.ts`); screens lazy-loaded via `src/screens/registry.ts`.
@@ -76,5 +76,9 @@ Per-instance settings live in `millida-settings.json` inside the instance folder
 - Calls/voice are peer-to-peer WebRTC mesh (`src/state/call.ts`, `src/lib/call/`); the mic worklet is loaded via `blob:` to avoid widening CSP.
 
 ## Build-time configuration
-- `MILLIDA_MS_CLIENT_ID` (compile-time `option_env!`) — Azure app for Microsoft sign-in; without it the app builds and sign-in reports it is not configured.
-- `tauri.conf.json` `version` is `2.0.0` in source; the updater (`plugins.updater.pubkey`, minisign) will self-update local builds to the official release unless the version is raised. `tauri.release.conf.json` is used by `build:release`.
+- `KONMIN_MS_CLIENT_ID` (compile-time `option_env!`) — Azure app for Microsoft sign-in; there is deliberately no built-in fallback.
+- `KONMIN_DISCORD_APP_ID` / `KONMIN_SITE_URL` — Discord Rich Presence (off without an id).
+- Updates: `plugins.updater.endpoints`/`pubkey` in `tauri.conf.json` are empty on purpose; `vite.config.ts` derives `__KONMIN_UPDATES__` from them and `selfupdate::updates_configured` gates the core. Never point them back at Millida's update host.
+- Usage statistics are opt-in (`__KONMIN_TELEMETRY_OPT_IN__`, `telemetry-on` file in the data dir).
+- Deep-link scheme is `konmin://` (`crate::APP_SCHEME`, `is_app_link` also accepts `millida:`).
+- `KONMIN_SNAPSHOTS=update cargo test` rewrites the launch-command snapshots.

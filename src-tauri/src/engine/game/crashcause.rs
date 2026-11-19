@@ -1493,7 +1493,7 @@ mod tests {
 
     #[test]
     fn cause_leaves_no_home_build_nick_or_token() {
-        let raw = "java.io.FileNotFoundException: C:\\Users\\Вася\\AppData\\Roaming\\net.millida.launcher\\minecraft\\profiles\\Моя сборка\\config\\Grash.json (Session ID is token:eyJhbGciOi.abc) player Grash";
+        let raw = "java.io.FileNotFoundException: C:\\Users\\Вася\\AppData\\Roaming\\com.konmin.launcher\\minecraft\\profiles\\Моя сборка\\config\\Grash.json (Session ID is token:eyJhbGciOi.abc) player Grash";
         let got = scrub_cause(raw, Some("C:\\Users\\Вася"), "grash");
         for leaked in ["Вася", "Моя сборка", "Grash", "eyJhbGciOi"] {
             assert!(!got.contains(leaked), "{leaked} утёк: {got}");

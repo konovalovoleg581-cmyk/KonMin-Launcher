@@ -38,7 +38,7 @@ export function totalBytes(list: Pick<MoveCandidate, 'bytes'>[]): number {
 export function confirmText(list: MoveCandidate[]): string {
   const n = list.length + ' ' + plural(list.length, t('сборку'), t('сборки'), t('сборок'))
   const where = launchersText(list)
-  return t('Перенесём {count} ({size}) из {from} в Millida: миры, моды, настройки, скриншоты и серверы. В {from} всё останется как есть.', { count: n, size: sizeText(totalBytes(list)), from: where })
+  return t('Перенесём {count} ({size}) из {from} в KonMin Launcher: миры, моды, настройки, скриншоты и серверы. В {from} всё останется как есть.', { count: n, size: sizeText(totalBytes(list)), from: where })
 }
 
 export type RowResult = { kind: 'ok'; outcome: MoveOutcome } | { kind: 'error'; text: string }

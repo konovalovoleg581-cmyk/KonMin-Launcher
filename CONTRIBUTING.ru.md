@@ -2,7 +2,7 @@
 
 [English version: CONTRIBUTING.md](CONTRIBUTING.md)
 
-Millida Launcher — десктопный лаунчер Minecraft на Tauri 2 (Rust) и React 19.
+KonMin Launcher (форк Millida Launcher) — десктопный лаунчер Minecraft на Tauri 2 (Rust) и React 19.
 Ядро (`src-tauri`) отвечает за установку, запуск игры, работу с файлами и
 секретами; фронтенд (`src`) — вид поверх IPC-команд ядра.
 
@@ -70,7 +70,7 @@ bun run dev      # http://127.0.0.1:5173, без ядра
 трогает установку, запуск игры, пути или секреты, нужен `bun run tauri dev`.
 
 Вход по лицензии Microsoft требует своего Azure-приложения: `client_id` вшивается
-на этапе компиляции из переменной `MILLIDA_MS_CLIENT_ID`. Без неё лаунчер
+на этапе компиляции из переменной `KONMIN_MS_CLIENT_ID`. Без неё лаунчер
 собирается и работает, а кнопка входа честно сообщает, что вход не настроен.
 
 ## Что прогнать перед pull request

@@ -9,7 +9,7 @@ use tauri::{AppHandle, Manager};
 
 /// The start was for a game: a deep link, or a flag that launches or repairs a build.
 fn for_game(args: &[String]) -> bool {
-    args.iter().any(|a| a.starts_with("millida:")) || crate::cli::parse(args).is_some()
+    args.iter().any(|a| crate::is_app_link(a)) || crate::cli::parse(args).is_some()
 }
 
 /// Called once from `setup`. Hides the window at once when an install is going to be tried, so nothing flashes before

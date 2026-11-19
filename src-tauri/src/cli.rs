@@ -1,4 +1,4 @@
-// Command line: `millida-launcher --launch <build>`, `--repair <build>`, `--clean`.
+// Command line: `konmin-launcher --launch <build>`, `--repair <build>`, `--clean`.
 // The first start keeps the action until the webview asks for it; a second start hands it
 // to the running copy through the single-instance callback.
 use serde::Serialize;

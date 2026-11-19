@@ -159,7 +159,7 @@ mod tests {
                 ("XDG_DATA_DIRS", "/tmp/.mount_MillidAbC/usr/share:/usr/share:/usr/local/share"),
                 ("GST_PLUGIN_SCANNER_1_0", "/tmp/.mount_MillidAbC/usr/lib/gstreamer1.0/gstreamer-1.0/gst-plugin-scanner"),
                 ("APPDIR", mount),
-                ("APPIMAGE", "/home/p/Apps/Millida-Launcher.AppImage"),
+                ("APPIMAGE", "/home/p/Apps/KonMin-Launcher.AppImage"),
                 ("HOME", "/home/p"),
                 ("MANPATH", "/tmp/.mount_MillidAbCdef/share"),
             ],

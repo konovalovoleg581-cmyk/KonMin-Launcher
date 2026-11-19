@@ -2002,7 +2002,7 @@ button.ph-hs:hover > .ph-hs-img { transform: scale(1.03); }
   content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
   box-shadow: inset 0 0 0 2px var(--m-accent), inset 0 0 22px color-mix(in srgb, var(--m-accent) 45%, transparent);
 }
-.fy-card .ph-card-tag.sec { background: color-mix(in srgb, var(--m-bg, #161718) 82%, transparent); color: var(--m-fg); }
+.fy-card .ph-card-tag.sec { background: color-mix(in srgb, var(--m-bg, #0F1117) 82%, transparent); color: var(--m-fg); }
 .fy-more { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 100%; text-align: center; }
 .fy-more b { font: 700 16px/1.1 var(--m-font); }
 .fy-more-ic {

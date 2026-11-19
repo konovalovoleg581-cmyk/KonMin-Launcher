@@ -17,7 +17,7 @@ import { tmpdir } from 'node:os'
 import { join, relative } from 'node:path'
 import { spawnSync } from 'node:child_process'
 
-export const EXE_NAME = 'millida-launcher.exe'
+export const EXE_NAME = 'konmin-launcher.exe'
 /// A patch bigger than this share of the executable saves too little to be worth a second road.
 export const MAX_PATCH_SHARE = 0.6
 /// Files that are rewritten by every NSIS build and say nothing about what the release changed.
@@ -105,7 +105,7 @@ export function build(opts) {
     const fresh = unpackInstaller(newSetup, join(work, 'new'))
     const exe = readFileSync(fresh.exePath)
     // The signature of the finished executable: same key, same command as the installer.
-    const signed = join(work, `millida-launcher_${version}.exe`)
+    const signed = join(work, `konmin-launcher_${version}.exe`)
     copyFileSync(fresh.exePath, signed)
     run('sh', ['-c', signCmd.replaceAll('{file}', `'${signed}'`)])
     const signature = readFileSync(`${signed}.sig`, 'utf8').trim()

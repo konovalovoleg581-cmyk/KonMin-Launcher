@@ -143,7 +143,7 @@ pub(crate) fn is_delta_file(path: &Path) -> bool {
 }
 
 pub(crate) fn staged_name(version: &str) -> String {
-    format!("millida-launcher-{}{}", version.chars().filter(|c| c.is_ascii_alphanumeric() || *c == '.' || *c == '-').collect::<String>(), DELTA_SUFFIX)
+    format!("konmin-launcher-{}{}", version.chars().filter(|c| c.is_ascii_alphanumeric() || *c == '.' || *c == '-').collect::<String>(), DELTA_SUFFIX)
 }
 
 /// Puts the new executable where the old one is. Windows lets a running exe be renamed but not overwritten, so the old
@@ -390,18 +390,18 @@ mod tests {
     #[test]
     fn the_swap_keeps_the_old_exe_aside_and_rolls_back_on_failure() {
         let dir = scratch("swap");
-        let (target, staged) = (dir.join("millida-launcher.exe"), dir.join("staged.delta.exe"));
+        let (target, staged) = (dir.join("konmin-launcher.exe"), dir.join("staged.delta.exe"));
         std::fs::write(&target, b"old exe").unwrap();
         std::fs::write(&staged, b"new exe, longer").unwrap();
         swap_in(&staged, &target).unwrap();
         assert_eq!(std::fs::read(&target).unwrap(), b"new exe, longer");
-        assert_eq!(std::fs::read(dir.join("millida-launcher.exe.millida-prev")).unwrap(), b"old exe");
-        assert!(!dir.join("millida-launcher.exe.millida-new").exists());
+        assert_eq!(std::fs::read(dir.join("konmin-launcher.exe.millida-prev")).unwrap(), b"old exe");
+        assert!(!dir.join("konmin-launcher.exe.millida-new").exists());
 
         // a second swap replaces the leftover aside
         std::fs::write(&staged, b"third").unwrap();
         swap_in(&staged, &target).unwrap();
-        assert_eq!(std::fs::read(dir.join("millida-launcher.exe.millida-prev")).unwrap(), b"new exe, longer");
+        assert_eq!(std::fs::read(dir.join("konmin-launcher.exe.millida-prev")).unwrap(), b"new exe, longer");
 
         // nothing staged: the running exe is untouched
         let before = std::fs::read(&target).unwrap();
@@ -411,9 +411,9 @@ mod tests {
 
     #[test]
     fn staged_files_are_recognised_by_their_name() {
-        assert!(is_delta_file(Path::new("/x/updates/millida-launcher-2.0.9.delta.exe")));
-        assert!(!is_delta_file(Path::new("/x/updates/Millida-Launcher_2.0.9_x64-setup.exe")));
-        assert_eq!(staged_name("2.0.9"), "millida-launcher-2.0.9.delta.exe");
+        assert!(is_delta_file(Path::new("/x/updates/konmin-launcher-2.0.9.delta.exe")));
+        assert!(!is_delta_file(Path::new("/x/updates/KonMin-Launcher_2.0.9_x64-setup.exe")));
+        assert_eq!(staged_name("2.0.9"), "konmin-launcher-2.0.9.delta.exe");
         let odd = staged_name("../2.0\\9");
         assert!(!odd.contains('/') && !odd.contains('\\') && odd.ends_with(DELTA_SUFFIX), "no path pieces get into the name: {odd}");
     }

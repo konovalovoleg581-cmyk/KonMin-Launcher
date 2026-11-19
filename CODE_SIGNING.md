@@ -1,5 +1,10 @@
 # Code signing policy
 
+> **KonMin Launcher note.** This document is inherited unchanged from the upstream
+> [Millida Launcher](https://github.com/millida/launcher) project. It describes Millida's official
+> builds, services, contacts and processes, not KonMin's. What differs in KonMin Launcher:
+> [README.md](README.md) and [EXTERNAL-SERVICES.md](EXTERNAL-SERVICES.md).
+
 Russian version: [CODE_SIGNING.ru.md](CODE_SIGNING.ru.md)
 
 How Millida Launcher files are signed and who is responsible for it.

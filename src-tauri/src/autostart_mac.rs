@@ -1,10 +1,10 @@
 // macOS login item: the app registers itself with SMAppService.mainApp (macOS 13+).
 //
 // Why not the LaunchAgent that tauri-plugin-autostart writes: its plist points at
-// `Contents/MacOS/millida-launcher`, so Background Task Management lists a bare
+// `Contents/MacOS/konmin-launcher`, so Background Task Management lists a bare
 // binary named after the cargo package and shows «App Background Activity:
-// "millida-launcher" can run in the background» again whenever that binary changes
-// (every update). mainApp is tied to the bundle: the name is «Millida Launcher»,
+// "konmin-launcher" can run in the background» again whenever that binary changes
+// (every update). mainApp is tied to the bundle: the name is «KonMin Launcher»,
 // the notice comes once, when the player flips the switch.
 //
 // A login item gets no arguments, so «started by the system» is read from the
@@ -93,7 +93,7 @@ mod tests {
 
     #[test]
     fn legacy_plist_is_named_after_the_package() {
-        let p = legacy_plist("millida-launcher").unwrap();
-        assert!(p.ends_with("Library/LaunchAgents/millida-launcher.plist"));
+        let p = legacy_plist("konmin-launcher").unwrap();
+        assert!(p.ends_with("Library/LaunchAgents/konmin-launcher.plist"));
     }
 }

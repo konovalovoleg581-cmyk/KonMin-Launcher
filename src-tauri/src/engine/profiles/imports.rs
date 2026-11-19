@@ -920,7 +920,7 @@ pub fn import_instance(path: String, name: String, version: String, loader: Stri
     let game = match instance_game_dir(&src) {
         Some(g) => g,
         None if has_game_dir_entry(&src) => {
-            return Err("Папка игры этой сборки — ссылка на другое место на диске. Millida по ссылкам не копирует: открой сборку в её лаунчере и укажи обычную папку".into());
+            return Err("Папка игры этой сборки — ссылка на другое место на диске. KonMin Launcher по ссылкам не копирует: открой сборку в её лаунчере и укажи обычную папку".into());
         }
         None => src.clone(),
     };

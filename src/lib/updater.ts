@@ -1,5 +1,5 @@
 // Launcher update. The check goes through the Tauri plugin. The version list address and the public part of the signing key are set in tauri.conf.json.
-// Install only with a Millida signature. Fallback: the core downloads the update itself (updateFallback*). Details: SAFETY.md.
+// Install only with a valid signature from this build's own update key. Fallback: the core downloads the update itself (updateFallback*). Details: SAFETY.md.
 import { check, type Update } from '@tauri-apps/plugin-updater'
 import { exit, relaunch } from '@tauri-apps/plugin-process'
 import { hasTauri, tauri } from '../ipc/tauri'
@@ -31,7 +31,9 @@ export interface UpdateInfo {
   install: () => Promise<void>
 }
 
-export const DOWNLOAD_PAGE = 'https://millida.net/launcher'
+/// Where a KonMin release publishes its installers (VITE_KONMIN_DOWNLOAD_PAGE at build time); empty in a build
+/// that has no release page, and then nothing is opened.
+export const DOWNLOAD_PAGE: string = import.meta.env.VITE_KONMIN_DOWNLOAD_PAGE || ''
 
 const FAILED_KEY = 'm-upd-failed'
 /// The version whose patch update did not install: the full installer is taken for it from then on, in every session.
@@ -163,7 +165,11 @@ function afterQuiet(run: () => void) {
   setTimeout(attempt, QUIET_FIRST_MS)
 }
 
-const updatesAllowed = () => hasTauri() && !import.meta.env.DEV
+/// False when the build names no update channel of its own (KonMin Launcher ships without one, README «Updates»).
+/// Under `bun test` there is no Vite define, and the module keeps its usual behaviour for the tests.
+const updatesConfigured = typeof __KONMIN_UPDATES__ === 'undefined' ? true : __KONMIN_UPDATES__
+
+const updatesAllowed = () => hasTauri() && !import.meta.env.DEV && updatesConfigured
 
 /// Flatpak updates itself and mounts /app read-only, so the fallback channel cannot install there.
 let managedOutside: boolean | null = null
@@ -177,7 +183,7 @@ async function updatesReady(): Promise<boolean> {
   return updatesAllowed() && !(await updatesManagedOutside())
 }
 
-const FLATPAK_UPDATE_COMMAND = 'flatpak update net.millida.launcher'
+const FLATPAK_UPDATE_COMMAND = 'flatpak update com.konmin.launcher'
 
 async function managedOutsideOnly(): Promise<boolean> {
   return updatesAllowed() && (await updatesManagedOutside())
@@ -428,7 +434,7 @@ const TRANSLOCATED_RE = /запущен из образа/i
 
 function noticeIfTranslocated(e: unknown): boolean {
   if (!TRANSLOCATED_RE.test(String(e))) return false
-  showToast(t('Лаунчер запущен из образа. Перенеси Millida в «Программы» — иначе обновления не установятся'), 'error')
+  showToast(t('Лаунчер запущен из образа. Перенеси KonMin Launcher в «Программы» — иначе обновления не установятся'), 'error')
   return true
 }
 
@@ -747,7 +753,7 @@ export async function applyUpdate(): Promise<void> {
       if (!useUpdate.getState().failed) return
     }
     showToast(t('Автоматически обновиться не вышло — скачай установщик на открывшейся странице и запусти его поверх'), 'error')
-    openExt(DOWNLOAD_PAGE)
+    if (DOWNLOAD_PAGE) openExt(DOWNLOAD_PAGE)
     return
   }
   if (!current || st.manual) {
@@ -803,7 +809,16 @@ export async function checkForUpdate(loud = false): Promise<UpdateInfo | null> {
 
 async function runCheck(loud: () => boolean): Promise<UpdateInfo | null> {
   if (!updatesAllowed()) {
-    if (loud()) showToast(hasTauri() ? t('В дев-запуске обновления отключены') : t('Обновления доступны в приложении лаунчера'), 'error')
+    if (loud()) {
+      showToast(
+        !hasTauri()
+          ? t('Обновления доступны в приложении лаунчера')
+          : !updatesConfigured
+            ? t('В этой сборке KonMin Launcher автообновление не настроено')
+            : t('В дев-запуске обновления отключены'),
+        'error',
+      )
+    }
     return null
   }
   if (await updatesManagedOutside()) {

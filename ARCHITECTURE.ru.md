@@ -1,4 +1,4 @@
-# Устройство Millida Launcher
+# Устройство KonMin Launcher
 
 [English version: ARCHITECTURE.md](ARCHITECTURE.md)
 
@@ -114,8 +114,8 @@ GDLauncher, CurseForge, Modrinth App, общие `.minecraft`) и импорт �
 ### accounts — [src-tauri/src/engine/accounts](src-tauri/src/engine/accounts)
 
 `microsoft.rs` — device flow Microsoft и цепочка Xbox Live → XSTS → Minecraft
-Services → профиль. Client_id берётся из `option_env!("MILLIDA_MS_CLIENT_ID")`,
-иначе используется вшитый запасной.
+Services → профиль. Client_id берётся из `option_env!("KONMIN_MS_CLIENT_ID")`;
+без него вход через Microsoft сообщает, что не настроен (встроенного id в KonMin нет).
 `millida.rs` — прокси к `api.millida.net/v2` (`millida_api`): путь и метод
 проверяются, токен подставляет ядро.
 `session.rs` — привязка сессии к идентификатору аккаунта: ключи хранилища
@@ -387,7 +387,7 @@ macOS его не играет), выбор файла пользователе�
 
 ## Данные на диске
 
-- Данные лаунчера — `data_dir()/net.millida.launcher`: `profiles.json`,
+- Данные лаунчера — `data_dir()/com.konmin.launcher`: `profiles.json`,
   `secrets.bin`, `device.key`, `game-root.txt`, скачанные JRE в `java/`.
   На Windows это `%APPDATA%`, на macOS `~/Library/Application Support`,
   на Linux `~/.local/share`.

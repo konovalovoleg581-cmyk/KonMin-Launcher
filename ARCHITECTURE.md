@@ -1,4 +1,4 @@
-# How Millida Launcher is built
+# How KonMin Launcher is built
 
 Russian version: [ARCHITECTURE.ru.md](ARCHITECTURE.ru.md)
 
@@ -114,8 +114,8 @@ only install path, both for the code and for the cloud.
 ### accounts: [src-tauri/src/engine/accounts](src-tauri/src/engine/accounts)
 
 `microsoft.rs`: the Microsoft device flow and the chain Xbox Live → XSTS → Minecraft
-Services → profile. The client_id comes from `option_env!("MILLIDA_MS_CLIENT_ID")`,
-otherwise a built-in fallback is used.
+Services → profile. The client_id comes from `option_env!("KONMIN_MS_CLIENT_ID")`;
+without it Microsoft sign-in reports that it is not configured (KonMin has no built-in id).
 `millida.rs`: a proxy to `api.millida.net/v2` (`millida_api`). The path and method
 are checked, and the core adds the token.
 `session.rs`: binding a session to an account ID: storage keys
@@ -387,7 +387,7 @@ And never return the value of a token to the frontend: return a flag.
 
 ## Data on disk
 
-- Launcher data is in `data_dir()/net.millida.launcher`: `profiles.json`,
+- Launcher data is in `data_dir()/com.konmin.launcher`: `profiles.json`,
   `secrets.bin`, `device.key`, `game-root.txt`, downloaded JREs in `java/`.
   On Windows this is `%APPDATA%`, on macOS `~/Library/Application Support`,
   on Linux `~/.local/share`.

@@ -1,4 +1,4 @@
-// Where the launcher data lives: net.millida.launcher in the user data folder, the game root (inside it by default), moving the root, clearing the cache.
+// Where the launcher data lives: com.konmin.launcher in the user data folder, the game root (inside it by default), moving the root, clearing the cache.
 // Only the cache (tmp and natives) and, once the new root is in use, the originals copied there are deleted.
 use std::path::PathBuf;
 
@@ -9,7 +9,7 @@ pub fn is_flatpak() -> bool {
 }
 
 pub fn data_dir() -> PathBuf {
-    dirs::data_dir().unwrap_or_else(|| PathBuf::from(".")).join("net.millida.launcher")
+    dirs::data_dir().unwrap_or_else(|| PathBuf::from(".")).join("com.konmin.launcher")
 }
 
 fn configured_root() -> Option<PathBuf> {

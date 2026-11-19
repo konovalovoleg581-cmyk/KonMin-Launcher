@@ -251,7 +251,7 @@ mod private_dir {
 
     pub fn claim(base: &Path) -> Result<(PathBuf, File), String> {
         let user = UserSid::current()?;
-        let dir = base.join(format!("net.millida.launcher.agents.{}", user.text));
+        let dir = base.join(format!("com.konmin.launcher.agents.{}", user.text));
         let pin = owned(&dir, &user)?;
         Ok((dir, pin))
     }

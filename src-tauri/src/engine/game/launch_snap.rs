@@ -2,7 +2,7 @@
 // is a real version description (Mojang, Fabric, Quilt, Forge, NeoForge; tests/data/launch) with
 // an account, settings and a machine; the test builds what the launcher would start and compares it
 // with the file in tests/data/launch/snapshots. A difference fails the test and names the first line
-// that moved. A change that is meant gets new files: `MILLIDA_SNAPSHOTS=update cargo test launch_snap`.
+// that moved. A change that is meant gets new files: `KONMIN_SNAPSHOTS=update cargo test launch_snap`.
 // Nothing here touches the network or the player's folders: the game root is the made-up `/G`.
 use super::*;
 use crate::engine::*;
@@ -283,9 +283,9 @@ fn snapshot_path(name: &str) -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/data/launch/snapshots").join(format!("{}.txt", name))
 }
 
-/// Compares every case with its file; `MILLIDA_SNAPSHOTS=update` writes the files instead.
+/// Compares every case with its file; `KONMIN_SNAPSHOTS=update` writes the files instead.
 pub(super) fn check_snapshots(build: impl Fn(&Case) -> Built) {
-    let update = std::env::var("MILLIDA_SNAPSHOTS").is_ok_and(|v| v == "update");
+    let update = std::env::var("KONMIN_SNAPSHOTS").is_ok_and(|v| v == "update");
     let all = cases();
     assert_eq!(all.len(), 20, "twenty reference builds");
     let mut failed: Vec<String> = vec![];
@@ -297,7 +297,7 @@ pub(super) fn check_snapshots(build: impl Fn(&Case) -> Built) {
             std::fs::write(&path, &text).unwrap();
             continue;
         }
-        let want = std::fs::read_to_string(&path).unwrap_or_else(|_| panic!("no snapshot for {}: run with MILLIDA_SNAPSHOTS=update", case.name));
+        let want = std::fs::read_to_string(&path).unwrap_or_else(|_| panic!("no snapshot for {}: run with KONMIN_SNAPSHOTS=update", case.name));
         let want = want.replace("\r\n", "\n");
         if want != text {
             let first = want
@@ -446,7 +446,7 @@ fn reference_launches_keep_their_command_line() {
 
 #[test]
 fn reference_launches_keep_their_prepare_graph() {
-    let update = std::env::var("MILLIDA_SNAPSHOTS").is_ok_and(|v| v == "update");
+    let update = std::env::var("KONMIN_SNAPSHOTS").is_ok_and(|v| v == "update");
     let mut failed = vec![];
     for case in cases() {
         let text = render_plan(&case);

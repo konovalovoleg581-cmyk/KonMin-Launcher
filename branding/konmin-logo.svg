@@ -1,0 +1,12 @@
+<svg width="376" height="376" viewBox="0 0 376 376" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="kmbg" x1="0" y1="0" x2="376" y2="376" gradientUnits="userSpaceOnUse"><stop stop-color="#3D8BFF"/><stop offset="1" stop-color="#7B5CFF"/></linearGradient>
+<linearGradient id="kmgl" x1="0" y1="0" x2="0" y2="188" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF" stop-opacity=".22"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>
+</defs>
+<rect width="376" height="376" rx="84" fill="url(#kmbg)"/>
+<rect width="376" height="376" rx="84" fill="url(#kmgl)"/>
+<rect x="6" y="6" width="364" height="364" rx="78" stroke="#FFFFFF" stroke-opacity=".14" stroke-width="4"/>
+<path d="M91 93h30v30h-30zM121 93h30v30h-30zM241 93h30v30h-30zM271 93h30v30h-30zM91 123h30v30h-30zM121 123h30v30h-30zM211 123h30v30h-30zM241 123h30v30h-30zM91 153h30v30h-30zM121 153h30v30h-30zM181 153h30v30h-30zM211 153h30v30h-30zM91 183h30v30h-30zM121 183h30v30h-30zM151 183h30v30h-30zM181 183h30v30h-30zM91 213h30v30h-30zM121 213h30v30h-30zM181 213h30v30h-30zM211 213h30v30h-30zM91 243h30v30h-30zM121 243h30v30h-30zM211 243h30v30h-30zM241 243h30v30h-30zM91 273h30v30h-30zM121 273h30v30h-30zM241 273h30v30h-30zM271 273h30v30h-30z" fill="#0B0D2A" fill-opacity=".30"/>
+<path d="M83 83h30v30h-30zM113 83h30v30h-30zM233 83h30v30h-30zM263 83h30v30h-30zM83 113h30v30h-30zM113 113h30v30h-30zM203 113h30v30h-30zM233 113h30v30h-30zM83 143h30v30h-30zM113 143h30v30h-30zM173 143h30v30h-30zM203 143h30v30h-30zM83 173h30v30h-30zM113 173h30v30h-30zM143 173h30v30h-30zM173 173h30v30h-30zM83 203h30v30h-30zM113 203h30v30h-30zM173 203h30v30h-30zM203 203h30v30h-30zM83 233h30v30h-30zM113 233h30v30h-30zM203 233h30v30h-30zM233 233h30v30h-30zM83 263h30v30h-30zM113 263h30v30h-30zM233 263h30v30h-30zM263 263h30v30h-30z" fill="#FFFFFF"/>
+<path d="M263 83h30v30h-30z" fill="#5EF0FF"/>
+</svg>

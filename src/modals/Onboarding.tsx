@@ -32,7 +32,7 @@ function Welcome({ nick }: { nick: string }) {
   return (
     <>
       <div className="onb-hero">
-        <img src="/millida-logo.svg" alt="" />
+        <img src="/konmin-logo.svg" alt="" />
         <div>
           <h3>{nick ? t('Привет, {nick}!', { nick }) : t('Привет!')}</h3>
         </div>
@@ -244,7 +244,7 @@ function ImportStep() {
   return (
     <>
       <h3>{t('Перенесём сборки')}</h3>
-      <div className="sub">{movable ? t('Сборки Prism и Modrinth App переедут в Millida целиком — с мирами и настройками') : t('Оригиналы останутся на месте')}</div>
+      <div className="sub">{movable ? t('Сборки Prism и Modrinth App переедут в KonMin Launcher целиком — с мирами и настройками') : t('Оригиналы останутся на месте')}</div>
       {movable ? <MovePanel /> : null}
       <div className="onb-scroll">
         {failed ? (

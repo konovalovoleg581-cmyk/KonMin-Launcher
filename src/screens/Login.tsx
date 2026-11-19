@@ -6,7 +6,7 @@ import { KindPanel } from '../modals/AccountAdd'
 import { LangPicker } from '../components/LangPicker'
 import { useT } from '../i18n'
 import { cancelWebLogin, copyUserCode, copyVerifyLink, startWebLogin, useLogin } from '../state/login'
-import { finishFirstRun, useFirstRun } from '../state/firstRun'
+import { finishFirstRun, konminGuest, leaveGuestStep, playWithoutMillida, useFirstRun } from '../state/firstRun'
 import { isGameAccountKind, useAccounts } from '../state/accounts'
 import { refreshGameNick } from '../state/gameNick'
 import { openExt } from '../lib/api'
@@ -32,7 +32,7 @@ function GameAccountStep() {
     <div className="login-form lg2-card">
       <LangPicker className="lg2-lang" />
       <div className="login-logo">
-        <img src="/millida-logo.svg" alt="" width={56} height={56} />
+        <img src="/konmin-logo.svg" alt="" width={56} height={56} />
       </div>
       <h1>{t('Игровой аккаунт')}</h1>
       <p className="sub">{t('Как будешь играть?')}</p>
@@ -49,6 +49,11 @@ function GameAccountStep() {
             <span>{t('нет Realms и нет лицензионных серверов')}</span>
           </button>
           <LicenceBuyLink className="lg2-buy" track="first_run" />
+          {konminGuest() ? (
+            <button className="btn md ghost lg2-guest-konmin" onClick={leaveGuestStep}>
+              {t('Назад')}
+            </button>
+          ) : null}
         </>
       )}
     </div>
@@ -81,7 +86,7 @@ export function Login({ on }: { on: boolean }) {
         <div className="login-form lg2-card">
           <LangPicker className="lg2-lang" />
           <div className="login-logo">
-            <img src="/millida-logo.svg" alt="" width={56} height={56} />
+            <img src="/konmin-logo.svg" alt="" width={56} height={56} />
           </div>
           <h1>{t('Вход в Millida')}</h1>
           {/* Одна строка вместо абзаца: остальное показывает сам поток входа —
@@ -140,6 +145,9 @@ export function Login({ on }: { on: boolean }) {
             <Icon id="i-shield" />
             <span>{t('Пароль — только на сайте Millida')}</span>
           </div>
+          <button className="btn md ghost lg2-guest-konmin" data-track="konmin_guest" onClick={playWithoutMillida}>
+            {t('Играть без аккаунта Millida')}
+          </button>
         </div>
         )}
         <div className="login-art lg2-art">

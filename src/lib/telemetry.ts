@@ -142,11 +142,17 @@ function uuid(): string {
   return 'i' + Math.random().toString(36).slice(2) + Date.now().toString(36)
 }
 
+/// KonMin Launcher: statistics go to Millida's API (TELEMETRY.md), a third party for a KonMin user, so a KonMin
+/// build sends nothing until the player turns statistics on (the switch writes '0' to m-telemetry-off). Under
+/// `bun test` there is no Vite define, and the upstream opt-out behaviour is kept for the tests.
+const OPT_IN_ONLY = typeof __KONMIN_TELEMETRY_OPT_IN__ === 'undefined' ? false : __KONMIN_TELEMETRY_OPT_IN__
+
 export function telemetryEnabled(): boolean {
   try {
-    return localStorage.getItem(OPT_OUT_KEY) !== '1'
+    const choice = localStorage.getItem(OPT_OUT_KEY)
+    return OPT_IN_ONLY ? choice === '0' : choice !== '1'
   } catch {
-    return true
+    return !OPT_IN_ONLY
   }
 }
 

@@ -117,6 +117,7 @@ import type { PerfMode } from '../state/viewPrefs'
    ============================================================ */
 
 const accents = (): (Accent & { name: string })[] => [
+  { id: 'konmin', name: 'KonMin', c: '#5C84FF', h: '#7A9BFF', s: 'rgba(92,132,255,.14)' },
   { id: 'green', name: t('Зелёный'), c: '#5EC64D', h: '#70D55F', s: 'rgba(94,198,77,.13)' },
   { id: 'lime', name: t('Лайм'), c: '#9BD628', h: '#ACE23F', s: 'rgba(155,214,40,.14)' },
   { id: 'teal', name: t('Бирюзовый'), c: '#22C7A9', h: '#3ADBBD', s: 'rgba(34,199,169,.14)' },
@@ -158,7 +159,7 @@ function initialCustomHex(): string {
     const s = JSON.parse(localStorage.getItem('m-accent') || 'null')
     if (s && s.id === 'custom') return s.c
   } catch {}
-  return '#5EC64D'
+  return '#5C84FF'
 }
 
 function initialAccent(): string {
@@ -166,7 +167,7 @@ function initialAccent(): string {
     const s = JSON.parse(localStorage.getItem('m-accent') || 'null')
     if (s) return s.id
   } catch {}
-  return 'green'
+  return 'konmin'
 }
 
 type SecId = 'look' | 'graphics' | 'sound' | 'game' | 'clips' | 'files' | 'account' | 'about'
@@ -1189,9 +1190,9 @@ export function Settings({ on }: { on: boolean }) {
     <>
       <Block keys="версия обновление обновить проверить">
         <div className="s2-hero">
-          <img src="/millida-logo.svg" alt="" width={48} height={48} />
+          <img src="/konmin-logo.svg" alt="" width={48} height={48} />
           <span className="s2-hero-txt">
-            <b>Millida Launcher</b>
+            <b>KonMin Launcher</b>
             <small>
               {upd
                 ? updStaged

@@ -74,3 +74,17 @@ know whose build is running and whom to write to if something breaks.
 If your case is not described above, write to us and we will agree on it.
 
 Copyright and DMCA notices go to [dmca@millida.net](mailto:dmca@millida.net); see [DMCA.md](DMCA.md).
+
+---
+
+## KonMin Launcher
+
+*This section is added by the KonMin Launcher fork, as the section above allows. The text above
+is Millida's policy for the Millida marks and is kept unchanged.*
+
+KonMin Launcher follows these requirements: it has its own name, bundle identifier
+(`com.konmin.launcher`), executable (`konmin-launcher`), window title, autostart entry, logo, icons
+and favicon; it ships with no Millida Azure client id, Discord app id, update endpoints or update
+key; and it does not claim to be made, approved or supported by Millida. The remaining upstream
+design materials (wallpapers, lobby art, the Millida cape image shown for the Millida service) are
+listed as known limitations in [README.md](README.md) and [EXTERNAL-SERVICES.md](EXTERNAL-SERVICES.md).

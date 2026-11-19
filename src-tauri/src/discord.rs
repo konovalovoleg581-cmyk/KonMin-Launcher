@@ -2,7 +2,7 @@
 // It does not go to the internet itself: only the running Discord app gets the data (modpack name, server, join link). The application id below is public.
 //! Discord Rich Presence over the local Discord IPC socket. The application id
 //! controls the displayed app name and the asset images; override it with
-//! `MILLIDA_DISCORD_APP_ID`. Failures are non-fatal and retried no more often
+//! `KONMIN_DISCORD_APP_ID`. Failures are non-fatal and retried no more often
 //! than `RETRY_AFTER`.
 //!
 //! The socket is owned by one worker thread and never touched by a caller. A
@@ -26,10 +26,15 @@ use std::sync::Mutex;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 // Public application id from the Discord Developer Portal. Discord needs it to show the name and pictures. It is not a secret.
-const DEFAULT_APP_ID: &str = "1530764069965922354";
+// KonMin Launcher has no Discord application of its own yet, and the upstream id belongs to Millida: without
+// KONMIN_DISCORD_APP_ID (at build time or at run time) Rich Presence stays off.
+const DEFAULT_APP_ID: &str = match option_env!("KONMIN_DISCORD_APP_ID") {
+    Some(id) => id,
+    None => "",
+};
 const RETRY_AFTER: Duration = Duration::from_secs(30);
-const SITE_URL: &str = "https://millida.net/launcher";
-const DISCORD_URL: &str = "https://discord.gg/mcru";
+/// The "Download launcher" button only appears when the build names a download page (KONMIN_SITE_URL).
+const SITE_URL: Option<&str> = option_env!("KONMIN_SITE_URL");
 const PROFILE_BASE: &str = "https://millida.net/u/";
 
 /// Longest a caller waits for the socket before it is told what is known so
@@ -58,7 +63,7 @@ fn profile_url(slug: &str) -> Option<String> {
 }
 
 fn app_id() -> String {
-    std::env::var("MILLIDA_DISCORD_APP_ID").unwrap_or_else(|_| DEFAULT_APP_ID.to_string())
+    std::env::var("KONMIN_DISCORD_APP_ID").unwrap_or_else(|_| DEFAULT_APP_ID.to_string())
 }
 
 static TX: Mutex<Option<Sender<Job>>> = Mutex::new(None);
@@ -239,7 +244,7 @@ fn worker(generation: u64, rx: Receiver<Job>) {
                 let slug = lock(&LAST_SLUG).clone();
                 let presence = Presence {
                     details: "In launcher".into(),
-                    state: "Millida Launcher".into(),
+                    state: "KonMin Launcher".into(),
                     profile_slug: slug,
                     ..Presence::default()
                 };
@@ -352,7 +357,7 @@ fn apply(client: &mut Option<DiscordIpcClient>, since: &mut Option<i64>, p: &Pre
     }
 
     let big = if p.large_image.starts_with("https://") { p.large_image.as_str() } else { "logo" };
-    let big_text = if p.large_text.is_empty() { "Millida Launcher" } else { p.large_text.as_str() };
+    let big_text = if p.large_text.is_empty() { "KonMin Launcher" } else { p.large_text.as_str() };
     let join_ok = p.playing && p.join_url.starts_with(JOIN_PREFIX) && p.join_url.len() <= 512;
     let profile = profile_url(&p.profile_slug);
     // Presence is read by people of every language, so it stays English whatever the launcher's UI language.
@@ -360,20 +365,19 @@ fn apply(client: &mut Option<DiscordIpcClient>, since: &mut Option<i64>, p: &Pre
     let download_label = "Download launcher";
     let profile_label = "Millida profile";
     let small_text = if p.playing { "In game" } else { "In launcher" };
-    let buttons = if join_ok {
-        vec![
-            activity::Button::new(join_label, p.join_url.as_str()),
-            activity::Button::new(download_label, SITE_URL),
-        ]
-    } else {
-        vec![
-            activity::Button::new(download_label, SITE_URL),
-            match profile.as_deref() {
-                Some(url) => activity::Button::new(profile_label, url),
-                None => activity::Button::new("Discord Millida", DISCORD_URL),
-            },
-        ]
-    };
+    let site = SITE_URL.filter(|u| u.starts_with("https://"));
+    let mut buttons = Vec::new();
+    if join_ok {
+        buttons.push(activity::Button::new(join_label, p.join_url.as_str()));
+    }
+    if let Some(url) = site {
+        buttons.push(activity::Button::new(download_label, url));
+    }
+    if !join_ok {
+        if let Some(url) = profile.as_deref() {
+            buttons.push(activity::Button::new(profile_label, url));
+        }
+    }
     let mut act = activity::Activity::new()
         .activity_type(ActivityType::Playing)
         .details(&p.details)
@@ -384,8 +388,11 @@ fn apply(client: &mut Option<DiscordIpcClient>, since: &mut Option<i64>, p: &Pre
                 .large_text(big_text)
                 .small_image("logo")
                 .small_text(small_text),
-        )
-        .buttons(buttons);
+        );
+    // Discord rejects an empty button list, so a presence with nothing to link to sends none.
+    if !buttons.is_empty() {
+        act = act.buttons(buttons);
+    }
     if let Some(ts) = *since {
         act = act.timestamps(activity::Timestamps::new().start(ts));
     }
