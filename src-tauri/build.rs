@@ -60,6 +60,9 @@ fn main() {
     // The release number lives in tauri.conf.json alone: stamping it into Cargo.toml changed the crate's
     // metadata hash on every release, and with it the key of the incremental cache CI keeps between releases.
     println!("cargo:rerun-if-changed=tauri.conf.json");
+    // The Windows exe embeds icons/icon.ico through this script: a new icon must re-run it, or an incremental
+    // build keeps shipping the previous one (the installer would show the new icon, the exe the old).
+    println!("cargo:rerun-if-changed=icons/icon.ico");
     let conf: serde_json::Value =
         serde_json::from_str(&fs::read_to_string("tauri.conf.json").expect("tauri.conf.json")).expect("tauri.conf.json is not JSON");
     let version = conf["version"].as_str().expect("tauri.conf.json has no version");
