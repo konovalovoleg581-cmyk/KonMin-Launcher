@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
-private const val GALLERY_FOLDER = "Millida"
+private const val GALLERY_FOLDER = "KonMin"
 private const val DAY_MS = 24L * 60 * 60 * 1000
 
 internal val Screenshot.key: String get() = "$profileId/$name"

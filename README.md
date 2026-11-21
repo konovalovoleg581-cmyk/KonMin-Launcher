@@ -1,119 +1,99 @@
 <p align="center">
-  <img src=".github/readme/banner-en.png" alt="Millida Launcher for Android: Minecraft Java on your phone with mods, skins and friends">
+  <img src="branding/konmin-mobile-banner.png" alt="KonMin Launcher Mobile: Minecraft Java Edition on Android">
 </p>
 
 <p align="center">
-  <a href="https://millida.net/launcher/dl/android"><img src=".github/readme/download-android-en.png" width="32%" alt="Download for Android"></a>
+  <img src="https://img.shields.io/badge/Android-8%2B%2C%20arm64-5B7CFF" alt="Android 8 or newer, arm64">
+  <img src="https://img.shields.io/badge/Kotlin-Jetpack%20Compose-5B7CFF" alt="Kotlin and Jetpack Compose">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--only-555" alt="License GPL-3.0-only"></a>
 </p>
 
-<p align="center">
-  <a href="https://millida.net/launcher"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Flauncher-storage.millida.net%2Fmobile%2Flatest.json&query=%24.version&label=version&color=9B6BFF" alt="Latest version"></a>
-  <img src="https://img.shields.io/badge/Android-8%2B%2C%20arm64-3DDC84" alt="Android 8 or newer, arm64">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-555" alt="License GPL-3.0"></a>
-</p>
+*English | Русская версия: [README.ru.md](README.ru.md)*
 
-<p align="center">
-  <img src=".github/readme/trust-sha-en.png" width="49%" alt="Verified updates: the APK installs only if its SHA-256 matches">
-  <img src=".github/readme/trust-account-en.png" width="49%" alt="Your account is safe: you enter your password only on the Microsoft site">
-  <img src=".github/readme/trust-signed-en.png" width="49%" alt="One signing key: Android rejects an update signed by anyone else">
-  <a href="https://github.com/millida/launcher-mobile/commits/main"><img src=".github/readme/trust-open-en.png" width="49%" alt="Open source: you can check any line right here"></a>
-</p>
+**KonMin Launcher Mobile** is an Android launcher for **Minecraft Java Edition**: the same versions
+as on a computer, with Fabric, Quilt, Forge and NeoForge, mods and modpacks from Modrinth and
+CurseForge, resource packs, shaders, worlds, touch controls, keyboard, mouse and gamepad.
 
-| Lobby | Instances and servers | Catalog |
-| :---: | :---: | :---: |
-| <img src="screenshots/lobby.png" alt="Lobby: your character and the instance of the day"> | <img src="screenshots/builds.png" alt="My instances, shop, skin and servers"> | <img src="screenshots/catalog.png" alt="Modrinth and CurseForge mods"> |
-| **New instance** | **Character** | **More** |
-| <img src="screenshots/new-build.png" alt="Any version and loader: Fabric, Quilt, Forge, NeoForge"> | <img src="screenshots/character.png" alt="Skins and capes on a 3D figure"> | <img src="screenshots/more.png" alt="Friends, servers, hosting and account"> |
+> KonMin Launcher Mobile is a fork of the open-source
+> [Millida Launcher Mobile](https://github.com/millida/launcher-mobile) (GPL-3.0-only). It is **not
+> affiliated with, endorsed by or supported by Millida**. What was changed is listed in
+> [MODIFICATIONS.md](MODIFICATIONS.md); the outside services the app can talk to are listed below.
 
-*English | Russian version: [README.ru.md](README.ru.md)*
+## Install on your phone
 
-## Install
+1. Download the APK:
+   - from this repository's **Releases** page, or
+   - from the **Actions** tab → the latest successful *Android APK* run → **Artifacts** →
+     `KonMin-Launcher-Mobile` (you need to be signed in to GitHub; the artifact is a zip with the APK inside).
+2. Open the downloaded `KonMin-Launcher-Mobile-debug.apk`. Android asks whether the browser or file
+   manager may install apps: allow it ("Install unknown apps").
+3. Open **KonMin**, choose how you play (Microsoft licence or an offline nickname), create a modpack in
+   **Versions** and tap **Play**. The first start of a version downloads the game files from Mojang once.
 
-<details>
-<summary><b>Android</b>: <code>.apk</code> file</summary>
+**Phone requirements:** Android 8.0 or newer, a 64-bit processor (arm64), 4 GB of RAM or more,
+OpenGL ES 3.0 (ES 3.2 for shaders). Not every Minecraft version or mod runs well on every phone: start
+with vanilla or Fabric and a render distance of 6 on weaker devices.
 
-1. Tap "Download" above, or open [millida.net/launcher](https://millida.net/launcher) on your phone.
-2. Open the downloaded file. The phone will ask about installing from the browser: allow it ("Install unknown apps").
-3. Create an instance or pick a ready one in the catalog and tap "Play". The game files are downloaded on the first launch, only once.
+## What is inside
 
-The launcher installs its updates itself.
-</details>
+- **Six sections**: Home (play the selected modpack, account, progress), Versions (your modpacks with
+  their Minecraft version and loader), Mods (Modrinth and CurseForge catalog), Servers (join by address),
+  Skins, Settings.
+- **The real game engine of the original project**: Mojang version manifest and hash-checked downloads,
+  Fabric / Quilt / Forge / NeoForge installers, OpenJDK 8 / 21 / 25 for Android, the Krypton, GL4ES,
+  ANGLE and MobileGlues renderers, SDL3, touch / keyboard / mouse / gamepad input, worlds, backups,
+  screenshots, crash analysis.
+- **The Java + graphics runtime pack is inside the APK** (built from public sources, see below), so the
+  game starts without any launcher server.
+- **Accounts**: Microsoft through the official device-code page (the app never sees your password;
+  tokens are stored encrypted with Android Keystore), offline nicknames, account switching.
 
-<details>
-<summary><b>Which phone you need</b></summary>
+## Configuration of online services
 
-Android 8.0 or newer, a 64-bit processor (arm64), 4 GB of memory or more, OpenGL ES 3.0; ES 3.2 for shaders.
+A KonMin build talks only to Mojang/Microsoft, Modrinth, CurseForge's file CDN, the loader sites and the
+Java/runtime sources. Everything that would need a KonMin server is off until it is configured:
 
-If the installer says "App not compatible with your phone", the phone is 32-bit: the Java edition of Minecraft will not run on it.
-</details>
+| Setting (`gradle.properties`, `-P…` or environment) | Enables | Default |
+| --- | --- | --- |
+| `konmin.msClientId` / `KONMIN_MS_CLIENT_ID` | Microsoft (licensed) sign-in. Register your own app in Microsoft Entra ID for **personal Microsoft accounts**, allow public client flows, and request Minecraft API access for it. | empty: Microsoft sign-in says it is not set up; offline nicknames work |
+| `konmin.runtimeManifestUrl` / `KONMIN_RUNTIME_MANIFEST_URL` | downloading runtime updates from a KonMin server | empty: the bundled pack is used |
+| `konmin.millidaServices` / `KONMIN_MILLIDA_SERVICES` | Millida's account, friends, chat, shop, hosting, cloud sync, server rating and statistics (third-party servers) | `false`: no request ever goes to a Millida host |
 
-## FAQ
+With Millida services off, the screens that depend on them say so instead of failing, and the HTTP
+client refuses every `*.millida.net` / `*.millida.trade` request (`KonMinConfig`).
 
-<details>
-<summary><b>Is it free?</b></summary>
+## Build in the cloud (from a phone)
 
-Yes. There are no ads.
-</details>
+Push to the `konmin-mobile` branch, or open **Actions → Android APK → Run workflow**. The workflow
+([`.github/workflows/android.yml`](.github/workflows/android.yml)) installs the Android SDK, builds the
+runtime pack and the APK, and uploads it as an artifact. Pushing a tag such as `v1.0.0` also publishes a
+GitHub Release. Details, local builds and signing: [BUILDING.md](BUILDING.md).
 
-<details>
-<summary><b>Do I need a paid copy of Minecraft?</b></summary>
+## Runtime pack sources
 
-No. Without a license you can play with a nickname on Millida servers. With a license, you sign in on the official Microsoft page using a code. The launcher never sees your password.
-</details>
+`scripts/make_konmin_runtime.py` assembles `dist/konmin-runtime-arm64.zip` from:
 
-<details>
-<summary><b>Is this Pocket Edition?</b></summary>
+- ZalithLauncher2 2.4.11 for arm64 (GPL-3.0): Java 21 and 25, renderers, LWJGL/GLFW layer
+  (sha256 `b19adc0a…6ff8b84`);
+- OpenJDK 8 for Android arm64, AngelAuraMC build (GPL-2.0 with the Classpath Exception)
+  (sha256 `9a59124d…f0e06d`);
+- `bridge/` of this repository (GPL-3.0-only).
 
-No, this is Minecraft Java Edition: the same versions as on a computer, with Fabric, Quilt, Forge and NeoForge mods, resource packs and shaders from Modrinth and CurseForge.
-</details>
+Every file is checked against its SHA-256; the pack carries a `NOTICE-KONMIN.txt` with the sources.
 
-<details>
-<summary><b>Why is it not on Google Play or the App Store?</b></summary>
+## Branding
 
-The rules of both stores forbid apps to download executable code, and the launcher needs a Java machine, the game and mods. That is why the APK comes from the website. There is no iPhone version: iOS does not let a Java machine run at a usable speed.
-</details>
+`branding/` holds the KonMin mark (the KonMinli logo shared with the KonMin desktop launcher), the
+Android icon sources and the README banner; `scripts/gen_konmin_icons.py` regenerates the launcher
+icons (adaptive, monochrome and the in-app icon choices). Colours: background `#0F172A`, secondary
+background `#172033`, primary `#5B7CFF`, accent `#FFB703`, text `#FFFFFF` / `#AAB4C8`.
 
-<details>
-<summary><b>Black screen or the game lags</b></summary>
+## License
 
-The launcher picks the renderer for your graphics chip itself. If no picture appears, choose another one in "More" → "Settings" → "Renderer". For weak phones: vanilla or Fabric and a render distance of 6.
-</details>
+GPL-3.0-only ([LICENSE](LICENSE)). KonMin Launcher Mobile is a modified version of Millida Launcher
+Mobile; the original copyright notices are kept, and the modifications are listed in
+[MODIFICATIONS.md](MODIFICATIONS.md). Third-party components: [THIRD-PARTY.md](THIRD-PARTY.md).
+If you distribute an APK, you must also offer its corresponding source code (this repository at the
+commit the APK was built from).
 
-<details>
-<summary><b>Something does not work</b></summary>
-
-Write in [Discord](https://discord.gg/mcru) or open an issue. Attach a report: after a crash, use the "Send report" button; in other cases, the "Logs" tab of the instance.
-</details>
-
-## For developers
-
-Kotlin and Jetpack Compose. License: [GPL-3.0-only](LICENSE). Our own implementation, not a fork: the launcher, the interface and the launch layer are written here. Only ready-made binary parts of the runtime come from other projects: the Java machine for arm64 and the renderers. They are downloaded with a SHA-256 check and are not part of the source. Where they come from and under which license: [scripts/runtime_sources.json](scripts/runtime_sources.json) and [THIRD-PARTY.md](THIRD-PARTY.md).
-
-[How to build it yourself](BUILDING.md) · [How to send a fix](CONTRIBUTING.md) · [Where the APK comes from](SAFETY.md) · [Vulnerabilities](SECURITY.md) · [Name and logo](TRADEMARK.md)
-
-<details>
-<summary><b>How it is built</b></summary>
-
-```
-core/        pure logic: network, installation, profiles, accounts, launch arguments
-bridge/      a jar that replaces org.lwjgl.glfw inside the game
-processors/  the step driver of the Forge and NeoForge installers (Java 8+)
-runtime/     Android library: native host of the Java machine, EGL, input, service
-app/         the Compose interface
-scripts/     callback generator, runtime manifest builder
-```
-
-`core` knows nothing about Android and is tested on desktop Java, `runtime` knows nothing about the interface, `app` never touches the game files directly.
-</details>
-
-<details>
-<summary><b>Why the code is open</b></summary>
-
-The launcher handles your Microsoft sign-in, the game files and network requests. The honest answer to "what does it do with my account" is to let you read all of the code.
-
-- The official APK comes only from [millida.net/launcher](https://millida.net/launcher).
-- We do not support third-party builds. You can still build the code for yourself.
-- GPL-3.0 gives you the right to fork. The brand, the keys and our services are not covered by it. See [TRADEMARK.md](TRADEMARK.md).
-</details>
-
-<sub>Millida Launcher is not affiliated with Mojang AB or Microsoft. Minecraft is a trademark of Mojang AB. Android is a trademark of Google LLC.</sub>
+<sub>KonMin Launcher Mobile is not affiliated with Mojang AB, Microsoft or Millida. Minecraft is a trademark of Mojang AB.</sub>

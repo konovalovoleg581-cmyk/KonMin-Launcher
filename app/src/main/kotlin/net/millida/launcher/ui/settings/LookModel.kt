@@ -252,7 +252,7 @@ class LookModel private constructor(private val context: Context) {
     companion object {
         const val TIER_UNKNOWN = ""
         const val TIER_NONE = "none"
-        private const val DEFAULT_ACCENT = "green"
+        private const val DEFAULT_ACCENT = "konmin"
         private const val REFRESH_GAP_MS = 30_000L
 
         @Volatile

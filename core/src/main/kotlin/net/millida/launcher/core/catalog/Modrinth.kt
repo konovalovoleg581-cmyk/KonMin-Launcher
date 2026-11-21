@@ -226,7 +226,8 @@ class ModrinthCatalog(
         url.replace("[", "%5B").replace("]", "%5D").replace("\"", "%22")
 
     companion object {
-        const val USER_AGENT = "millida-mobile/1.0 (support@millida.net)"
+        // Modrinth asks every client for a name and a way to reach its authors.
+        const val USER_AGENT = "konmin-launcher-mobile/1.0 (github.com/konovalovoleg581-cmyk/KonMin-Launcher)"
         val ALLOWED_HOSTS = setOf(
             "api.millida.net",
             "cdn.millida.trade",

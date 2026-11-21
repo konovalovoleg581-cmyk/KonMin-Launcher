@@ -81,30 +81,32 @@ private val InkOnAccent = Color(0xFF06200E)
 
 private val TickRead = Color(0xFF4C9FFE)
 
+// KonMin Launcher Mobile palette: background #0F172A, secondary background #172033, text #FFFFFF,
+// secondary text #AAB4C8, primary blue #5B7CFF, accent yellow #FFB703.
 private val darkTokens = MillidaColors(
-    bg = Color(0xFF161718),
-    surface = Color(0xFF1E1F20),
-    surface2 = Color(0xFF26272A),
-    raised = Color(0xFF2A2B2E),
-    inset = Color(0xFF131314),
-    fg = Color(0xFFEDEFEE),
-    fgMuted = Color(0xCCEDEFEE),
-    fgSubtle = Color(0xA8EDEFEE),
-    fgFaint = Color(0x85EDEFEE),
-    accent = Color(0xFF5EC64D),
-    accentSoft = Color(0x215EC64D),
+    bg = Color(0xFF0F172A),
+    surface = Color(0xFF172033),
+    surface2 = Color(0xFF1E2940),
+    raised = Color(0xFF243049),
+    inset = Color(0xFF0B1222),
+    fg = Color(0xFFFFFFFF),
+    fgMuted = Color(0xFFD5DBE6),
+    fgSubtle = Color(0xFFAAB4C8),
+    fgFaint = Color(0xFF7D879C),
+    accent = Color(0xFF5B7CFF),
+    accentSoft = Color(0x215B7CFF),
     danger = Color(0xFFFF6B5E),
     dangerSoft = Color(0x21FF6B5E),
-    warning = Color(0xFFF5AA38),
-    warningSoft = Color(0x24F5AA38),
+    warning = Color(0xFFFFB703),
+    warningSoft = Color(0x24FFB703),
     info = Color(0xFF6AA9E9),
     infoSoft = Color(0x246AA9E9),
     success = Color(0xFF5EC64D),
     dark = true,
     onAccent = InkOnAccent,
-    accentText = Color(0xFF5EC64D),
-    accentToday = Color(0xFF334D32),
-    accentDeep = Color(0xFF11240E),
+    accentText = Color(0xFF7D98FF),
+    accentToday = Color(0xFF26346B),
+    accentDeep = Color(0xFF101A40),
     border = Color(0x12FFFFFF),
     borderStrong = Color(0x24FFFFFF),
     plateTop = Color(0x0AFFFFFF),
@@ -166,6 +168,8 @@ data class MillidaAccent(
 )
 
 val MillidaAccents: List<MillidaAccent> get() = listOf(
+    MillidaAccent("konmin", "KonMin", Color(0xFF5B7CFF), Color(0x215B7CFF)),
+    MillidaAccent("konmin-yellow", "KonMin Gold", Color(0xFFFFB703), Color(0x24FFB703)),
     MillidaAccent("green", tr("Зелёный"), Color(0xFF5EC64D), Color(0x215EC64D)),
     MillidaAccent("lime", tr("Лайм"), Color(0xFF9BD628), Color(0x249BD628)),
     MillidaAccent("teal", tr("Бирюзовый"), Color(0xFF22C7A9), Color(0x2422C7A9)),
@@ -787,7 +791,7 @@ private const val PREMIUM_DOCK_ALPHA = 0.35f
 @Composable
 fun MillidaTheme(
     dark: Boolean = isSystemInDarkTheme(),
-    accentId: String = "green",
+    accentId: String = "konmin",
     premium: Boolean = false,
     content: @Composable () -> Unit,
 ) {

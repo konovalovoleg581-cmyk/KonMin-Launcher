@@ -75,3 +75,16 @@ know whose build is running and whom to write to if something breaks.
 If your case is not described above, write to us and we will agree on it.
 
 Copyright and DMCA notices go to [dmca@millida.net](mailto:dmca@millida.net).
+
+---
+
+## KonMin Launcher Mobile
+
+*Added by the KonMin Launcher Mobile fork. The text above is Millida's policy for the Millida marks and
+is kept unchanged.*
+
+KonMin Launcher Mobile has its own name, application id (`net.konmin.launcher.mobile`), icon, logo,
+colours and link scheme (`konmin://`); it does not use Millida's signing key, Azure client id, update
+server or runtime storage, keeps Millida's online services off by default, and does not claim to be made,
+approved or supported by Millida. Remaining upstream design materials (lobby art, wallpapers, music in
+`app/src/main/assets`) are listed as a known limitation in README.md.

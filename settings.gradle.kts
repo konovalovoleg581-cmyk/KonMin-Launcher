@@ -10,11 +10,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://maven.fabricmc.net")
     }
 }
 
-rootProject.name = "millida-mobile"
+rootProject.name = "konmin-launcher-mobile"
 
 include(":core")
 include(":runtime")

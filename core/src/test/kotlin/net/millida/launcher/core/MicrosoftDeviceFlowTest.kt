@@ -52,7 +52,7 @@ class MicrosoftDeviceFlowTest {
                 },
             )
             .build()
-        return MicrosoftAuth(client)
+        return MicrosoftAuth(client, TEST_CLIENT_ID)
     }
 
     private fun sent(address: String): Request = synchronized(seen) {
@@ -95,7 +95,7 @@ class MicrosoftDeviceFlowTest {
             assertEquals("интервал по умолчанию — 5 секунд по RFC 8628", 5, sparse.intervalSec)
             assertEquals("срок по умолчанию — 15 минут", 900, sparse.expiresInSec)
             val fields = form(sent(DEVICE))
-            assertEquals(MicrosoftAuth.DEFAULT_CLIENT_ID, fields["client_id"])
+            assertEquals(TEST_CLIENT_ID, fields["client_id"])
             assertEquals("offline_access нужен, чтобы вход не слетал через час", "XboxLive.signin offline_access", fields["scope"])
         }
     }
@@ -318,5 +318,18 @@ class MicrosoftDeviceFlowTest {
         const val XSTS = "xsts.auth.xboxlive.com/xsts/authorize"
         const val LOGIN = "api.minecraftservices.com/authentication/login_with_xbox"
         const val PROFILE = "api.minecraftservices.com/minecraft/profile"
+    }
+}
+
+/** Any id: the build has no built-in one (KonMin sets its own through konmin.msClientId). */
+private const val TEST_CLIENT_ID = "00000000-0000-0000-0000-000000000000"
+
+class KonMinMicrosoftConfigTest {
+    @org.junit.Test
+    fun `a build without its own Azure client refuses to start the device flow`() {
+        val error = runCatching {
+            kotlinx.coroutines.runBlocking { MicrosoftAuth(okhttp3.OkHttpClient(), "").startDeviceFlow() }
+        }.exceptionOrNull()
+        org.junit.Assert.assertTrue("no request may go out with someone else's id", error is java.io.IOException)
     }
 }

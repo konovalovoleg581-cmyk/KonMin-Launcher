@@ -208,21 +208,36 @@ enum class Screen {
     HOME, BUILD, SERVERS, CATALOG, ACCOUNT, MORE, SETTINGS, SKINS, HOSTING, HOSTING_MANAGE,
     BEDROCK, PACKS, FRIENDS, CHAT, CABINET, SCREENSHOTS, SHOP,
     PREMIUM, PLUS,
+    /** KonMin: the instances on this phone with their Minecraft version and loader. */
+    VERSIONS,
 }
 
-val rootTabs: List<Screen> = listOf(Screen.HOME, Screen.CATALOG, Screen.SKINS, Screen.SHOP, Screen.MORE)
+/** KonMin Launcher Mobile's six sections: Home, Versions, Mods, Servers, Skins, Settings. */
+val rootTabs: List<Screen> = listOf(Screen.HOME, Screen.VERSIONS, Screen.CATALOG, Screen.SERVERS, Screen.SKINS, Screen.SETTINGS)
 
 val Screen.isRoot: Boolean get() = this in rootTabs
 
+/**
+ * Sections that exist only as Millida's online services. KonMin Launcher Mobile keeps their code, but they open
+ * only in a build with Millida services enabled (konmin.millidaServices); otherwise the player is told why.
+ */
+val Screen.needsMillida: Boolean
+    get() = this in setOf(
+        Screen.SHOP, Screen.FRIENDS, Screen.CHAT, Screen.HOSTING, Screen.HOSTING_MANAGE,
+        Screen.CABINET, Screen.PREMIUM, Screen.PLUS, Screen.BEDROCK,
+    )
+
+/** KonMin: whether this build may use Millida's online services at all. */
+val millidaServicesOn: Boolean get() = BuildConfig.MILLIDA_SERVICES
+
 fun rootTabOf(screen: Screen): Screen = when (screen) {
-    Screen.HOME, Screen.BUILD -> Screen.HOME
+    Screen.HOME, Screen.SHOP -> Screen.HOME
+    Screen.VERSIONS, Screen.BUILD, Screen.PACKS -> Screen.VERSIONS
     Screen.CATALOG -> Screen.CATALOG
+    Screen.SERVERS, Screen.BEDROCK, Screen.HOSTING, Screen.HOSTING_MANAGE -> Screen.SERVERS
     Screen.SKINS -> Screen.SKINS
-    Screen.SHOP -> Screen.SHOP
-    Screen.MORE, Screen.ACCOUNT, Screen.SERVERS, Screen.FRIENDS, Screen.CHAT, Screen.HOSTING,
-    Screen.HOSTING_MANAGE, Screen.CABINET, Screen.PACKS, Screen.SCREENSHOTS, Screen.BEDROCK,
-    Screen.SETTINGS -> Screen.MORE
-    Screen.PREMIUM, Screen.PLUS -> Screen.MORE
+    Screen.SETTINGS, Screen.MORE, Screen.ACCOUNT, Screen.FRIENDS, Screen.CHAT, Screen.CABINET,
+    Screen.SCREENSHOTS, Screen.PREMIUM, Screen.PLUS -> Screen.SETTINGS
 }
 
 /** A part of the app that loads on its own, so its wait and its failure stay inside it. */
@@ -378,7 +393,7 @@ data class UiState(
     val duplicateBytes: Long = 0,
     val duplicateGroups: Int = 0,
     val themeMode: String = Prefs.THEME_DARK,
-    val accentId: String = "green",
+    val accentId: String = "konmin",
     val accentCustom: String = "",
     val preparingGame: Boolean = false,
     val bedrockMode: String = Prefs.BEDROCK_ASK,
@@ -663,7 +678,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
                         activeProfileId = it.activeProfileId ?: remembered,
                         deviceReport = report,
                         importedRuntime = importedLabel(),
-                        guestAllowed = LoginGate.guestAllowed(prefs.millidaEver),
+                        guestAllowed = LoginGate.guestAllowed(prefs.millidaEver || !millidaServicesOn),
                     )
                 }
                 val start = LoginGate.atStart(
@@ -902,7 +917,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
                 notice(tr("На телефоне это по ссылке пока не надевается — выбери во вкладке «Персонаж»"), tone = ToastTone.Info)
             }
             else -> notice(
-                tr("«{slug}» на телефоне не ставится — поставь через Millida Launcher на компьютере", link.slug),
+                tr("«{slug}» на телефоне не ставится — поставь через KonMin Launcher на компьютере", link.slug),
                 isError = true,
             )
         }
@@ -968,6 +983,10 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun open(screen: Screen) {
+        if (screen.needsMillida && !millidaServicesOn) {
+            notice(tr("Это работает на серверах Millida — в KonMin Launcher пока отключено"), tone = ToastTone.Info)
+            return
+        }
         catalogReturn = null
         val current = state.value.screen
         when {
@@ -982,8 +1001,9 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
                 EventData().put("screen", screen.name.lowercase()).put("from", current.name.lowercase()).build(),
             )
         }
-        if (screen == Screen.SERVERS && state.value.servers.isEmpty()) loadServers(reset = true)
-        if (screen == Screen.SERVERS && state.value.serverVersions.isEmpty()) loadServerVersions()
+        // KonMin: the rating lives on Millida's API; without those services the section never asks it.
+        if (screen == Screen.SERVERS && millidaServicesOn && state.value.servers.isEmpty()) loadServers(reset = true)
+        if (screen == Screen.SERVERS && millidaServicesOn && state.value.serverVersions.isEmpty()) loadServerVersions()
         if (screen == Screen.SKINS && state.value.gameProfile == null) loadSkins()
         if (screen == Screen.BEDROCK || screen == Screen.MORE) refreshBedrock()
         if (screen == Screen.PACKS && state.value.myPacks.isEmpty()) loadMyPacks()
@@ -1759,7 +1779,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
      * Joining a server is the same launch with one extra argument, so the button
      * on a server card leads to the game itself instead of to a copied address.
      */
-    fun playOnAddress(address: String, name: String = "Millida") {
+    fun playOnAddress(address: String, name: String = "KonMin") {
         OwnServers.of(null, address)?.let { own ->
             playOwnServer(own)
             return
@@ -1853,7 +1873,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
      * no choice made the launcher takes the one that is ready, and sends the
      * player to the screen when neither is.
      */
-    fun openBedrockServer(address: String, name: String = "Millida") {
+    fun openBedrockServer(address: String, name: String = "KonMin") {
         when (prefs.bedrockMode) {
             Prefs.BEDROCK_OFFICIAL -> playOnBedrockEdition(address, name)
             Prefs.BEDROCK_OWN -> playBedrockThroughBridge(address, name)
@@ -1873,7 +1893,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
      * The Bedrock client is a separate application, so the launcher stops at
      * handing over the address - and says plainly when it cannot.
      */
-    fun playOnBedrockEdition(address: String, name: String = "Millida") {
+    fun playOnBedrockEdition(address: String, name: String = "KonMin") {
         val parsed = parseBedrockAddress(address)
         if (parsed == null) {
             notice(tr("Не разобрал адрес Bedrock: {address}", address), isError = true)
@@ -3133,7 +3153,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
      * knocks before the translator listens shows "connection refused", and the
      * player blames the launcher.
      */
-    fun playBedrockThroughBridge(address: String, name: String = "Millida") {
+    fun playBedrockThroughBridge(address: String, name: String = "KonMin") {
         val parsed = parseBedrockAddress(address)
         if (parsed == null) {
             notice(tr("Не разобрал адрес Bedrock: {address}", address), isError = true)
@@ -3910,7 +3930,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
                 sessionExpired = it.sessionExpired.takeUnless { kind -> kind == AccountKind.MILLIDA },
                 gameStep = stepDue,
                 loginGate = false,
-                guestAllowed = LoginGate.guestAllowed(prefs.millidaEver),
+                guestAllowed = LoginGate.guestAllowed(prefs.millidaEver || !millidaServicesOn),
             )
         }
         notice(tr("Вход выполнен: {nick}", session.nick))
@@ -4076,7 +4096,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
 
     /** The desktop's quickStart: a returning player plays under a fresh offline «PlayerNNNN» without signing in again. */
     fun playAsGuest() {
-        if (!LoginGate.guestAllowed(prefs.millidaEver)) {
+        if (!LoginGate.guestAllowed(prefs.millidaEver || !millidaServicesOn)) {
             notice(tr("Сначала войди в аккаунт Millida — это нужно один раз"), isError = true)
             return
         }
@@ -4263,7 +4283,11 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
         prefs.activeAccountId = account.id
         val stepDone = FirstRunGameStep.isGameAccount(kind) && prefs.firstRun == FirstRunGameStep.PENDING
         if (stepDone) prefs.firstRun = FirstRunGameStep.DONE
-        state.update { it.copy(accounts = accounts, account = account, gameStep = it.gameStep && !stepDone) }
+        // KonMin without Millida services: the account step stands in for the Millida sign-in, so a game account closes it.
+        val passGate = !millidaServicesOn && FirstRunGameStep.isGameAccount(kind)
+        state.update {
+            it.copy(accounts = accounts, account = account, gameStep = it.gameStep && !stepDone, loginGate = it.loginGate && !passGate)
+        }
         return account
     }
 
@@ -4384,7 +4408,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
     private fun adviseBatterySettings() {
         if (prefs.cleanerHintShown) return
         prefs.cleanerHintShown = true
-        notice(tr("Телефон закрыл игру в фоне. Разреши Millida работу без ограничений в настройках батареи"), tone = ToastTone.Info)
+        notice(tr("Телефон закрыл игру в фоне. Разреши KonMin работу без ограничений в настройках батареи"), tone = ToastTone.Info)
     }
 
     internal fun notice(

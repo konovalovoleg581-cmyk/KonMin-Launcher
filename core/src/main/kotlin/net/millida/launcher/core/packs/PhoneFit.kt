@@ -162,25 +162,25 @@ object PhoneFit {
         val text = when (block) {
             PhoneBlock.OLD_FORGE ->
                 tr("«{title}» на Forge {0} — на телефоне такие сборки не запускаются.", title, gameVersion.ifBlank { tr("до 1.13") }) +
-                    tr("Играй в неё через Millida Launcher на компьютере")
+                    tr("Играй в неё через KonMin Launcher на компьютере")
             PhoneBlock.OWN_LAUNCH ->
-                tr("У «{title}» свой запуск, написанный для компьютера. Играй в неё через Millida Launcher на компьютере", title)
+                tr("У «{title}» свой запуск, написанный для компьютера. Играй в неё через KonMin Launcher на компьютере", title)
             PhoneBlock.BROKEN_LAUNCH ->
-                tr("У «{title}» свой запуск, телефон его не поддерживает. Играй в неё через Millida Launcher на компьютере", title)
+                tr("У «{title}» свой запуск, телефон его не поддерживает. Играй в неё через KonMin Launcher на компьютере", title)
             PhoneBlock.PAID_OWN_LAUNCH ->
                 tr("«{title}» запускается своим способом, написанным для компьютера, — на телефоне она не работает. ", title) +
-                    tr("Играй в неё через Millida Launcher на компьютере")
+                    tr("Играй в неё через KonMin Launcher на компьютере")
             PhoneBlock.SDL_WINDOW -> if (sdlRuntime) {
                 tr("«{title}» открывает окно игры через SDL3 — на телефоне такие сборки идут только в бете", title)
             } else {
                 tr("«{title}» открывает окно игры через SDL3, а на телефоне этой библиотеки нет. ", title) +
-                    tr("Играй в неё через Millida Launcher на компьютере")
+                    tr("Играй в неё через KonMin Launcher на компьютере")
             }
             PhoneBlock.DESKTOP_NATIVE ->
                 tr("В «{title}» есть библиотеки, собранные только для компьютера. ", title) +
-                    tr("Играй в неё через Millida Launcher на компьютере")
+                    tr("Играй в неё через KonMin Launcher на компьютере")
             PhoneBlock.TOO_HEAVY ->
-                tr("«{title}» не поместится в память этого телефона. Играй в неё через Millida Launcher на компьютере", title)
+                tr("«{title}» не поместится в память этого телефона. Играй в неё через KonMin Launcher на компьютере", title)
         }
         val unlockable = block == PhoneBlock.OLD_FORGE || block == PhoneBlock.OWN_LAUNCH ||
             (block == PhoneBlock.SDL_WINDOW && sdlRuntime)

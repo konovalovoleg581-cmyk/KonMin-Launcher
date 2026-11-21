@@ -15,8 +15,13 @@ import java.io.File
 import java.io.IOException
 import java.util.zip.ZipInputStream
 
-const val RUNTIME_MANIFEST_URL = "https://launcher-storage.millida.net/mobile/runtime/manifest.json"
-const val RUNTIME_MANIFEST_ARM32_URL = "https://launcher-storage.millida.net/mobile/runtime/manifest-armeabi-v7a.json"
+/**
+ * KonMin Launcher Mobile has no built-in runtime host: the pack comes bundled in the APK or imported, and a
+ * KonMin server can be named at build time (konmin.runtimeManifestUrl, see KonMinConfig). The upstream address
+ * served Millida's pack from Millida's storage and is not used.
+ */
+val RUNTIME_MANIFEST_URL: String get() = net.millida.launcher.core.KonMinConfig.runtimeManifestUrl
+val RUNTIME_MANIFEST_ARM32_URL: String get() = RUNTIME_MANIFEST_URL.replace("manifest.json", "manifest-armeabi-v7a.json")
 
 /**
  * 32-bit ARM has a manifest of its own: applications released before it read
@@ -176,6 +181,10 @@ class RuntimeInstaller(
 ) {
     suspend fun manifest(): RuntimeManifest {
         val cached = File(layout.caches, MANIFEST_CACHE)
+        if (manifestUrl.isBlank()) {
+            if (cached.isFile) return MojangJson.decodeFromString(RuntimeManifest.serializer(), cached.readText())
+            throw IOException(tr("Адрес пакета Java и графики не настроен: импортируй пакет в настройках или поставь сборку со встроенным пакетом"))
+        }
         if (!manifestUrl.startsWith("http://") && !manifestUrl.startsWith("https://")) {
             val local = File(manifestUrl.removePrefix("file://"))
             if (!local.isFile) throw IOException(tr("файл манифеста не найден: {absolutePath}", local.absolutePath))

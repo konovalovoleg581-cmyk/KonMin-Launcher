@@ -114,7 +114,7 @@ private fun LogActions(text: String, model: LauncherViewModel) {
                     val written = withContext(Dispatchers.IO) { runCatching { file.writeText(text) }.isSuccess }
                     when {
                         !written -> model.notice(tr("Журнал не сохранился — освободи место и повтори"), isError = true)
-                        !shareFile(context, file, "text/plain", tr("Журнал Millida")) ->
+                        !shareFile(context, file, "text/plain", tr("Журнал KonMin")) ->
                             model.notice(tr("Не нашлось приложения, чтобы отправить журнал"), isError = true)
                     }
                 }

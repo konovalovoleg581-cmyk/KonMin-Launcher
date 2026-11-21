@@ -66,7 +66,7 @@ enum class IconRule { FREE, FRIENDS, PLUS, DIAMOND }
 
 /** The desktop's APP_ICONS in its order; [perk] is the friends-ladder reward that opens the icon. */
 enum class AppIcon(val id: String, private val titleKey: String, val rule: IconRule, private val needKey: String, val perk: String? = null) {
-    DEFAULT("default", "Millida", IconRule.FREE, ""),
+    DEFAULT("default", "KonMin", IconRule.FREE, ""),
     SPARK("spark", trKey("Искра"), IconRule.FRIENDS, trKey("Пригласи 5 друзей"), "icon-spark"),
     FLAME("flame", trKey("Пламя"), IconRule.FRIENDS, trKey("Пригласи 10 друзей"), "icon-flame"),
     AMETHYST("amethyst", trKey("Аметист"), IconRule.FRIENDS, trKey("Пригласи 25 друзей"), "icon-amethyst"),

@@ -68,11 +68,14 @@ class TelemetryTest {
         server = MockWebServer()
         server.start()
         dir = Files.createTempDirectory("telemetry").toFile()
+        // KonMin: statistics go to Millida and are off by default; these tests check the mechanism itself.
+        KonMinConfig.millidaServices = true
     }
 
     @After
     fun stop() {
         server.shutdown()
+        KonMinConfig.millidaServices = false
         dir.deleteRecursively()
     }
 

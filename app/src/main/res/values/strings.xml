@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Millida</string>
+    <!-- Home-screen label stays short; the full name is KonMin Launcher Mobile. -->
+    <string name="app_name">KonMin</string>
+    <string name="app_full_name">KonMin Launcher Mobile</string>
 </resources>

@@ -1,16 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <group
-        android:scaleX="0.1915"
-        android:scaleY="0.1915"
-        android:translateX="18"
-        android:translateY="18">
-        <path
-            android:fillColor="#FFFFFFFF"
-            android:pathData="M210.071,120.946H120.949V254.654H254.641L254.642,165.517H299.209V254.654H299.222V299.222H76.3809V120.946H76.3672V76.3774H210.071V120.946ZM210.071,210.084H165.503V165.516H210.071V210.084ZM299.209,120.947H254.656V165.515H210.088V120.947H254.641V76.3784H299.209V120.947Z" />
+<!-- KonMinli, the KonMin mark. Generated from branding/konmin-logo.svg by scripts/gen_konmin_icons.py; do not edit by hand. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp" android:height="108dp" android:viewportWidth="564" android:viewportHeight="564">
+    <group android:translateX="94" android:translateY="94">
+        <group >
+            <group android:translateX="188" android:translateY="442">
+                <group >
+                    <group android:translateX="-188" android:translateY="-442">
+                        <group android:translateX="188" android:translateY="442">
+                            <group >
+                                <group android:translateX="-188" android:translateY="-442">
+                                    <group android:translateX="188" android:translateY="200">
+                                        <group >
+                                            <group android:translateX="-188" android:translateY="-200">
+                                                <group >
+                                                    <group >
+                                                        <group android:translateX="0" android:translateY="0">
+                                                            <group android:translateX="8" android:translateY="10">
+                                                                <path android:fillColor="#0B0D2A" android:pathData="M83 83H143V113H83ZM233 83H263V113H233ZM83 113H143V143H83ZM203 113H263V143H203ZM83 143H143V173H83ZM173 143H233V173H173ZM83 173H203V203H83ZM83 203H143V233H83ZM173 203H233V233H173ZM83 233H143V263H83ZM203 233H263V263H203ZM83 263H143V293H83ZM233 263H293V293H233Z" />
+                                                                <path android:fillColor="#0B0D2A" android:pathData="M263,83h30v30h-30z" />
+                                                            </group>
+                                                            <path android:fillColor="#FFFFFF" android:pathData="M83 83H143V113H83ZM233 83H263V113H233ZM83 113H143V143H83ZM203 113H263V143H203ZM83 143H143V173H83ZM173 143H233V173H173ZM83 173H203V203H83ZM83 203H143V233H83ZM173 203H233V233H173ZM83 233H143V263H83ZM203 233H263V263H203ZM83 263H143V293H83ZM233 263H293V293H233Z" />
+                                                            <path android:fillColor="#5EF0FF" android:pathData="M263,83h30v30h-30z" />
+                                                        </group>
+                                                        <group android:translateX="94" android:translateY="14" android:scaleX="0.5" android:scaleY="0.5">
+                                                            <group >
+                                                                <path android:fillColor="#F59AA8" android:pathData="M79,588h26v9h-26z" />
+                                                                <path android:fillColor="#F59AA8" android:pathData="M271,588h26v9h-26z" />
+                                                            </group>
+                                                            <group >
+                                                                <group android:translateX="131" android:translateY="68">
+                                                                    <group >
+                                                                        <group android:translateX="-131" android:translateY="-68">
+                                                                            <path android:fillColor="#1B1F1C" android:pathData="M71,16h10v10h-10z" />
+                                                                            <path android:fillColor="#1B1F1C" android:pathData="M63,4h10v10h-10z" />
+                                                                            <path android:fillColor="#1B1F1C" android:pathData="M57,-6h9v9h-9z" />
+                                                                            <path android:fillColor="#1B1F1C" android:pathData="M81,6h100v124h-100z" />
+                                                                            <group >
+                                                                                <path android:fillColor="#8FF5FF" android:pathData="M97,39h68v84h-68z" />
+                                                                                <path android:fillColor="#1FB5D6" android:pathData="M97,81h68v42h-68z" />
+                                                                            </group>
+                                                                            <group >
+                                                                                <path android:fillColor="#1B1F1C" android:pathData="M115,57h32v48h-32z" />
+                                                                            </group>
+                                                                            <path android:fillColor="#FFFFFF" android:pathData="M147,89h16v16h-16z" />
+                                                                            <path android:fillColor="#FFFFFF" android:pathData="M98,30h31v31h-31z" />
+                                                                        </group>
+                                                                    </group>
+                                                                </group>
+                                                                <group android:translateX="245" android:translateY="68">
+                                                                    <group >
+                                                                        <group android:translateX="-245" android:translateY="-68">
+                                                                            <path android:fillColor="#1B1F1C" android:pathData="M295,16h10v10h-10z" />
+                                                                            <path android:fillColor="#1B1F1C" android:pathData="M303,4h10v10h-10z" />
+                                                                            <path android:fillColor="#1B1F1C" android:pathData="M309,-6h9v9h-9z" />
+                                                                            <path android:fillColor="#1B1F1C" android:pathData="M195,6h100v124h-100z" />
+                                                                            <group >
+                                                                                <path android:fillColor="#8FF5FF" android:pathData="M211,39h68v84h-68z" />
+                                                                                <path android:fillColor="#1FB5D6" android:pathData="M211,81h68v42h-68z" />
+                                                                            </group>
+                                                                            <group >
+                                                                                <path android:fillColor="#1B1F1C" android:pathData="M229,57h32v48h-32z" />
+                                                                            </group>
+                                                                            <path android:fillColor="#FFFFFF" android:pathData="M261,89h16v16h-16z" />
+                                                                            <path android:fillColor="#FFFFFF" android:pathData="M212,30h31v31h-31z" />
+                                                                        </group>
+                                                                    </group>
+                                                                </group>
+                                                            </group>
+                                                            <group >
+                                                                <path android:fillColor="#1B1F1C" android:pathData="M167 588h7v7h-7zM202 588h7v7h-7zM174 595h28v7h-28z" />
+                                                            </group>
+                                                        </group>
+                                                    </group>
+                                                </group>
+                                            </group>
+                                        </group>
+                                    </group>
+                                </group>
+                            </group>
+                        </group>
+                    </group>
+                </group>
+            </group>
+        </group>
     </group>
 </vector>

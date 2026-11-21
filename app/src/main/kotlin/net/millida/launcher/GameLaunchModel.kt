@@ -801,7 +801,7 @@ class GameLaunchModel(application: Application) : AndroidViewModel(application) 
                 .onFailure { GameSession.note(sessionLog, "отчёт не собран: ${it.message}") }
                 .getOrNull()
         }
-        val shared = report != null && shareFile(getApplication<Application>(), report, "text/plain", tr("Отчёт Millida"))
+        val shared = report != null && shareFile(getApplication<Application>(), report, "text/plain", tr("Отчёт KonMin"))
         if (!shared) showNotice(tr("Отчёт не отправился — открой «Лог», скопируй его и пришли в поддержку"))
     }
 

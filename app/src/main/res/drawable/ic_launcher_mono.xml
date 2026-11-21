@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- KonMinli, the KonMin mark. Generated from branding/konmin-logo.svg by scripts/gen_konmin_icons.py; do not edit by hand. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp" android:height="108dp" android:viewportWidth="564" android:viewportHeight="564">
+    <group android:translateX="94" android:translateY="94">
+        <path android:fillColor="#FFFFFFFF" android:pathData="M83 83H143V113H83ZM233 83H263V113H233ZM83 113H143V143H83ZM203 113H263V143H203ZM83 143H143V173H83ZM173 143H233V173H173ZM83 173H203V203H83ZM83 203H143V233H83ZM173 203H233V233H173ZM83 233H143V263H83ZM203 233H263V263H203ZM83 263H143V293H83ZM233 263H293V293H233Z" />
+        <path android:fillColor="#FFFFFFFF" android:pathData="M263,83h30v30h-30z" />
+    </group>
+</vector>

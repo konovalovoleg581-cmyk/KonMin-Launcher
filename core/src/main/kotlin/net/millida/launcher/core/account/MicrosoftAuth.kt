@@ -38,9 +38,16 @@ sealed interface DevicePoll {
 
 class MicrosoftAuth(
     private val client: OkHttpClient,
-    private val clientId: String = DEFAULT_CLIENT_ID,
+    /**
+     * The Microsoft Entra ID application of this build (BuildConfig.MS_CLIENT_ID, from konmin.msClientId).
+     * There is no default: the upstream id belongs to Millida's Azure organisation and is not KonMin's to use.
+     */
+    private val clientId: String,
 ) {
     suspend fun startDeviceFlow(): DeviceCodePrompt = withContext(Dispatchers.IO) {
+        if (clientId.isBlank()) {
+            throw IOException(tr("Вход через Microsoft не настроен в этой сборке KonMin: нужен свой клиент Azure (konmin.msClientId)"))
+        }
         val body = FormBody.Builder()
             .add("client_id", clientId)
             .add("scope", "XboxLive.signin offline_access")
@@ -221,7 +228,6 @@ class MicrosoftAuth(
         this[key]?.jsonPrimitive?.content?.toLongOrNull() ?: fallback
 
     companion object {
-        const val DEFAULT_CLIENT_ID = "499c8d36-be2a-4231-9ebd-ef291b7bb64c"
         private const val PROFILE_URL = "https://api.minecraftservices.com/minecraft/profile"
     }
 }

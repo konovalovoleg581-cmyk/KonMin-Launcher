@@ -132,7 +132,7 @@ class Container(private val context: Context) {
     val telemetry: AppTelemetry by lazy { AppTelemetry(context, millidaAuth, profiles, probeGpu = true) }
     val portal = PortalClient(millidaAuth)
     val wardrobe = WardrobeClient(millidaAuth)
-    val microsoftAuth = MicrosoftAuth(Downloader.shared())
+    val microsoftAuth = MicrosoftAuth(Downloader.shared(), BuildConfig.MS_CLIENT_ID)
     val millidaMod = MillidaMod(layout, profiles, downloader)
     val updates = UpdateClient(layout, downloader)
     /**

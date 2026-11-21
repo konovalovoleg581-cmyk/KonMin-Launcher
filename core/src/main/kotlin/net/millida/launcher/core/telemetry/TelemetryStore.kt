@@ -31,8 +31,11 @@ class TelemetryStore(private val dir: File, private val newId: () -> String = { 
     private val offFile get() = File(dir, "off")
     private val gameFile get() = File(dir, "game-open.json")
 
-    /** Same default as the desktop: on until the player turns it off. */
-    val enabled: Boolean get() = !offFile.exists()
+    /**
+     * Upstream: on until the player turns it off. KonMin: statistics go to Millida's API, so nothing is even
+     * recorded unless the build enables Millida services (KonMinConfig) and the player has not turned it off.
+     */
+    val enabled: Boolean get() = net.millida.launcher.core.KonMinConfig.millidaServices && !offFile.exists()
 
     fun setEnabled(on: Boolean) {
         locked {

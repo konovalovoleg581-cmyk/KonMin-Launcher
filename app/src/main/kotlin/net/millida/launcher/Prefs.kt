@@ -429,7 +429,7 @@ class Prefs(private val context: Context) {
         private const val KEY_LANGUAGE = "language"
         private const val KEY_ACCENT = "accent"
         private const val KEY_ACCENT_CUSTOM = "accent-custom"
-        private const val ACCENT_DEFAULT = "green"
+        private const val ACCENT_DEFAULT = "konmin"
         const val THEME_SYSTEM = "system"
         const val THEME_DARK = "dark"
         const val THEME_LIGHT = "light"

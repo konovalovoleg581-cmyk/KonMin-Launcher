@@ -35,7 +35,7 @@ class GameFilesProvider : DocumentsProvider() {
         cursor.newRow().apply {
             add(Root.COLUMN_ROOT_ID, ROOT_ID)
             add(Root.COLUMN_DOCUMENT_ID, ROOT_DOCUMENT)
-            add(Root.COLUMN_TITLE, "Millida")
+            add(Root.COLUMN_TITLE, "KonMin")
             add(Root.COLUMN_SUMMARY, tr("Папки сборок"))
             add(Root.COLUMN_ICON, R.mipmap.ic_launcher)
             add(Root.COLUMN_FLAGS, Root.FLAG_SUPPORTS_CREATE or Root.FLAG_SUPPORTS_IS_CHILD or Root.FLAG_LOCAL_ONLY)
@@ -134,7 +134,7 @@ class GameFilesProvider : DocumentsProvider() {
 
     /** A build's folder is named by its id; the player knows it by the build's name. */
     private fun displayName(documentId: String, file: File): String {
-        if (documentId == ROOT_DOCUMENT) return "Millida"
+        if (documentId == ROOT_DOCUMENT) return "KonMin"
         val relative = documentId.removePrefix("$ROOT_DOCUMENT/")
         if (relative.contains('/')) return file.name
         val name = runCatching {

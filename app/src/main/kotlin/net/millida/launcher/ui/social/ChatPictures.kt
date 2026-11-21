@@ -20,7 +20,7 @@ import java.io.File
 import java.io.IOException
 import java.io.InputStream
 
-internal val SAVED_PICTURE_NOTICE: String get() = tr("Сохранено: Pictures/Millida")
+internal val SAVED_PICTURE_NOTICE: String get() = tr("Сохранено: Pictures/KonMin")
 
 private const val MAX_PICTURE_BYTES = 10 * 1024 * 1024
 private const val PICTURE_DIR = "chat-pictures"

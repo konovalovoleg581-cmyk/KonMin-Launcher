@@ -40,7 +40,7 @@ class LoadErrorTextTest {
     }
 
     @Test
-    fun `каждый экран принадлежит одной из пяти вкладок`() {
+    fun `каждый экран принадлежит одному из шести разделов KonMin`() {
         Screen.entries.forEach { screen ->
             val root = rootTabOf(screen)
             assertTrue("$screen ведёт на $root, которой нет в нижней панели — подсветка вкладки потеряется", root.isRoot)
@@ -48,8 +48,12 @@ class LoadErrorTextTest {
         rootTabs.forEach { tab ->
             assertEquals("корневая вкладка $tab должна подсвечивать саму себя", tab, rootTabOf(tab))
         }
-        assertEquals("сборка открывается с главной и подсвечивает её", Screen.HOME, rootTabOf(Screen.BUILD))
-        assertEquals("настройки живут в «Ещё»", Screen.MORE, rootTabOf(Screen.SETTINGS))
-        assertEquals("в нижней панели ровно пять мест", 5, rootTabs.size)
+        assertEquals("сборка открывается из «Версий» и подсвечивает их", Screen.VERSIONS, rootTabOf(Screen.BUILD))
+        assertEquals("«Ещё» живёт в настройках", Screen.SETTINGS, rootTabOf(Screen.MORE))
+        assertEquals(
+            "разделы KonMin: Главная, Версии, Моды, Серверы, Скины, Настройки",
+            listOf(Screen.HOME, Screen.VERSIONS, Screen.CATALOG, Screen.SERVERS, Screen.SKINS, Screen.SETTINGS),
+            rootTabs,
+        )
     }
 }

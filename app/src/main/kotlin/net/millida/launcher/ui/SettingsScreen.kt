@@ -99,7 +99,7 @@ private val SEARCH_WORDS get() = mapOf(
     "account" to tr("Аккаунт Баланс кошелёк деньги пополнить рубли Видно в профиле приватность Игровая активность") + " " +
         tr("Серверы Часы в игре Список друзей Достижения Маркет Эмоции вдвоём Кто может звать") + " " +
         tr("Статистика использования телеметрия данные"),
-    "update" to tr("Обновления Millida Mobile версия"),
+    "update" to tr("Обновления KonMin Launcher Mobile версия"),
     "storage" to tr("Хранилище Кэш Копии модов очистить место"),
     "advanced-layer" to tr("Дополнительно Оконный слой"),
     "advanced-runtime" to tr("Дополнительно Рантайм Java"),
@@ -111,7 +111,7 @@ private val SEARCH_WORDS get() = mapOf(
 /** The launcher's own window layer is a development tool: see Prefs.windowLayer. */
 private const val LAYER_SECTION = "advanced-layer"
 
-/** The portrait «Ещё» root tab already holds these entries; only landscape needs them here. */
+/** Account, screenshots, pack codes: the entries of the upstream «Ещё» tab, reached from Settings in KonMin. */
 private const val MORE_SECTION = "more"
 
 @Composable
@@ -121,8 +121,8 @@ fun SettingsScreen(state: UiState, model: LauncherViewModel, modifier: Modifier 
     var query by rememberSaveable { mutableStateOf("") }
     val wide = LocalWideLayout.current
     val shown: (String) -> Boolean = { key ->
+        // KonMin: the «Ещё» section shows in portrait too (there is no «Ещё» tab any more).
         (key != LAYER_SECTION || BuildConfig.TEST_HOOKS) &&
-            (key != MORE_SECTION || wide) &&
             SettingsSearch.matches(query, SEARCH_WORDS[key].orEmpty())
     }
     val found = SEARCH_WORDS.keys.any { key -> shown(key) && (key != "notify" || state.millidaSignedIn) }
@@ -333,7 +333,8 @@ private fun SettingsPage(
                             .padding(vertical = 4.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        SettingsGroup.entries.filter { it != SettingsGroup.More || wide }.forEach { tab ->
+                        // KonMin: «Ещё» is no longer a tab of the bottom bar, so its links live here in both orientations.
+                        SettingsGroup.entries.forEach { tab ->
                             MChip(
                                 text = tab.label,
                                 selected = !searching && tab == group,

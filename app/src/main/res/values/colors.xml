@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg">#161718</color>
-    <color name="accent">#5EC64D</color>
-    <color name="ic_launcher_background">#5ACE66</color>
+    <!-- KonMin Launcher Mobile palette. -->
+    <color name="bg">#0F172A</color>
+    <color name="bg_secondary">#172033</color>
+    <color name="accent">#5B7CFF</color>
+    <color name="accent_yellow">#FFB703</color>
+    <color name="text">#FFFFFF</color>
+    <color name="text_secondary">#AAB4C8</color>
+    <color name="ic_launcher_background">#5B7CFF</color>
 </resources>

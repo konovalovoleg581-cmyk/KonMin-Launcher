@@ -24,7 +24,7 @@ object HostAbi {
     fun launchProblem(supportedAbis: List<String>): String? {
         if (game(supportedAbis) != null) return null
         return tr("Игра запускается только на процессоре ARM, а это устройство — {0} (похоже на эмулятор на компьютере): Java из пакета рантайма на нём не загружается. ", primary(supportedAbis)) +
-            tr("Запусти сборку на телефоне или в лаунчере Millida для ПК.")
+            tr("Запусти сборку на телефоне или в лаунчере KonMin для ПК.")
     }
 
     /** Where the system keeps its own libraries for a process of this ABI. */

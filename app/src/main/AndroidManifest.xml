@@ -58,27 +58,15 @@
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.Millida">
             <!--
-              The site's "Играть" and "Установить в Millida Launcher" buttons open
-              millida:// addresses. Of the https links to millida.net only pack
-              codes are claimed; every other page stays in the browser.
+              KonMin Launcher Mobile opens konmin:// links (shared pack codes, server joins).
+              The upstream millida:// scheme and the verified millida.net links belong to Millida's
+              app and site, so this app does not claim them.
             -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="millida" />
-            </intent-filter>
-            <!--
-              Verified against https://millida.net/.well-known/assetlinks.json,
-              so a shared pack code opens here without a chooser.
-            -->
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" />
-                <data android:host="millida.net" />
-                <data android:pathPrefix="/p/" />
+                <data android:scheme="konmin" />
             </intent-filter>
         </activity>
 
@@ -86,7 +74,7 @@
           The home screen icon, one alias per icon of the desktop's picker
           (Settings → Вид → «Иконка приложения»). Exactly one is enabled; the
           launcher's own links stay on MainActivity, so switching the icon never
-          breaks a millida:// or pack-code link.
+          breaks a konmin:// link.
         -->
         <activity-alias
             android:name=".IconDefault"

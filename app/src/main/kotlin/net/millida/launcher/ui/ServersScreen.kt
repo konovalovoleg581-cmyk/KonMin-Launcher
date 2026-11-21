@@ -93,6 +93,11 @@ private enum class ServerFilterSheet { CATEGORY, SORT, LICENSE, ONLINE, VERSION 
 
 @Composable
 fun ServersScreen(state: UiState, model: LauncherViewModel, modifier: Modifier = Modifier) {
+    // KonMin: the rating is Millida's service; without it the section offers joining by address instead.
+    if (!net.millida.launcher.millidaServicesOn) {
+        ServersWithoutRating(state, model, modifier)
+        return
+    }
     val clipboard = LocalClipboardManager.current
     val context = LocalContext.current
     val lobby by model.lobby.state.collectAsStateWithLifecycle()

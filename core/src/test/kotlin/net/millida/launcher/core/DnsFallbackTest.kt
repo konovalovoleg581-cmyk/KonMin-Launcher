@@ -159,9 +159,10 @@ class DnsFallbackTest {
     @Test
     fun `вход Microsoft при мёртвом имени объясняется по-русски`() = runBlocking {
         server.enqueue(MockResponse().setBody("<html>портал провайдера</html>"))
-        val client = OkHttpClient.Builder().dns(resolver(deadSystem)).build()
+        // KonMin: no system proxy either; through an HTTP proxy the name is resolved by the proxy and the dead resolver is never asked.
+        val client = OkHttpClient.Builder().proxy(java.net.Proxy.NO_PROXY).dns(resolver(deadSystem)).build()
 
-        val error = runCatching { MicrosoftAuth(client).startDeviceFlow() }.exceptionOrNull()
+        val error = runCatching { MicrosoftAuth(client, "00000000-0000-0000-0000-000000000000").startDeviceFlow() }.exceptionOrNull()
 
         val text = error?.message.orEmpty()
         assertTrue("сказано, что не удалось", text.contains("Не удалось определить адрес"))

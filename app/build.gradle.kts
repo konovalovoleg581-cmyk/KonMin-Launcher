@@ -31,6 +31,23 @@ abstract class BundleRuntimeTask : DefaultTask() {
 }
 
 val bundleRuntime = providers.gradleProperty("millida.bundleRuntime").isPresent
+
+/**
+ * KonMin Launcher Mobile: settings for services KonMin has to provide itself. None of them has a default
+ * that points at Millida: a build without them is a complete offline-capable launcher, and each online
+ * piece switches on only when its address or id is given (gradle.properties, -P, or the environment).
+ */
+fun konmin(name: String, env: String): String =
+    providers.gradleProperty("konmin.$name").orNull?.trim()?.takeIf { it.isNotEmpty() }
+        ?: providers.environmentVariable(env).orNull?.trim().orEmpty()
+// Microsoft Entra ID application (personal accounts, device code flow). Empty: Microsoft sign-in says it is not set up.
+val konminMsClientId = konmin("msClientId", "KONMIN_MS_CLIENT_ID")
+// Manifest of a runtime pack (Java and graphics) hosted by KonMin. Empty: only a bundled or imported pack is used.
+val konminRuntimeManifest = konmin("runtimeManifestUrl", "KONMIN_RUNTIME_MANIFEST_URL")
+// Millida's online services (account, friends, chat, shop, hosting, cloud, catalog of Millida packs, telemetry).
+// Off unless explicitly enabled: they are a third party's servers, not KonMin's.
+val millidaServices = konmin("millidaServices", "KONMIN_MILLIDA_SERVICES") == "true"
+fun quoted(value: String) = "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 val releaseVersionCode = providers.gradleProperty("millida.versionCode").get().trim().toInt()
 val releaseVersionName = providers.gradleProperty("millida.versionName").get().trim()
 // A release-signed build for the test phone: the debug hooks ride along so it installs over the
@@ -39,7 +56,7 @@ val testHooks = providers.gradleProperty("millida.testHooks").isPresent
 // Pictures of the landscape lobby for review, rendered by Robolectric into this folder.
 val lobbyShots = providers.gradleProperty("millida.shots").map { rootProject.file(it).absolutePath }
 val runtimeArchivePath = providers.gradleProperty("millida.runtimeArchive")
-    .getOrElse("../dist/millida-runtime-arm64.zip")
+    .getOrElse("../dist/konmin-runtime-arm64.zip")
 
 // 64-bit ARM alone unless asked otherwise: the 32-bit build joins a release only
 // once its runtime is published, since an application that installs on a phone
@@ -48,11 +65,13 @@ val gameAbis = providers.gradleProperty("millida.abis").getOrElse("arm64-v8a")
     .split(',').map { it.trim() }.filter { it.isNotEmpty() }
 
 android {
+    // The Kotlin packages keep their upstream names (net.millida.launcher.*): the native bridge's JNI symbols and the
+    // classes the game's Java machine loads are bound to them. The package Android installs and updates by is KonMin's.
     namespace = "net.millida.launcher"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "net.millida.launcher"
+        applicationId = "net.konmin.launcher.mobile"
         minSdk = 26
         targetSdk = 35
         versionCode = releaseVersionCode
@@ -62,7 +81,11 @@ android {
         }
         // The launcher is landscape-only, like the game and the desktop lobby.
         manifestPlaceholders["launcherOrientation"] = "sensorLandscape"
-        buildConfigField("boolean", "SELF_UPDATE", "true")
+        // No KonMin update server yet: updates come as a new APK from the project's releases.
+        buildConfigField("boolean", "SELF_UPDATE", "false")
+        buildConfigField("String", "MS_CLIENT_ID", quoted(konminMsClientId))
+        buildConfigField("String", "RUNTIME_MANIFEST_URL", quoted(konminRuntimeManifest))
+        buildConfigField("boolean", "MILLIDA_SERVICES", millidaServices.toString())
         buildConfigField("boolean", "OFFLINE_LOGIN", "true")
         buildConfigField("boolean", "OTHER_STORE_LINKS", "true")
         buildConfigField("boolean", "PD_CONSENT", "false")
@@ -76,19 +99,21 @@ android {
     signingConfigs {
         // The key never lives in the project: the path and the password come
         // from the release job environment or local.properties, never from git.
-        create("millida") {
+        // KonMin's own release key. Millida's key is not and must not be used: an APK signed by a different key
+        // is a different publisher, and Android refuses to update one with the other.
+        create("konmin") {
             val local = Properties()
             val file = rootProject.file("local.properties")
             if (file.exists()) file.inputStream().use { local.load(it) }
             fun setting(env: String, key: String): String? =
                 providers.environmentVariable(env).orNull?.takeIf { it.isNotBlank() } ?: local.getProperty(key)
-            val store = setting("MILLIDA_KEYSTORE_FILE", "millida.release.keystore")
-            val password = setting("MILLIDA_KEYSTORE_PASSWORD", "millida.release.password")
+            val store = setting("KONMIN_KEYSTORE_FILE", "konmin.release.keystore")
+            val password = setting("KONMIN_KEYSTORE_PASSWORD", "konmin.release.password")
             if (store != null && File(store).isFile) {
                 storeFile = File(store)
                 storePassword = password
-                keyAlias = setting("MILLIDA_KEY_ALIAS", "millida.release.alias")
-                keyPassword = setting("MILLIDA_KEY_PASSWORD", "millida.release.key.password") ?: password
+                keyAlias = setting("KONMIN_KEY_ALIAS", "konmin.release.alias")
+                keyPassword = setting("KONMIN_KEY_PASSWORD", "konmin.release.key.password") ?: password
             }
         }
     }
@@ -98,11 +123,13 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("millida")
+            // Without a configured key the release APK is built unsigned rather than failing the build.
+            signingConfigs.getByName("konmin").takeIf { it.storeFile != null }?.let { signingConfig = it }
             buildConfigField("boolean", "TEST_HOOKS", testHooks.toString())
         }
         debug {
-            applicationIdSuffix = ".debug"
+            // No suffix: until KonMin publishes a signed release, the debug APK is the one players install,
+            // and it carries the real package name.
             buildConfigField("boolean", "TEST_HOOKS", "true")
             buildConfigField("boolean", "GUEST_LOGIN", "true")
         }
@@ -187,6 +214,7 @@ android {
                 }
             } else {
                 test.exclude("**/LobbyShotsTest*")
+                test.exclude("**/KonMinShotsTest*")
             }
         }
     }

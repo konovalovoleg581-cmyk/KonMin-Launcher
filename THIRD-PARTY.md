@@ -87,3 +87,19 @@ cut down to Latin and Cyrillic.
 These do not end up in the APK: the Gradle wrapper and the Android Gradle Plugin
 (Apache-2.0), JUnit 4 (EPL-1.0), Robolectric (MIT), Roborazzi (Apache-2.0),
 MockWebServer (Apache-2.0).
+
+---
+
+## KonMin Launcher Mobile: bundled runtime pack
+
+KonMin builds put the Java + graphics runtime pack inside the APK (`assets/millida-runtime.zip`),
+built by `scripts/make_konmin_runtime.py` from:
+
+| Component | License | Source |
+| --- | --- | --- |
+| ZalithLauncher2 2.4.11, arm64 APK: OpenJDK 21 and 25, libpojavexec, gl4es, NG-GL4ES (Krypton), OpenAL Soft, LWJGL 3.3.6, ANGLE, Mesa, FreeType, JNA, bytehook, libc++ | GPL-3.0 (the launcher parts); the components under their own licenses listed above in this file | https://github.com/ZalithLauncher/ZalithLauncher2/releases/tag/2.4.11 (sha256 `b19adc0acdfeafad950637cc4ae9091ec296f3917d1d5d15be7635c9f6ff8b84`) |
+| OpenJDK 8 for Android arm64 (AngelAuraMC build) | GPL-2.0 with the Classpath Exception | https://github.com/AngelAuraMC/angelauramc-openjdk-build/releases/tag/download_jre8 (sha256 `9a59124d9791957d55c68be664ab76831f336cf2e1e1cd4414220c6fdbf0e06d`) |
+| `bridge/` (millida-glfw.jar) | GPL-3.0-only | this repository |
+
+The pack also carries `NOTICE-KONMIN.txt` with this list. The corresponding source of each GPL
+component is at the addresses above.

@@ -43,7 +43,7 @@ private const val DISSOLVE_MS = 560
 private const val FLASH_SHARE = 0.12f
 private const val SCATTER = 3f
 private val CELL = 36.dp
-private const val BRAND = "Millida"
+private const val BRAND = "KonMin"
 
 /**
  * «С возвращением, <ник>» once per launch, about two seconds, a tap skips it.
@@ -102,7 +102,7 @@ fun WelcomeSplash(ask: WelcomeAsk, onDone: () -> Unit) {
                 val nick = ask.nick.ifBlank { tr("игрок") }
                 Text(
                     greeting(
-                        text = if (ask.first) tr("Добро пожаловать\nв Millida") else tr("С возвращением,\n{nick}", nick),
+                        text = if (ask.first) tr("Добро пожаловать\nв KonMin") else tr("С возвращением,\n{nick}", nick),
                         accent = if (ask.first) BRAND else nick,
                         quiet = MillidaType.body.copy(color = colors.fgMuted),
                         loud = MillidaType.screenTitle.copy(color = colors.fg),

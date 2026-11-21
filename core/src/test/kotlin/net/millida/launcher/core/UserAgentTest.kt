@@ -46,19 +46,19 @@ class UserAgentTest {
     }
 
     @Test
-    fun `имя общее с настольным лаунчером, а версия на настольную не похожа`() {
+    fun `KonMin называет себя своим именем, а версия на настольную не похожа`() {
         val agent = Downloader.USER_AGENT
         assertTrue(
-            "сервер узнаёт лаунчер по началу «MillidaLauncher/», с другим началом телефон для него чужой: $agent",
-            agent.startsWith("MillidaLauncher/"),
+            "форк не представляется лаунчером Millida — серверы Millida не должны принимать его за свой: $agent",
+            agent.startsWith("KonMinLauncher/") && !agent.startsWith("MillidaLauncher/"),
         )
         assertFalse(
-            "по настольной версии из этого заголовка сервер предлагает игры только для компьютера, телефон скачает такую и не запустит: $agent",
-            Regex("^MillidaLauncher/\\d+\\.\\d+\\.\\d+(?:[\\s(]|$)").containsMatchIn(agent),
+            "по настольной версии из заголовка сервер предложит игру для компьютера, телефон её не запустит: $agent",
+            Regex("^KonMinLauncher/\\d+\\.\\d+\\.\\d+(?:[\\s(]|$)").containsMatchIn(agent),
         )
         assertTrue(
-            "версия сборки должна читаться из заголовка: $agent",
-            Regex("^MillidaLauncher/android-[0-9A-Za-z._-]+ \\(\\+https://millida\\.net\\)$").matches(agent),
+            "версия сборки читается из заголовка: $agent",
+            Regex("^KonMinLauncher/android-[0-9A-Za-z._-]+ \\(fork of Millida Launcher Mobile\\)$").matches(agent),
         )
     }
 }

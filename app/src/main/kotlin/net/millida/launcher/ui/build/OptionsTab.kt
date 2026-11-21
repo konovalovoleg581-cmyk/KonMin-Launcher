@@ -286,7 +286,7 @@ private fun FilesCard(profile: Profile, model: LauncherViewModel) {
         Text(tr("Настройки модов, options.txt, журналы — открыть, отправить, добавить или удалить"), style = MillidaType.small, color = millida.fgSubtle)
         Spacer(Modifier.height(6.dp))
         Text(
-            tr("В приложении «Файлы»: Millida → {name}. Папка Android/data с Android 11 закрыта для всех приложений, поэтому сборки видны там как отдельное место.", profile.name),
+            tr("В приложении «Файлы»: KonMin → {name}. Папка Android/data с Android 11 закрыта для всех приложений, поэтому сборки видны там как отдельное место.", profile.name),
             style = MillidaType.small,
             color = millida.fgFaint,
         )
@@ -296,7 +296,7 @@ private fun FilesCard(profile: Profile, model: LauncherViewModel) {
             MSecondaryButton(tr("Добавить мод из файла"), onClick = { addMod.launch(arrayOf("application/java-archive", "application/zip", "application/octet-stream", "*/*")) }, icon = MIcons.plus, size = MButtonSize.Small)
             MTextButton(tr("Открыть в «Файлах»"), onClick = {
                 if (!openInFiles(context, profile)) {
-                    model.notice(tr("Открой приложение «Файлы» и выбери в меню Millida"), isError = true)
+                    model.notice(tr("Открой приложение «Файлы» и выбери в меню KonMin"), isError = true)
                 }
             }, icon = MIcons.externalLink)
         }

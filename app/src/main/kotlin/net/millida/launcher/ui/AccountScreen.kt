@@ -86,7 +86,9 @@ internal fun accountKindLabel(kind: AccountKind): String = when (kind) {
 
 internal fun signInService(kind: AccountKind): String = when (kind) {
     AccountKind.MICROSOFT -> "Microsoft"
-    AccountKind.MILLIDA, AccountKind.OFFLINE -> "Millida"
+    AccountKind.MILLIDA -> "Millida"
+    // KonMin: an offline nick is local to this launcher, not a Millida service.
+    AccountKind.OFFLINE -> tr("Офлайн")
 }
 
 private enum class AccountUnlink(val title: String) { DISCORD("Discord"), TELEGRAM("Telegram") }

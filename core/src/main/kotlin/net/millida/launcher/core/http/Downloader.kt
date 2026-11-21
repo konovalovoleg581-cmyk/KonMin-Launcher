@@ -365,7 +365,7 @@ class Downloader(
          * it. The version sits behind "android-": whatever reads a desktop version out of this
          * header must not take a phone for a computer.
          */
-        const val USER_AGENT = "MillidaLauncher/android-$LAUNCHER_VERSION (+https://millida.net)"
+        const val USER_AGENT = "KonMinLauncher/android-$LAUNCHER_VERSION (fork of Millida Launcher Mobile)"
 
         @Volatile
         private var sharedClient: OkHttpClient? = null
@@ -377,6 +377,14 @@ class Downloader(
 
         fun defaultClient(): OkHttpClient = OkHttpClient.Builder()
             .dns(DohDns.shared())
+            // KonMin: no request reaches a Millida host unless this build enables those services.
+            .addInterceptor { chain ->
+                val host = chain.request().url.host
+                if (!net.millida.launcher.core.KonMinConfig.millidaServices && net.millida.launcher.core.KonMinConfig.isMillidaHost(host)) {
+                    throw net.millida.launcher.core.KonMinConfig.MillidaServicesOff(host)
+                }
+                chain.proceed(chain.request())
+            }
             .addInterceptor { chain ->
                 val request = chain.request()
                 chain.proceed(

@@ -22,3 +22,6 @@ out/
 .DS_Store
 Thumbs.db
 __pycache__/
+
+# KonMin: checksums of a local build; CI writes its own next to the APK
+release/SHA256SUMS.txt

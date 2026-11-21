@@ -7,6 +7,9 @@ import java.io.File
 class MillidaApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        // Before anything reaches the network, in every process (launcher, game, proxy).
+        net.millida.launcher.core.KonMinConfig.runtimeManifestUrl = BuildConfig.RUNTIME_MANIFEST_URL
+        net.millida.launcher.core.KonMinConfig.millidaServices = BuildConfig.MILLIDA_SERVICES
         CrashGuard.install(this)
         if (isLauncherProcess()) CrashGuard.sendEarly(this)
         AppLanguage.install(this)

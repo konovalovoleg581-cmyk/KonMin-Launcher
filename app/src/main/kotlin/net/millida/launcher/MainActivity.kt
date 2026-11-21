@@ -110,6 +110,8 @@ import net.millida.launcher.ui.CatalogScreen
 import net.millida.launcher.ui.ChatScreen
 import net.millida.launcher.ui.FriendsScreen
 import net.millida.launcher.ui.HomeScreen
+import net.millida.launcher.ui.VersionsScreen
+import net.millida.launcher.ui.BrandSign
 import net.millida.launcher.ui.HostingManageScreen
 import net.millida.launcher.ui.HostingScreen
 import net.millida.launcher.ui.RemoteScreen
@@ -258,7 +260,13 @@ class MainActivity : ComponentActivity() {
                                     if (modals.layers.isEmpty()) ToastHost(state, model, barShown = false, atTop = false)
                                 }
                                 if (state.loginGate && !state.onboarding) {
-                                    LoginScreen(state, model, onLeave = { moveTaskToBack(true) })
+                                    // KonMin: without Millida services there is no Millida sign-in to show; the player
+                                    // picks a Microsoft licence or an offline nick instead.
+                                    if (millidaServicesOn) {
+                                        LoginScreen(state, model, onLeave = { moveTaskToBack(true) })
+                                    } else {
+                                        GameAccountStep(state, model, onLeave = { moveTaskToBack(true) })
+                                    }
                                     if (modals.layers.isEmpty()) ToastHost(state, model, barShown = false, atTop = false)
                                 }
                                 if (state.gameStep && !state.onboarding && !state.loginGate) {
@@ -370,8 +378,10 @@ class MainActivity : ComponentActivity() {
         if (intent?.action != Intent.ACTION_VIEW) return
         val data = intent.data ?: return
         val scheme = data.scheme.orEmpty()
-        if (!"millida".equals(scheme, ignoreCase = true) && !"https".equals(scheme, ignoreCase = true)) return
-        model.handleLink(data.toString())
+        if (!"konmin".equals(scheme, ignoreCase = true) && !"https".equals(scheme, ignoreCase = true)) return
+        // The link parser speaks the upstream scheme; a konmin:// link carries the same paths.
+        val link = if ("konmin".equals(scheme, ignoreCase = true)) "millida" + data.toString().substring(scheme.length) else data.toString()
+        model.handleLink(link)
     }
 
     override fun onResume() {
@@ -401,11 +411,12 @@ class MainActivity : ComponentActivity() {
 private data class Tab(val screen: Screen, val label: String, val icon: MillidaIcon)
 
 private val tabs get() = listOf(
-    Tab(Screen.HOME, tr("Играть"), MIcons.home),
-    Tab(Screen.CATALOG, tr("Каталог"), MIcons.catalog),
-    Tab(Screen.SKINS, tr("Персонаж"), MIcons.character),
-    Tab(Screen.SHOP, tr("Магазин"), MIcons.shop),
-    Tab(Screen.MORE, tr("Ещё"), MIcons.more),
+    Tab(Screen.HOME, tr("Главная"), MIcons.home),
+    Tab(Screen.VERSIONS, tr("Версии"), MIcons.blocks),
+    Tab(Screen.CATALOG, tr("Моды"), MIcons.catalog),
+    Tab(Screen.SERVERS, tr("Серверы"), MIcons.server),
+    Tab(Screen.SKINS, tr("Скины"), MIcons.character),
+    Tab(Screen.SETTINGS, tr("Настройки"), MIcons.settings),
 )
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -496,9 +507,59 @@ private fun WideShell(state: UiState, model: LauncherViewModel, hub: WideHub) {
         onBack = { model.back() },
     )
     CompositionLocalProvider(LocalWideHub provides hub, LocalWideBack provides back) {
-        ScreenHost(state, model)
+        Row(Modifier.fillMaxSize()) {
+            SectionRail(current = rootTabOf(state.screen), onPick = { model.open(it) })
+            Box(Modifier.weight(1f).fillMaxHeight()) { ScreenHost(state, model) }
+        }
     }
 }
+
+/**
+ * KonMin: the six sections in landscape, where upstream had no sections bar at all. A narrow pixel rail on the
+ * left (inside the cutout-safe area), the same tabs and labels as the phone's bottom bar.
+ */
+@Composable
+private fun SectionRail(current: Screen, onPick: (Screen) -> Unit) {
+    val colors = millida
+    Column(
+        Modifier
+            .fillMaxHeight()
+            .width(RAIL_WIDTH)
+            .background(colors.surface)
+            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Start + WindowInsetsSides.Vertical))
+            .padding(vertical = 6.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        BrandSign(28.dp)
+        Spacer(Modifier.height(6.dp))
+        tabs.forEach { tab ->
+            val active = tab.screen == current
+            Column(
+                Modifier
+                    .width(RAIL_WIDTH - 8.dp)
+                    .pixelSurface(
+                        fill = if (active) colors.accent else Color.Transparent,
+                        cut = MillidaCut.control,
+                        frame = if (active) PixelFrame.Button else PixelFrame.None,
+                    )
+                    .selectable(active, onClick = { if (!active) onPick(tab.screen) }, role = Role.Tab)
+                    .padding(vertical = 6.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                MIcon(tab.icon, size = 22.dp, color = if (active) colors.onAccent else colors.fgMuted)
+                Text(
+                    tab.label,
+                    style = MillidaType.tabLabel,
+                    color = if (active) colors.onAccent else colors.fgSubtle,
+                    maxLines = 1,
+                )
+            }
+        }
+    }
+}
+
+private val RAIL_WIDTH = 76.dp
 
 /**
  * How deep a screen sits, for the slide direction. In landscape the sections
@@ -507,7 +568,7 @@ private fun WideShell(state: UiState, model: LauncherViewModel, hub: WideHub) {
  */
 private fun Screen.depth(wide: Boolean): Int = when (this) {
     Screen.HOME -> 0
-    Screen.CATALOG, Screen.SKINS, Screen.SHOP, Screen.MORE -> if (wide) 1 else 0
+    Screen.VERSIONS, Screen.CATALOG, Screen.SERVERS, Screen.SKINS, Screen.SETTINGS -> if (wide) 1 else 0
     Screen.CHAT, Screen.HOSTING_MANAGE -> 2
     else -> 1
 }
@@ -623,6 +684,7 @@ private fun ScreenFor(screen: Screen, state: UiState, model: LauncherViewModel) 
         Screen.SHOP -> ShopScreen(state, model)
         Screen.PREMIUM -> PremiumScreen(state, model)
         Screen.PLUS -> PlusScreen(state, model)
+        Screen.VERSIONS -> VersionsScreen(state, model)
     }
 }
 

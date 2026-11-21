@@ -43,11 +43,14 @@ class TelemetryKindTest {
     fun start() {
         server = MockWebServer()
         server.start()
+        // KonMin: statistics go to Millida and are off by default; these tests check the mechanism itself.
+        KonMinConfig.millidaServices = true
     }
 
     @After
     fun stop() {
         server.shutdown()
+        KonMinConfig.millidaServices = false
     }
 
     private data class Case(val error: Throwable, val kind: String, val why: String)

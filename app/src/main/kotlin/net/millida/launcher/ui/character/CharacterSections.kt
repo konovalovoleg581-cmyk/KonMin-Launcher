@@ -273,7 +273,8 @@ private fun LazyGridScope.skinSection(p: CharacterPanel) {
         showcaseSection(p, showcase)
         return
     }
-    if (p.target == WearTarget.SignedOut) {
+    // KonMin: the hint leads to the Millida sign-in, which a build without Millida services does not have.
+    if (p.target == WearTarget.SignedOut && net.millida.launcher.millidaServicesOn) {
         full("skin-sign-in") {
             MListRow(
                 title = tr("Скины только на этом телефоне"),

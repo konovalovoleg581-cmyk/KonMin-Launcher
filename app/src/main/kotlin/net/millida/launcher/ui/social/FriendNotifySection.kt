@@ -61,7 +61,7 @@ fun FriendNotifySection(model: LauncherViewModel, modifier: Modifier = Modifier)
                     val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                         .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
                     runCatching { context.startActivity(intent) }
-                        .onFailure { model.notice(tr("Открой настройки телефона → Приложения → Millida → Уведомления"), isError = true) }
+                        .onFailure { model.notice(tr("Открой настройки телефона → Приложения → KonMin → Уведомления"), isError = true) }
                 },
                 color = millida.accentText,
             )

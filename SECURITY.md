@@ -1,5 +1,9 @@
 # Security
 
+> **KonMin Launcher Mobile note.** This document is inherited unchanged from the upstream
+> [Millida Launcher Mobile](https://github.com/millida/launcher-mobile). It describes Millida's builds,
+> services, contacts and processes, not KonMin's. See [README.md](README.md) and [MODIFICATIONS.md](MODIFICATIONS.md).
+
 Russian version: [SECURITY.ru.md](SECURITY.ru.md)
 
 Thank you for taking the time to report a problem. The launcher starts the game, uses the

@@ -10,31 +10,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.BaselineShift
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.millida.launcher.R
 
-/** The green Millida sign alone, as on the desktop title bar and sign-in screen. */
+/** The KonMin mark (KonMinli), the same sign as the KonMin desktop launcher's. */
 @Composable
 fun BrandSign(size: Dp, modifier: Modifier = Modifier) {
-    Image(painterResource(R.drawable.ic_brand_logo), contentDescription = "Millida", modifier = modifier.size(size))
+    Image(painterResource(R.drawable.ic_brand_logo), contentDescription = "KonMin", modifier = modifier.size(size))
 }
 
 private val WordmarkFont = FontFamily(Font(R.font.unbounded_medium, FontWeight.Medium))
 
 /**
- * Sign plus the wordmark exactly as millida.net draws it (ui-kit/millida/Logo.tsx): Unbounded 500,
- * upper case, tracking 0.02em, ® after the word, text 22 to a 36 sign with a 12 gap. The owner
- * twice caught a mixed-case bold «Millida» here as an old font (26.10).
+ * Sign plus the KonMin wordmark: Unbounded 500, upper case, tracking 0.02em, text 22 to a 36 sign
+ * with a 12 gap (the proportions of the upstream lockup). No ® sign: KonMin is not a registered mark.
  */
 @Composable
 fun BrandLockup(signSize: Dp = 22.dp, color: Color = millida.fg, modifier: Modifier = Modifier) {
@@ -43,10 +39,7 @@ fun BrandLockup(signSize: Dp = 22.dp, color: Color = millida.fg, modifier: Modif
         BrandSign(signSize)
         Spacer(Modifier.width(signSize * (12f / 36f)))
         androidx.compose.material3.Text(
-            buildAnnotatedString {
-                append("MILLIDA")
-                withStyle(SpanStyle(fontSize = (fontSize * 0.45f).sp, baselineShift = BaselineShift(0.9f))) { append("®") }
-            },
+            buildAnnotatedString { append("KONMIN") },
             style = TextStyle(
                 fontFamily = WordmarkFont,
                 fontWeight = FontWeight.Medium,

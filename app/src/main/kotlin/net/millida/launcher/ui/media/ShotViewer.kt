@@ -135,7 +135,7 @@ internal fun ShotViewer(
                 scope.launch {
                     val failure = failureOf { saveToGallery(context, model.shotFile(shot.profileId, shot.name), shot.name) }
                     saving = false
-                    report(failure, tr("Снимок в галерее, папка Millida"))
+                    report(failure, tr("Снимок в галерее, папка KonMin"))
                 }
             } else {
                 exporting = shot
@@ -149,7 +149,7 @@ internal fun ShotViewer(
         } catch (missing: Exception) {
             null
         }
-        if (file == null || !shareFile(context, file, "image/png", tr("Снимок Millida"))) {
+        if (file == null || !shareFile(context, file, "image/png", tr("Снимок KonMin"))) {
             model.notice(tr("Не нашлось приложения, готового принять снимок"), isError = true)
         }
     }

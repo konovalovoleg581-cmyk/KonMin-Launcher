@@ -171,7 +171,8 @@ internal fun WideLobbyTopRow(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            FriendsCorner(
+            // KonMin: friends are a Millida service.
+            if (net.millida.launcher.millidaServicesOn) FriendsCorner(
                 state,
                 onFriends,
                 Modifier.tourTarget(TourTarget.FRIENDS),

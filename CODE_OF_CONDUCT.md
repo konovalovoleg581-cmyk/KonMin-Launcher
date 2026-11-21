@@ -1,5 +1,9 @@
 # Contributor Covenant Code of Conduct
 
+> **KonMin Launcher Mobile note.** This document is inherited unchanged from the upstream
+> [Millida Launcher Mobile](https://github.com/millida/launcher-mobile). It describes Millida's builds,
+> services, contacts and processes, not KonMin's. See [README.md](README.md) and [MODIFICATIONS.md](MODIFICATIONS.md).
+
 Russian version: [CODE_OF_CONDUCT.ru.md](CODE_OF_CONDUCT.ru.md)
 
 ## Our Pledge

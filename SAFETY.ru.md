@@ -1,5 +1,9 @@
 # Откуда берётся APK и как это проверить
 
+> **Примечание KonMin Launcher Mobile.** Документ перенесён без изменений из оригинального
+> [Millida Launcher Mobile](https://github.com/millida/launcher-mobile) и описывает сборки, сервисы,
+> контакты и процессы Millida, а не KonMin. См. [README.md](README.md) и [MODIFICATIONS.md](MODIFICATIONS.md).
+
 [English version: SAFETY.md](SAFETY.md)
 
 ## Коротко

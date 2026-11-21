@@ -253,7 +253,8 @@ private fun WideLobbyScene(
             window = window,
             speech = speech,
         )
-        HubTileColumn(
+        // KonMin: the tiles open Millida's shop, wardrobe and hosting; without those services the rail has Skins.
+        if (net.millida.launcher.millidaServicesOn) HubTileColumn(
             hostedCount = hostedCount,
             shopAlert = shopAlert,
             bonusReady = bonusReady,
@@ -273,8 +274,9 @@ private fun WideLobbyScene(
         // corner buttons and the dock at the desktop's size, shrunk as a whole
         // where a phone is lower than that: a card cut by the dock or one that
         // silently disappears both read as a mistake.
-        val bannerShown = banners.isNotEmpty() && grid.bannerFits
-        val recShown = !bannerShown && recommend != null && grid.recFits
+        // KonMin: banners and the recommended pack come from Millida's catalog and promotions.
+        val bannerShown = net.millida.launcher.millidaServicesOn && banners.isNotEmpty() && grid.bannerFits
+        val recShown = net.millida.launcher.millidaServicesOn && !bannerShown && recommend != null && grid.recFits
         if (bannerShown || recShown) {
             Box(
                 Modifier
@@ -307,7 +309,8 @@ private fun WideLobbyScene(
             onAccount = { menuOpen = !menuOpen },
             onFriends = actions.onFriends,
             onSettings = actions.onSettings,
-            onFeedback = if (compact) actions.onFeedback else null,
+            // KonMin: feedback is posted to Millida's API.
+            onFeedback = if (compact && net.millida.launcher.millidaServicesOn) actions.onFeedback else null,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .cachedLayer()
@@ -327,7 +330,7 @@ private fun WideLobbyScene(
                 .padding(start = grid.dock.start.dp)
                 .width(grid.dock.width.dp),
         )
-        if (compact) {
+        if (compact && net.millida.launcher.millidaServicesOn) {
             PartyChips(
                 onParty = actions.onParty,
                 onInvite = actions.onInvite,
@@ -475,7 +478,7 @@ private fun LobbyDock(
                         .tourTarget(TourTarget.PLAY),
                     fillHeight = true,
                 )
-                if (chest) ChestButton(actions.onChest)
+                if (chest && net.millida.launcher.millidaServicesOn) ChestButton(actions.onChest)
             }
         }
     }

@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import net.millida.launcher.Area
 import net.millida.launcher.LauncherViewModel
 import net.millida.launcher.Screen
+import net.millida.launcher.millidaServicesOn
+import net.millida.launcher.needsMillida
 import net.millida.launcher.UiState
 import net.millida.launcher.core.i18n.tr
 import net.millida.launcher.core.portal.asRubles
@@ -176,7 +178,9 @@ internal fun MoreSectionsSettings(state: UiState, model: LauncherViewModel, modi
         icon = MIcons.user,
         screen = Screen.ACCOUNT,
     )
+    // KonMin: sections that run on Millida's servers are listed only when this build enables those services.
     val entries = listOf(account, cabinetEntry(), packsEntry(state), shotsEntry(state), bedrockEntry(state), premiumEntry())
+        .filter { !it.screen.needsMillida || millidaServicesOn }
     SettingsSection(tr("ЕЩЁ"), modifier) {
         entries.forEachIndexed { index, entry ->
             if (index > 0) MDivider()

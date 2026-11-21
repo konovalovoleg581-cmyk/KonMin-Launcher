@@ -363,7 +363,7 @@ class MillidaShelfModel(
                 return@launch
             }
             if (modrinth == null) {
-                host.notice(tr("«{title}» на телефоне не ставится — поставь через Millida Launcher на компьютере", title), true)
+                host.notice(tr("«{title}» на телефоне не ставится — поставь через KonMin Launcher на компьютере", title), true)
                 return@launch
             }
             show(

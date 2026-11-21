@@ -1,72 +1,86 @@
-# How to build Millida Launcher for Android yourself
+# Building KonMin Launcher Mobile
 
-Russian version: [BUILDING.ru.md](BUILDING.ru.md)
+Russian version of the original guide: [BUILDING.ru.md](BUILDING.ru.md) (it describes the upstream
+project; the KonMin specifics are below).
 
-Three commands. The first build takes longer: Gradle downloads the dependencies once. After that, a couple of minutes.
+## A. In the cloud, from a phone (no computer needed)
 
-## 1. Install the tools
+The repository has a GitHub Actions workflow, [`.github/workflows/android.yml`](.github/workflows/android.yml),
+that builds the APK on GitHub's servers.
 
-The easiest way is [Android Studio](https://developer.android.com/studio): it already has a JDK and the Android SDK. Then go to "Settings" → "Languages & Frameworks" → "Android SDK":
+1. Open the repository on github.com in your phone's browser (or the GitHub app) and sign in.
+2. Make sure Actions are enabled: **Settings → Actions → General → Allow all actions**.
+3. Start a build in one of two ways:
+   - push any commit to the `konmin-mobile` branch, or
+   - open **Actions → Android APK → Run workflow**, pick the `konmin-mobile` branch, tap **Run workflow**.
+4. Wait for the green check (about 15–25 minutes: the first step downloads the Android SDK and assembles
+   the Java/graphics runtime pack).
+5. Open the run, scroll to **Artifacts**, download **KonMin-Launcher-Mobile**. It is a zip: open it
+   with your file manager and install `KonMin-Launcher-Mobile-debug.apk`.
 
-- the "SDK Platforms" tab: **Android 15 (API 35)**;
-- the "SDK Tools" tab: **NDK (Side by side) 27** and **CMake 3.22.1**.
+To publish a Release (a permanent download link), create a tag that starts with `v`, for example
+`v1.0.0`, on the `konmin-mobile` branch (**Code → Tags/Releases → Create a new release → Choose a tag →
+v1.0.0 → Publish**, or `git tag v1.0.0 && git push origin v1.0.0`). The workflow then attaches the APK and
+its SHA-256 to that Release.
 
-Without Android Studio: JDK 17 or newer and the [command-line tools](https://developer.android.com/studio#command-line-tools-only):
+### Optional repository settings
 
-```bash
-sdkmanager "platforms;android-35" "ndk;27.0.12077973" "cmake;3.22.1"
-```
-
-Tell the build where the SDK is, with the `ANDROID_HOME` variable or a `local.properties` file in the root of the repository:
-
-```properties
-sdk.dir=C\:\\Users\\<name>\\AppData\\Local\\Android\\Sdk
-```
-
-Android Studio creates this file itself when you open the project in it.
-
-## 2. Build
-
-```bash
-git clone https://github.com/millida/launcher-mobile.git
-cd launcher-mobile
-./gradlew :app:assembleDebug
-```
-
-In PowerShell: `.\gradlew :app:assembleDebug`.
-
-To build exactly the version served on the website, take the latest "Millida Mobile X.Y.Z" commit in the [history](https://github.com/millida/launcher-mobile/commits/main).
-
-## 3. Get the result
-
-`app/build/outputs/apk/debug/app-debug.apk`: copy it to the phone and open it, or install it over a cable:
-
-```bash
-adb install app/build/outputs/apk/debug/app-debug.apk
-```
-
-You need a phone with Android 8.0 or newer and a 64-bit processor (arm64).
-
-## How your build differs from ours
-
-| | Your build | From millida.net |
+| Where | Name | What for |
 | --- | --- | --- |
-| Code | The same as in this repository | The same: every release here is a "Millida Mobile X.Y.Z" commit |
-| Signature | The debug key of the Android SDK | The Millida key. No developer publishes it: with it, anyone could release an app in our name |
-| App | A separate one, `net.millida.launcher.debug`: it installs next to the official one and does not touch it | `net.millida.launcher` |
-| Java and graphics | Downloaded on the first game launch | Already inside the APK |
+| Settings → Secrets and variables → Actions → **Variables** | `KONMIN_MS_CLIENT_ID` | Your Microsoft Entra ID application id: turns on Microsoft (licensed) sign-in. It is public, not a secret. |
+| … → **Secrets** | `KONMIN_KEYSTORE_BASE64`, `KONMIN_KEYSTORE_PASSWORD`, `KONMIN_KEY_ALIAS`, `KONMIN_KEY_PASSWORD` | Your own release signing key (base64 of the `.jks` file). With them the workflow also builds a signed `KonMin-Launcher-Mobile.apk`. |
 
-## How to check the official APK
+Never use somebody else's signing key: Android identifies the publisher by it and refuses to update an app
+signed by a different key. Keep the keystore file and its passwords safe; losing them means users must
+uninstall and reinstall to get updates.
 
-- Download only from [millida.net/launcher](https://millida.net/launcher). Anything else is not ours.
-- The SHA-256 of the file must match the one published in [latest.json](https://launcher-storage.millida.net/mobile/latest.json): on Windows `certutil -hashfile <file> SHA256`, on macOS and Linux `sha256sum <file>`.
-- The signing key fingerprint, `apksigner verify --print-certs <file>`, must match `sha256_cert_fingerprints` in [assetlinks.json](https://millida.net/.well-known/assetlinks.json).
+## B. On a computer
+
+Requirements: JDK 17+, Android SDK with **platform 35**, **build-tools 35.0.0**, **NDK 27.0.12077973**,
+**CMake 3.22.1**, Python 3. Android Studio installs all of them ("SDK Manager"), or:
+
+```bash
+sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;27.0.12077973" "cmake;3.22.1"
+```
+
+Tell Gradle where the SDK is (`ANDROID_HOME`, or `sdk.dir=…` in `local.properties`), then:
+
+```bash
+./gradlew :bridge:jar
+python3 scripts/make_konmin_runtime.py
+./gradlew :app:assembleDebug -Pmillida.bundleRuntime -Pmillida.runtimeArchive=../dist/konmin-runtime-arm64.zip
+```
+
+The APK is `app/build/outputs/apk/debug/app-debug.apk` (package `net.konmin.launcher.mobile`).
+
+- Without the two runtime steps and `-Pmillida.bundleRuntime`, you get a small APK (~45 MB) without the
+  Java/graphics pack: it starts, but a game can only run after a pack is imported in Settings.
+- Signed release: put your key in `local.properties` (`konmin.release.keystore`, `konmin.release.password`,
+  `konmin.release.alias`, `konmin.release.key.password`) or the `KONMIN_KEYSTORE_*` environment variables
+  and run `./gradlew :app:assembleRelease` with the same `-P` flags. Without a key the release APK is built
+  unsigned.
+
+### Open in Android Studio
+
+**File → Open** → the repository folder → wait for the Gradle sync → pick the `app` configuration and a
+64-bit ARM phone or emulator image. The first sync downloads several hundred MB of dependencies.
+
+### Checks
+
+```bash
+./gradlew :core:test                         # core unit tests (JVM)
+./gradlew :app:testDebugUnitTest             # app unit tests (Robolectric)
+./gradlew :app:testDebugUnitTest --tests '*KonMinShotsTest*' -Pmillida.shots=shots   # screenshots of the six sections
+```
+
+On a machine whose locale is not UTF-8, set `LC_ALL=C.UTF-8` first: some upstream test names are in Russian.
 
 ## If it does not build
 
 | Error | What to do |
 | --- | --- |
-| `SDK location not found` | The SDK path is not set: `ANDROID_HOME` or `local.properties`, step 1 |
-| `Android Gradle plugin requires Java 17 to run` | Install JDK 17 or newer, or point `JAVA_HOME` to the `jbr` folder of Android Studio |
-| An error about the NDK or CMake | Install NDK 27 and CMake 3.22.1 in "SDK Tools", step 1 |
-| Something else | [Open an issue](https://github.com/millida/launcher-mobile/issues/new) and attach the output of the command |
+| `SDK location not found` | Set `ANDROID_HOME` or `sdk.dir` in `local.properties` |
+| `Android Gradle plugin requires Java 17` | Install JDK 17+ or point `JAVA_HOME` at it |
+| NDK or CMake errors | Install NDK 27.0.12077973 and CMake 3.22.1 |
+| `make_konmin_runtime.py`: sha256 mismatch | A source file changed upstream; do not bypass the check — update the pinned version deliberately |
+| HTTP 429 from Maven Central | Temporary rate limit: run the build again |

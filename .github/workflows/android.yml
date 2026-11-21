@@ -1,0 +1,103 @@
+# KonMin Launcher Mobile: builds the APK in the cloud, no computer needed.
+#
+# - Every push to the konmin-mobile branch (or «Run workflow» in the Actions tab) builds the debug APK with the
+#   Java + graphics runtime pack inside and uploads it as the «KonMin-Launcher-Mobile» artifact.
+# - A tag v* (for example v1.0.0) also publishes a GitHub Release with that APK and its SHA-256.
+# - A release-signed APK is built too when the repository has the KONMIN_KEYSTORE_* secrets (see BUILDING.md).
+#
+# The runtime pack is assembled from public, hash-pinned sources by scripts/make_konmin_runtime.py;
+# nothing is downloaded from Millida's servers.
+name: Android APK
+
+on:
+  push:
+    branches: [konmin-mobile]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      ANDROID_NDK_VERSION: 27.0.12077973
+      # Optional: your own Microsoft Entra ID app for licensed sign-in (a public id, not a secret).
+      KONMIN_MS_CLIENT_ID: ${{ vars.KONMIN_MS_CLIENT_ID }}
+      HAS_KEY: ${{ secrets.KONMIN_KEYSTORE_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Android SDK packages
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;${ANDROID_NDK_VERSION}" "cmake;3.22.1"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Bridge (millida-glfw.jar)
+        run: ./gradlew :bridge:jar --no-daemon --console=plain
+
+      - name: Runtime pack from public sources
+        run: python3 scripts/make_konmin_runtime.py
+
+      - name: Debug APK with the runtime pack inside
+        run: >
+          ./gradlew :app:assembleDebug --no-daemon --console=plain
+          -Pmillida.bundleRuntime -Pmillida.runtimeArchive=../dist/konmin-runtime-arm64.zip
+
+      - name: Release APK (only with the signing secrets)
+        if: ${{ env.HAS_KEY == 'true' }}
+        env:
+          KONMIN_KEYSTORE_PASSWORD: ${{ secrets.KONMIN_KEYSTORE_PASSWORD }}
+          KONMIN_KEY_ALIAS: ${{ secrets.KONMIN_KEY_ALIAS }}
+          KONMIN_KEY_PASSWORD: ${{ secrets.KONMIN_KEY_PASSWORD }}
+        run: |
+          echo "${{ secrets.KONMIN_KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/konmin.jks"
+          KONMIN_KEYSTORE_FILE="$RUNNER_TEMP/konmin.jks" ./gradlew :app:assembleRelease --no-daemon --console=plain \
+            -Pmillida.bundleRuntime -Pmillida.runtimeArchive=../dist/konmin-runtime-arm64.zip
+          rm -f "$RUNNER_TEMP/konmin.jks"
+
+      - name: Collect APKs
+        run: |
+          mkdir -p release
+          cp app/build/outputs/apk/debug/app-debug.apk "release/KonMin-Launcher-Mobile-debug.apk"
+          if [ -f app/build/outputs/apk/release/app-release.apk ]; then
+            cp app/build/outputs/apk/release/app-release.apk "release/KonMin-Launcher-Mobile.apk"
+          fi
+          (cd release && sha256sum *.apk > SHA256SUMS.txt && cat SHA256SUMS.txt)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KonMin-Launcher-Mobile
+          path: release/
+          retention-days: 30
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: KonMin-Launcher-Mobile
+          path: release
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: KonMin Launcher Mobile ${{ github.ref_name }}
+          files: release/*
+          body: |
+            KonMin Launcher Mobile ${{ github.ref_name }} for Android 8.0+ (arm64).
+            Install KonMin-Launcher-Mobile-debug.apk (or the signed APK if present). SHA-256 sums are in SHA256SUMS.txt.
+            Source code: this repository, branch konmin-mobile (GPL-3.0-only).
